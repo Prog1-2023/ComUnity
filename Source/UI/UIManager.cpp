@@ -61,6 +61,7 @@ void UIManager::RegisterWidget(const string& _widgetName, Widget* _widget)
 void UIManager::DrawAll()
 {
 	toolbar.Draw();
+	DockSpaceOverViewport(GetMainViewport()->ID);
 	// TODO a opti?
 	for (const pair<string, Widget*>& _pair : allWidgets)
 	{
@@ -71,6 +72,7 @@ void UIManager::DrawAll()
 			End();
 		}
 	}
+
 }
 
 void UIManager::OpenPanel(const string& _widgetName)
