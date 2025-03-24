@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Singleton.h"
-#include <string>
-#include "../IMGUI/imgui.h"
 
 class FontManager : public Singleton<FontManager>
 {

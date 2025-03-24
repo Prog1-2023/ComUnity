@@ -1,5 +1,4 @@
 #include "FontManager.h"
-#include <iostream>
 
 FontManager::FontManager()
 {
