@@ -4,11 +4,13 @@
 
 class UIElement : public Actor
 {
+protected:
 	string name;
 
 public:
 	UIElement(World* _world,const string& _name);
-	virtual ~UIElement() { };
+	~UIElement();
 
-private:
+public:
+	virtual void Draw() = 0;
 };

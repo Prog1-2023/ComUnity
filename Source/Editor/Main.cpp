@@ -4,6 +4,8 @@
 #include "World.h"
 #include "../Actors/Cameras/CameraActor.h"
 #include "../Components/StaticMeshComponent.h"
+#include "../UI/Canvas.h"
+#include "../UI/UIImage.h"
 
 
 /// Classes
@@ -70,9 +72,9 @@ int main()
 
 #pragma endregion
 
-	float f = 0.0f;
-	string buf = "oui";
-	bool _oui = true;
+	Canvas* _canva = new Canvas(_world,"Canva");
+	//UIImage* _image = new UIImage(_world,"Image Test");
+	//_canva->Add(_image);
 
 	while (!glfwWindowShouldClose(_window.GetWindow()))
 	{
@@ -82,19 +84,6 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		
-
-		ImGui::Begin("My First Tool", &_oui, ImGuiWindowFlags_MenuBar);
-
-		ImGui::Text("Hello, world %d", 123);
-		if (ImGui::Button("Save"))
-			cout << "pd" << endl;
-
-		ImGui::InputText("string", buf.data(), 20);
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-
-		ImGui::End();
-
 
 		// Compute deltaTime
 		_deltatime = glfwGetTime() - _time;
@@ -158,8 +147,10 @@ int main()
 
 		//}
 
+		//_canva->Draw();
 
-				// Rendering
+
+		// Rendering
 		// (Your code clears your framebuffer, renders your other stuff etc.)
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -171,8 +162,6 @@ int main()
 		//glfwSwapInterval(1);
 
 		// Wait for inputs
-
-
 	}
 
 #pragma region Deletions
@@ -183,6 +172,9 @@ int main()
 	//glDeleteProgram(_shaderProgram);
 
 #pragma endregion
+
+	delete _canva;
+	//delete _image;
 
 	Shutdown(_window.GetWindow());
 	_actor->BeginDestroy();
