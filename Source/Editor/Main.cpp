@@ -5,76 +5,79 @@
 #include "../Actors/Cameras/CameraActor.h"
 #include "../Components/StaticMeshComponent.h"
 #include "../UI/UIManager.h"
+#include "../UI/FontManager.h"
 
 void Shutdown(GLFWwindow* _window);
 
 int main()
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	World* _world = new World();
-	Window _window = Window(800, 600, "Oui oui");
-	_world->SetWindow(&_window);
+    World* _world = new World();
+    Window _window = Window(800, 600, "Oui oui");
+    _world->SetWindow(&_window);
 
-	Actor* _actor = _world->SpawnActor();
-	_actor->LoadModel("D:/LucienAxel/Github/ComUnity/Content/Survival_Backpack/Meshes/Survival_BackPack.fbx");
-	_actor->BeginPlay();
+    Actor* _actor = _world->SpawnActor();
+    _actor->LoadModel("D:/Github/ComUnity/Content/Survival_Backpack/Meshes/Survival_BackPack.fbx");
+    _actor->BeginPlay();
 
-	StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
-	CameraActor* _camera = _world->SpawnActor<CameraActor>();
-	_world->SetCurrentCamera(_camera);
-	_world->Initialize();
+    StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
+    CameraActor* _camera = _world->SpawnActor<CameraActor>();
+    _world->SetCurrentCamera(_camera);
+    _world->Initialize();
 
-	int _width, _height;
-	double _time = glfwGetTime();
-	double _deltatime = 0.0;
-	glClearColor(0.5f, 0.2f, 0.2f, 1.0f);
-	vec3 _targetPos = vec3(0.0f);
+    int _width, _height;
+    double _time = glfwGetTime();
+    double _deltatime = 0.0;
+    glClearColor(0.5f, 0.2f, 0.2f, 1.0f);
+    vec3 _targetPos = vec3(0.0f);
 
-	UIManager& _uiManager = UIManager::GetInstance();
-	_uiManager.Init(_window.GetWindow());
+    UIManager& _uiManager = UIManager::GetInstance();
+    _uiManager.Init(_window.GetWindow());
 
-	float f = 0.0f;
-	string buf = "oui";
-	bool _oui = true;
+    // oui
+    FontManager::GetInstance().LoadFont("D:/Github/ComUnity/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
 
-	while (!glfwWindowShouldClose(_window.GetWindow()))
-	{
-		_uiManager.StartLoop();
+    float f = 0.0f;
+    string buf = "oui";
+    bool _oui = true;
 
-		glfwPollEvents();
+    while (!glfwWindowShouldClose(_window.GetWindow()))
+    {
+        _uiManager.StartLoop();
 
-		ImGui::Begin("My First Tool", &_oui, ImGuiWindowFlags_MenuBar);
+        glfwPollEvents();
 
-		ImGui::Text("Hello, world %d", 123);
-		if (ImGui::Button("Save"))
-			cout << "pd" << endl;
+        ImGui::Begin("My First Tool", &_oui, ImGuiWindowFlags_MenuBar);
 
-		ImGui::InputText("string", buf.data(), 20);
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+        Text("Hello, world %d", 123);
+        if (ImGui::Button("Save"))
+            cout << "pd" << endl;
 
-		ImGui::End();
+        ImGui::InputText("string", buf.data(), 20);
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 
+        ImGui::End();
 
-		_deltatime = glfwGetTime() - _time;
-		_time = glfwGetTime();
+        _deltatime = glfwGetTime() - _time;
+        _time = glfwGetTime();
 
-		glfwGetFramebufferSize(_window.GetWindow(), &_width, &_height);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glfwGetFramebufferSize(_window.GetWindow(), &_width, &_height);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		_window.GetController()->PollEvents();
+        _window.GetController()->PollEvents();
 
-		_uiManager.EndLoop();
-		glfwSwapBuffers(_window.GetWindow());
+        _uiManager.EndLoop();
+        glfwSwapBuffers(_window.GetWindow());
+    }
 
-	}
+    Shutdown(_window.GetWindow());
+    _actor->BeginDestroy();
+    delete _world;
 
-	Shutdown(_window.GetWindow());
-	_actor->BeginDestroy();
-	delete _world;
-
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
+
 
 void Shutdown(GLFWwindow* _window)
 {
