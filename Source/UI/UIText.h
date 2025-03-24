@@ -1,5 +1,5 @@
 #pragma once
-#include "../UI/UiElement."
+#include "../UI/UiElement
 
 class UIText : public UIElement
 {
