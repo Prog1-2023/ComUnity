@@ -1,3 +1,3 @@
 # ComUnity
 
-UML : [https://app.diagrams.net/?src=about](https://app.diagrams.net/#G1SfpsJKpL5jjQRdJJSG0JI9rXtxYddJVD)
+UML : https://drive.google.com/file/d/1SfpsJKpL5jjQRdJJSG0JI9rXtxYddJVD/view?usp=sharing
