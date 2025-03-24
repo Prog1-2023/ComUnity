@@ -32,5 +32,5 @@ public:
 	}
 
 public:
-	void Draw();
+	virtual void Draw() override;
 };

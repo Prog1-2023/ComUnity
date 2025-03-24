@@ -1,13 +1,23 @@
 #include "UIManager.h"
 
-#include "../Utils/CoreMinimal.h"
+#include "ConsoleWidget.h"
 
 UIManager::UIManager()
 {
+	toolbar = Toolbar();
+	allWidgets = map<string, Widget*>();
 }
 
 UIManager::~UIManager()
 {
+	// TODO a opti?
+	for (const pair<string, Widget*>& _pair : allWidgets)
+		delete _pair.second;
+}
+
+void UIManager::InitPanels()
+{
+	new ConsoleWidget();
 }
 
 void UIManager::Init(GLFWwindow* _window)
@@ -20,6 +30,7 @@ void UIManager::Init(GLFWwindow* _window)
 	_io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui_ImplGlfw_InitForOpenGL(_window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
+	InitPanels();
 }
 
 void UIManager::StartLoop()
@@ -40,4 +51,45 @@ void UIManager::Destroy()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	DestroyContext();
+}
+
+void UIManager::RegisterWidget(const string& _widgetName, Widget* _widget)
+{
+	allWidgets[_widgetName] = _widget;
+}
+
+void UIManager::DrawAll()
+{
+	toolbar.Draw();
+	// TODO a opti?
+	for (const pair<string, Widget*>& _pair : allWidgets)
+	{
+		if (_pair.second->GetIsActiveRef())
+		{
+			Begin(_pair.first.c_str(), &_pair.second->GetIsActiveRef());
+			_pair.second->Draw();
+			End();
+		}
+	}
+}
+
+void UIManager::OpenPanel(const string& _widgetName)
+{
+	if (allWidgets.contains(_widgetName))
+		allWidgets[_widgetName]->SetIsActive(true);
+}
+
+void UIManager::ClosePanel(const string& _widgetName)
+{
+	if (allWidgets.contains(_widgetName))
+		allWidgets[_widgetName]->SetIsActive(false);
+}
+
+void UIManager::TogglePanel(const string& _widgetName)
+{
+	if (allWidgets.contains(_widgetName))
+	{
+		if (allWidgets[_widgetName]->GetIsActiveRef()) allWidgets[_widgetName]->SetIsActive(false);
+		else allWidgets[_widgetName]->SetIsActive(true);
+	}
 }
