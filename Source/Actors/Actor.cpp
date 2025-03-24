@@ -46,6 +46,8 @@ void Actor::LoadModel(const string& _path)
 {
 	Importer _importer = Importer();
 	const aiScene* _scene = _importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	if (!_scene) return;
+
 	const string& _errorString = string("Error => ") + string(_importer.GetErrorString());
 	const aiNode* _node = _scene->mRootNode;
 	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorString.c_str());

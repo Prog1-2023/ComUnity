@@ -28,6 +28,7 @@ using namespace std;
 using namespace filesystem;
 using namespace glm;
 using namespace Assimp;
+using namespace ImGui;
 
 //#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define FORCEINLINE __forceinline

@@ -31,7 +31,7 @@ public:
 	FORCEINLINE void SetScale(const Vector3f& _scale) { scale = _scale; }
 
 public:
-	TransformComponent(Actor* _owner);
+	TransformComponent(class Actor* _owner);
 	~TransformComponent();
 
 protected:
