@@ -6,6 +6,11 @@
 #include "../Components/StaticMeshComponent.h"
 #include "../UI/UIManager.h"
 #include "../UI/FontManager.h"
+#include "../UI/Canvas.h"
+#include "../UI/UIImage.h"
+#include "../UI/UIManager.h"
+#include "..\UI\Widget.h"
+#include "..\UI\ConsoleWidget.h"
 
 void Shutdown(GLFWwindow* _window);
 
@@ -20,6 +25,12 @@ int main()
     Actor* _actor = _world->SpawnActor();
     _actor->LoadModel("D:/Github/ComUnity/Content/Survival_Backpack/Meshes/Survival_BackPack.fbx");
     _actor->BeginPlay();
+	World* _world = new World();
+	Window _window = Window(800, 600, "Engine");
+	_world->SetWindow(&_window);
+
+	Actor* _actor = _world->SpawnActor();
+	_actor->BeginPlay();
 
     StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
     CameraActor* _camera = _world->SpawnActor<CameraActor>();
@@ -76,6 +87,36 @@ int main()
     delete _world;
 
     return EXIT_SUCCESS;
+	int _width, _height;
+	double _time = glfwGetTime();
+	double _deltatime = 0.0;
+	glClearColor(0.5f, 0.2f, 0.2f, 1.0f);
+	vec3 _targetPos = vec3(0.0f);
+
+	UIManager& _uiManager = UIManager::GetInstance();
+	_uiManager.Init(_window.GetWindow());
+
+	while (!glfwWindowShouldClose(_window.GetWindow()))
+	{
+		glfwPollEvents();
+		_uiManager.StartLoop();
+		_deltatime = glfwGetTime() - _time;
+		_time = glfwGetTime();
+		glfwGetFramebufferSize(_window.GetWindow(), &_width, &_height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		_window.GetController()->PollEvents();
+
+		_uiManager.DrawAll();
+
+		_uiManager.EndLoop();
+		glfwSwapBuffers(_window.GetWindow());
+	}
+
+	Shutdown(_window.GetWindow());
+	_actor->BeginDestroy();
+	delete _world;
+
+	return EXIT_SUCCESS;
 }
 
 
