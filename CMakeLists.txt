@@ -65,10 +65,10 @@ include_directories(Dependencies/Includes)
 # Libraries
 set (ALL_LIBS
   ${OPENGL_LIBRARY}
-  D:/Github/ComUnity/Dependencies/Libraries/glfw3.lib
-  D:/Github/ComUnity/Dependencies/Libraries/GLEW_1130.lib
-  D:/Github/ComUnity/Dependencies/Libraries/assimp-vc143-mtd.lib
-  D:/Github/ComUnity/Dependencies/Libraries/zlibstaticd.lib
+  D:/LucienAxel/Github/ComUnity/Dependencies/Libraries/glfw3.lib
+  D:/LucienAxel/Github/ComUnity/Dependencies/Libraries/GLEW_1130.lib
+  D:/LucienAxel/Github/ComUnity/Dependencies/Libraries/assimp-vc143-mtd.lib
+  D:/LucienAxel/Github/ComUnity/Dependencies/Libraries/zlibstaticd.lib
 )
 
 link_directories(Dependencies/Libraries)

@@ -19,7 +19,7 @@ void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg)
 	if (!_expr)
 	{
 		cerr << "Assert failed:\t" << _msg << endl
-		     << "Expected:\t" << _exprStr << endl;
+			 << "Expected:\t" << _exprStr << endl;
 
 		abort();
 	}
@@ -58,20 +58,20 @@ void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg)
 
 string GetAbsolutePath()
 {
-    path _path = current_path();
+	path _path = current_path();
 
-    path::iterator _it = find(_path.begin(), _path.end(), "ComUnity");
-    if (_it != _path.end())
-    {
-        path _fixedPath;
-        for (path::iterator _pathPart = _path.begin(); _pathPart != _it; ++_pathPart)
-        {
-            _fixedPath /= *_pathPart;
-        }
-        _fixedPath /= "ComUnity";
+	path::iterator _it = find(_path.begin(), _path.end(), "ComUnity");
+	if (_it != _path.end())
+	{
+		path _fixedPath;
+		for (path::iterator _pathPart = _path.begin(); _pathPart != _it; ++_pathPart)
+		{
+			_fixedPath /= *_pathPart;
+		}
+		_fixedPath /= "ComUnity";
 
-        return _fixedPath.string();
-    }
+		return _fixedPath.string();
+	}
 
     cerr << "The 'ComUnity' folder was not found in the current path." << endl;
     return "";

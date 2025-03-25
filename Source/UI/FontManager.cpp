@@ -11,25 +11,26 @@ FontManager::FontManager()
 
 FontManager::~FontManager()
 {
-	for (auto& [key, font] : fontList)
+	for (const pair<string, ImFont*>& _pair : fontList)
 	{
-		if (ImGui::GetIO().Fonts->TexID) {
+		delete _pair.second;
+		/*if (ImGui::GetIO().Fonts->TexID) {
 			GLuint texID = (GLuint)(intptr_t)ImGui::GetIO().Fonts->TexID;
 			glDeleteTextures(1, &texID);
-		}
+		}*/
 	}
-	fontList.clear();
 }
 
 bool FontManager::LoadFont(const string& _fontPath, float _fontSize)
 {
+	return true;
 	string _fontKey = _fontPath.substr(_fontPath.find_last_of("/\\") + 1);
 
-	ImGuiIO& _io = ImGui::GetIO();
+	ImGuiIO& _io = GetIO();
 
 	if (fontList.find(_fontKey) != fontList.end())
 	{
-		cout << "Font already loaded, reloading texture: " << _fontKey << " (size: " << _fontSize << ")" << endl; 
+		cout << "Font already loaded, reloading texture: " << _fontKey << " (size: " << _fontSize << ")" << endl;
 		return LoadFontTexture();
 	}
 
@@ -48,7 +49,8 @@ bool FontManager::LoadFont(const string& _fontPath, float _fontSize)
 
 bool FontManager::LoadFontTexture()
 {
-	ImGuiIO& _io = ImGui::GetIO();
+	return true;
+	ImGuiIO& _io = GetIO();
 
 	unsigned char* _pixels;
 	int _width, _height;
@@ -75,6 +77,7 @@ bool FontManager::LoadFontTexture()
 
 void FontManager::RenderText(const string& _fontName, const string& _text, float _x, float _y, float _scale, ImVec4 _color)
 {
+	return;
 	ImFont* _font = nullptr;
 
 	if (!_fontName.empty()) {
