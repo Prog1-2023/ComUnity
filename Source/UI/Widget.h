@@ -14,7 +14,7 @@ public:
 	FORCEINLINE void ToggleIsActive() { isActive = !isActive; }
 
 public:
-	Widget(const string& _widgetName);
+	Widget(const string& _widgetName, const bool& _openedByDefault);
 	virtual ~Widget() = default;
 
 private:

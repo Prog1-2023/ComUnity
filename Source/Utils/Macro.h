@@ -5,6 +5,7 @@
 #include <set>
 #include <queue>
 #include <functional>
+#include <algorithm>
 
 #define _USE_MATH_DEFINES
 #include <math.h>

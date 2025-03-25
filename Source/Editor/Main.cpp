@@ -9,6 +9,7 @@
 #include "../UI/UIManager.h"
 #include "..\UI\Widget.h"
 #include "..\UI\ConsoleWidget.h"
+#include "..\UI\HierarchyWidget.h"
 
 void Shutdown(GLFWwindow* _window);
 
@@ -35,7 +36,9 @@ int main()
 	vec3 _targetPos = vec3(0.0f);
 
 	UIManager& _uiManager = UIManager::GetInstance();
-	_uiManager.Init(_window.GetWindow());
+	_uiManager.Init(_window.GetWindow(), _world);
+	HierarchyWidget* _hierarchy = _uiManager.GetWidgetOfType<HierarchyWidget>();
+	_hierarchy->OnActorSelected().Add([&](Actor* _actor) { cout << "Selected actor: " << typeid(_actor).name() << endl;});
 
 	while (!glfwWindowShouldClose(_window.GetWindow()))
 	{

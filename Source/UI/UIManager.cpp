@@ -1,6 +1,13 @@
 #include "UIManager.h"
 
 #include "ConsoleWidget.h"
+#include "ContentWidget.h"
+#include "HierarchyWidget.h"
+#include "SceneWidget.h"
+#include "InspectorWidget.h"
+#include "ProjectSettingsWidget.h"
+#include "EditorPreferencesWidget.h"
+#include "SpawnActorWidget.h"
 
 UIManager::UIManager()
 {
@@ -17,11 +24,19 @@ UIManager::~UIManager()
 
 void UIManager::InitPanels()
 {
-	new ConsoleWidget();
+	new ConsoleWidget(true);
+	new ContentWidget(true);
+	new HierarchyWidget(true);
+	new SceneWidget(true);
+	new InspectorWidget(true);
+	new ProjectSettingsWidget(false);
+	new EditorPreferencesWidget(false);
+	new SpawnActorWidget(true);
 }
 
-void UIManager::Init(GLFWwindow* _window)
+void UIManager::Init(GLFWwindow* _window, World* _world)
 {
+	world = _world;
 	IMGUI_CHECKVERSION();
 	CreateContext();
 	ImGuiIO& _io = GetIO();
