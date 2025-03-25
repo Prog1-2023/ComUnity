@@ -1,7 +1,7 @@
 #include "UIText.h"
 
 UIText::UIText(FontManager* _fontManager, World* _world, const string& _name)
-    : UIElement(_world, _name),
+    : UIElement(),
     fontManager(_fontManager), text(""), fontName(""), x(0), y(0), scale(1.0f), color(ImVec4(1, 1, 1, 1))
 {
     if (fontName.empty()) 

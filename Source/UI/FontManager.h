@@ -11,7 +11,7 @@ class FontManager : public Singleton<FontManager>
     map<string, ImFont*> fontList; 
 
 private:
-        ImFont* defaultFont = nullptr;
+    ImFont* defaultFont = nullptr;
 
 public:
     FontManager();

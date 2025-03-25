@@ -36,18 +36,18 @@ int main()
     vec3 _targetPos = vec3(0.0f);
 
     UIManager& _uiManager = UIManager::GetInstance();
-    _uiManager.Init(_window.GetWindow());
+    _uiManager.Init(_window.GetWindow(), _world);
 
     //Test text
-    FontManager* fontManager = new FontManager();
-    fontManager->LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
+    FontManager& fontManager = FontManager::GetInstance();
+    //fontManager->LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
 
-    UIText* uiText = new UIText(fontManager, _world);
+    /*UIText* uiText = new UIText(fontManager, _world);
     uiText->SetText("Hello World");
     uiText->SetFont("RubikGlitch-Regular.ttf");
     uiText->SetPosition(100, 100);
     uiText->SetScale(1.0f);
-    uiText->SetColor(ImVec4(1, 1, 0, 1)); 
+    uiText->SetColor(ImVec4(1, 1, 0, 1)); */
 
 
     while (!glfwWindowShouldClose(_window.GetWindow()))
@@ -61,7 +61,7 @@ int main()
         _window.GetController()->PollEvents();
 
         //Test text
-        uiText->Draw();
+        //uiText->Draw();
 
         _uiManager.DrawAll();
 
