@@ -1,16 +1,12 @@
 #include "UIImage.h"
 
-UIImage::UIImage(World* _world, const string& _name) : UIElement(_world, _name)
+UIImage::UIImage(const ImTextureID& _textureID, const ImVec2& _imageSize)
 {
-
-}
-
-UIImage::~UIImage()
-{
-
+	texture = _textureID;
+	imageSize = _imageSize;
 }
 
 void UIImage::Draw()
 {
-	ImGui::Image(0, ImVec2(100, 100));
+	Image(texture, imageSize);
 }

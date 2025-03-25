@@ -12,10 +12,12 @@ class UIManager : public Singleton<UIManager>
 	map<string, Widget*> allWidgets;
 	Toolbar toolbar;
 	World* world;
+	GLFWwindow* window;
 
 public:
 	FORCEINLINE void SetWorld(World* _world) { world = _world; }
 	FORCEINLINE World* GetWorld() const { return world; }
+	FORCEINLINE GLFWwindow* GetWindow() const { return window; }
 
 public:
 	UIManager();

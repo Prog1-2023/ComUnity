@@ -1,16 +1,18 @@
 #include "SpawnActorWidget.h"
 
+#include "UIImage.h"
+
 SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn Actors", _openedByDefault)
 {
-	tabList = map<string, SpawnActorTab>();
+	tabList = unordered_map<string, SpawnActorTab>();
 
 	SpawnActorTab _meshTab = SpawnActorTab();
 	SpawnActorTab _lightTab = SpawnActorTab();
 
 	_meshTab.actorList["Cube"].Add([&]() { cout << "Cube" << endl;});
-	_meshTab.actorList["Cone"].Add([&]() { cout << "Cone" << endl;});
 	_meshTab.actorList["Sphere"].Add([&]() { cout << "Sphere" << endl;});
 	_meshTab.actorList["Cylinder"].Add([&]() { cout << "Cylinder" << endl;});
+	_meshTab.actorList["Cone"].Add([&]() { cout << "Cone" << endl;});
 
 	_lightTab.actorList["Point Light"].Add([&]() { cout << "Point Light" << endl;});
 	_lightTab.actorList["Spot Light"].Add([&]() { cout << "Spot Light" << endl;});
