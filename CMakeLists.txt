@@ -63,6 +63,14 @@ endforeach()
 # Dependencies
 set(DEPENDENCIES "${CMAKE_SOURCE_DIR}/Dependencies")
 
+# GLFW
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(ComUnity PRIVATE glfw)
+
+# GLEW
+find_package(GLEW REQUIRED)
+target_link_libraries(ComUnity PRIVATE GLEW::GLEW)
+
 # FMT
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(ComUnity PRIVATE fmt::fmt)
@@ -89,8 +97,8 @@ target_include_directories(ComUnity PRIVATE ${INCLUDES})
 # Libraries
 set(LIBRARIES_DIR "${DEPENDENCIES}/Libraries")
 file(GLOB_RECURSE STATIC_LIBRARIES "${LIBRARIES_DIR}/Statics/*.lib")
-message(STATUS "Libraries found: ${STATIC_LIBRARIES}") # Debug
 target_link_libraries(ComUnity PRIVATE ${STATIC_LIBRARIES})
+#message(STATUS "Libraries found: ${STATIC_LIBRARIES}")
 
 # DLLs
 set(DYNAMIC_LIBRARIES "${LIBRARIES_DIR}/Dynamics/")

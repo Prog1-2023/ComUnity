@@ -17,6 +17,10 @@
 // IrrKlang
 #include <irrKlang.h>
 
+// OpenGL
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 using namespace std;
 using namespace Assimp;
 using namespace fmt;
@@ -84,5 +88,47 @@ int main()
 	{
 		cout << "Erreur d'initialisation d'IrrKlang.\n";
 	}
+
+	// OpenGL
+	// Initialisation de GLFW
+	if (!glfwInit()) {
+		std::cerr << "Erreur d'initialisation de GLFW!" << std::endl;
+		return -1;
+	}
+
+	// Créer une fenêtre GLFW
+	GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL avec GLEW", nullptr, nullptr);
+	if (!window) {
+		std::cerr << "Erreur de création de la fenêtre!" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+
+	// Rendre le contexte de la fenêtre courant
+	glfwMakeContextCurrent(window);
+
+	// Initialiser GLEW
+	if (glewInit() != GLEW_OK) {
+		std::cerr << "Erreur d'initialisation de GLEW!" << std::endl;
+		return -1;
+	}
+
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
+	// Boucle de rendu
+	while (!glfwWindowShouldClose(window)) {
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Swap des buffers
+		glfwSwapBuffers(window);
+
+		// Polling des événements
+		glfwPollEvents();
+	}
+
+	// Nettoyer et quitter
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
 	return EXIT_SUCCESS;
 }

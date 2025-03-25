@@ -31,3 +31,4 @@
 *.out
 *.app
 /vcpkg_installed
+/Binaries
