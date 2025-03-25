@@ -1,20 +1,38 @@
 #include "Serialization.h"
 #include <fstream>
+#include <direct.h> 
 
 Serialization::Serialization()
 {
-	values = vector<SerializedValue>();
+	values = vector<SerializedValue*>();
 }
 
 Serialization::~Serialization()
 {
-
+	for (SerializedValue* _value : values)
+	{
+		delete _value;
+	}
 }
 
 void Serialization::StartSerialization()
 {
-	const string& _path = "C:/Users/PUEC1602/Documents/GitHub/ComUnity/Source/Serialization/Serialization.h";
-	ReadFile(_path);
+	const size_t size = 1024;
+	// Allocate a character array to store the directory path
+	char buffer[size];
+
+	// Call _getcwd to get the current working directory and store it in buffer
+	if (getcwd(buffer, size) != NULL) {
+		// print the current working directory
+		cout << "Current working directory: " << buffer << endl;
+	}
+	else {
+		// If _getcwd returns NULL, print an error message
+		cerr << "Error getting current working directory" << endl;
+	}
+
+	//const string& _path = "C:/Users/PUEC1602/Documents/GitHub/ComUnity/Source/Serialization/Serialization.h";
+	//ReadFile(_path);
 }
 
 void Serialization::ReadFile(const string& _path)
@@ -30,7 +48,8 @@ void Serialization::ReadFile(const string& _path)
 	{
 		if (Contains(_line,"SERIALIZE"))
 		{
-			SerializedValue _value = RetreiveValue(_line);
+			SerializedValue* _value = RetreiveValue(_line);
+			values.push_back(_value);
 		}
 	}
 }
@@ -61,11 +80,13 @@ bool Serialization::Contains(const string& _toCheck, const string& _toCompare)
 	return false;
 }
 
-SerializedValue Serialization::RetreiveValue(const string& _line)
+SerializedValue* Serialization::RetreiveValue(string _line)
 {
 	const unsigned int _status = GetSerializeStatus(_line);
-	const string& _type = GetType(_line);
-	return SerializedValue();
+	const string& _type = GetNextWord(_line);
+	const string& _name = GetNextWord(_line);
+	const string& _value = GetValue(_line);
+	return new SerializedValue(_status, _type, _name, _value);
 }
 
 unsigned int Serialization::GetSerializeStatus(const string& _line)
@@ -76,10 +97,34 @@ unsigned int Serialization::GetSerializeStatus(const string& _line)
 		return 1;
 }
 
-string Serialization::GetType(const string& _line)
+string Serialization::GetNextWord(string& _line)
 {
-	string _newLine = _line.substr(_line.find_first_of(' '));
-	_newLine = _newLine.substr(_line.find_first_of(' '));
-	cout << _newLine;
-	return "";
+	_line = _line.substr(_line.find_first_of(' ') + 1);
+
+	string _type = "";
+
+	for(char _char : _line)
+	{
+		if (_char == ' ')
+			break;
+
+		_type += _char;
+	}
+	return _type;
+}
+
+string Serialization::GetValue(string& _line)
+{
+	_line = _line.substr(_line.find_first_of('=') + 1);
+
+	int _index = 0;
+	for (string::iterator _it = _line.begin(); _it != _line.end(); _it++, _index++)
+	{
+		if (_line.at(_index) == ' ')
+		{
+			_line.erase(_it);
+		}
+	}
+	_line.pop_back();
+	return _line;
 }
