@@ -7,7 +7,7 @@ class ConsoleWidget : public Widget
 {
 	
 public:
-	ConsoleWidget();
+	ConsoleWidget(const bool& _openedByDefault);
 	virtual ~ConsoleWidget() = default;
 
 public:

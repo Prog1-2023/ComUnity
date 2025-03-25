@@ -1,6 +1,6 @@
 #include "ConsoleWidget.h"
 
-ConsoleWidget::ConsoleWidget() : Widget("Console")
+ConsoleWidget::ConsoleWidget(const bool& _openedByDefault) : Widget("Console", _openedByDefault)
 {
 }
 
