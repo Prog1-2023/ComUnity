@@ -46,3 +46,5 @@ using namespace ImGui;
 
 void AssertDebug(const char* _exprStr, const bool _expr, const char* _msg, const char* _file, const int _line);
 void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg);
+
+string GetAbsolutePath();

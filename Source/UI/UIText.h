@@ -4,7 +4,7 @@
 #include "../Utils/CoreMinimal.h"
 #include "UIElement.h"
 
-class UIText : UIElement
+class UIText : public UIElement
 {
     FontManager* fontManager;
     string text;
@@ -15,7 +15,7 @@ class UIText : UIElement
     ImVec4 color;
 
 public:
-    UIText(FontManager* _fontManager);
+    UIText(FontManager* _fontManager, World* _world, const string& _name = "UIText");
     ~UIText();
 
     void SetText(const string& _text);
@@ -24,5 +24,5 @@ public:
     void SetScale(float _scale);
     void SetColor(const ImVec4& _color);
 
-    void Render();
+    void Draw(); 
 };

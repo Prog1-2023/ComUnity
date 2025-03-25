@@ -1,39 +1,32 @@
 #include "UIText.h"
-#include <iostream>
 
-UIText::UIText(FontManager* fontManager)
-    : fontManager(fontManager),
-    text(""),
-    fontName(""),
-    x(0.0f),
-    y(0.0f),
-    scale(1.0f),
-    color(ImVec4(1.0f, 1.0f, 1.0f, 1.0f))
+UIText::UIText(FontManager* _fontManager, World* _world, const string& _name)
+    : UIElement(_world, _name),
+    fontManager(_fontManager), text(""), fontName(""), x(0), y(0), scale(1.0f), color(ImVec4(1, 1, 1, 1))
 {
+    if (fontName.empty()) 
+    {
+        fontManager->LoadFont(GetAbsolutePath() + "/Content/Fonts/DefaultSans-Regular.ttf", 20.0f);
+        fontName = "DefaultSans-Regular.ttf"; 
+    }
 }
 
 UIText::~UIText()
 {
 }
 
-void UIText::SetText(const std::string& _text)
+void UIText::SetText(const string& _text)
 {
     text = _text;
 }
 
-void UIText::SetFont(const std::string& _fontName)
+void UIText::SetFont(const string& _fontName)
 {
-    if (fontManager->LoadFont(_fontName, 24.0f)) {
-        fontName = _fontName;
-    }
-    else {
-        cerr << "Failed to load font: " << _fontName << endl;
-    }
+    fontName = _fontName;
 }
 
 void UIText::SetPosition(float _x, float _y)
 {
-    
     x = _x;
     y = _y;
 }
@@ -48,12 +41,10 @@ void UIText::SetColor(const ImVec4& _color)
     color = _color;
 }
 
-void UIText::Render()
+void UIText::Draw()
 {
-    if (fontName.empty() || text.empty()) {
-        cerr << "Error: Missing font or text!" << endl;
-        return;
+    if (fontManager)
+    {
+        fontManager->RenderText(fontName, text, x, y, scale, color);
     }
-
-    fontManager->RenderText(fontName, text, x, y, scale, color);
 }
