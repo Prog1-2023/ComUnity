@@ -1,7 +1,6 @@
 #include "ContentWidget.h"
 
-#include <filesystem>
-#include <fstream>
+#include "FileManager.h"
 
 ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault)
 {
@@ -21,7 +20,7 @@ ContentWidget::~ContentWidget()
 void ContentWidget::UpdateElements()
 {
 	elements.clear();
-	const string& _path = GetProjectContent() + "/" + currentPath;
+	const string& _path = FileManager::GetContentPath() + "/" + currentPath;
 	for (const directory_entry& _iterator : directory_iterator(_path))
 		elements.push_back(_iterator.path().filename().string());
 }
@@ -29,14 +28,14 @@ void ContentWidget::UpdateElements()
 void ContentWidget::Open(const string& _fileName)
 {
 	const string& _path = currentPath + "/" + _fileName;
-	if (is_directory(GetProjectContent() + _path))
+	if (is_directory(FileManager::GetContentPath() + _path))
 	{
 		currentPath = _path;
 		UpdateElements();
 	}
 	else
 	{
-		const string& _filePath = GetProjectContent() + _path;
+		const string& _filePath = FileManager::GetContentPath() + _path;
 		system(_filePath.c_str());
 	}
 }
@@ -62,7 +61,7 @@ void ContentWidget::CreateFolder()
 		if (Button("Confirm"))
 		{
 			CloseCurrentPopup();
-			create_directory(GetProjectContent() + "/" + currentPath + "/" + newFolderName);
+			FileManager::CreateFolder(FileManager::GetContentPath() + "/" + currentPath, newFolderName);
 			UpdateElements();
 		}
 		EndPopup();
@@ -80,10 +79,15 @@ void ContentWidget::CreateClass()
 		if (Button("Confirm"))
 		{
 			CloseCurrentPopup();
-			// TODO move text to template files
 			const string& _classNameString = string(newClassName);
-			WriteToFile(_classNameString + ".h", "#pragma once\n\n#include \"../Utils/CoreMinimal.h\"\n#include \"../Actors/Actor.h\"\n\nclass " + _classNameString + " : public Actor\n{\n\npublic:\n\t" + _classNameString + "();\n\t~" + _classNameString + "();\n\t\npublic:\n\tvirtual void BeginPlay() override;\n\tvirtual void BeginDestroy() override;\n\tvirtual void Tick(const float _deltatime) override;\n };\n");
-			WriteToFile(_classNameString + ".cpp", "#include \"" + _classNameString + ".h\"\n\n" + _classNameString + "::" + _classNameString + "()\n{\n\n}\n\n" + _classNameString + "::~" + _classNameString + "()\n{\n\n}\n\nvoid " + _classNameString + "::BeginPlay()\n{\n\tSuper::BeginPlay();\n}\n\nvoid " + _classNameString + "::BeginDestroy()\n{\n\tSuper::BeginDestroy();\n}\n\nvoid " + _classNameString + "::Tick(const float _deltatime)\n{\n\tSuper::Tick(_deltatime);\n}\n");
+			const string& _templatePath = FileManager::GetSourcePath() + "/UI/Templates/";
+			const string& _contentPath = FileManager::GetContentPath() + "/" + currentPath + "/";
+			const string& _headerFilePath = _contentPath + _classNameString + ".h";
+			const string& _cppFilePath = _contentPath + _classNameString + ".cpp";
+			FileManager::CopyFile(_templatePath + "class.h", _headerFilePath);
+			FileManager::CopyFile(_templatePath + "class.cpp", _cppFilePath);
+			FileManager::ReplaceFileContent(_headerFilePath, "[NAME]", _classNameString);
+			FileManager::ReplaceFileContent(_cppFilePath, "[NAME]", _classNameString);
 			UpdateElements();
 		}
 		EndPopup();
@@ -97,13 +101,6 @@ void ContentWidget::ImportFile()
 		Text("test popup");
 		EndPopup();
 	}
-}
-
-void ContentWidget::WriteToFile(const string& _fileName, const string& _content)
-{
-	ofstream _stream = ofstream(GetProjectContent() + "/" + currentPath + "/" + _fileName);
-	_stream << _content;
-	_stream.close();
 }
 
 void ContentWidget::Draw()

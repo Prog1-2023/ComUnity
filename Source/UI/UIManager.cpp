@@ -8,6 +8,7 @@
 #include "ProjectSettingsWidget.h"
 #include "EditorPreferencesWidget.h"
 #include "SpawnActorWidget.h"
+#include "FileManager.h"
 
 UIManager::UIManager()
 {
@@ -34,6 +35,17 @@ void UIManager::InitPanels()
 	new SpawnActorWidget(true);
 }
 
+void UIManager::InitDockingPositions()
+{
+	const string& _initFile = FileManager::GetBinariesPath() + "/imgui.ini";
+	if (!FileManager::DoesFileExist(_initFile))
+	{
+		const string& _from = FileManager::GetSourcePath() + "/UI/Templates/imgui.ini";
+		const string& _to = _initFile;
+		FileManager::CopyFile(_from, _initFile);
+	}
+}
+
 void UIManager::Init(GLFWwindow* _window, World* _world)
 {
 	window = _window;
@@ -47,6 +59,7 @@ void UIManager::Init(GLFWwindow* _window, World* _world)
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 	InitPanels();
+	InitDockingPositions();
 }
 
 void UIManager::StartLoop()
