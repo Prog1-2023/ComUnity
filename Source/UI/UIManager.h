@@ -25,6 +25,7 @@ public:
 
 private:
 	void InitPanels();
+	void InitDockingPositions();
 
 public:
 	void Init(GLFWwindow* _window, World* _world);
