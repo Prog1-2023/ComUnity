@@ -1,9 +1,10 @@
 #include "Canvas.h"
 
-Canvas::Canvas(World* _world, const string& _name) : UIElement(_world,_name)
+Canvas::Canvas(const string& _canvasName) : UIElement()
 {
 	allElements = vector<UIElement*>();
 	layout = nullptr;
+	canvasName = _canvasName;
 }
 
 Canvas::~Canvas()
@@ -13,13 +14,11 @@ Canvas::~Canvas()
 
 void Canvas::Draw()
 {
-	if (isDraw)
+	if (isVisible)
 	{
-		Begin(name.c_str(), &isDraw, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+		Begin(canvasName.c_str(), &isVisible, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 		for (UIElement* _element : allElements)
-		{
 			_element->Draw();
-		}
 		End();
 	}
 }

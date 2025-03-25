@@ -1,25 +1,52 @@
 #include "UIManager.h"
 
-#include "../Utils/CoreMinimal.h"
+#include "ConsoleWidget.h"
+#include "ContentWidget.h"
+#include "HierarchyWidget.h"
+#include "SceneWidget.h"
+#include "InspectorWidget.h"
+#include "ProjectSettingsWidget.h"
+#include "EditorPreferencesWidget.h"
+#include "SpawnActorWidget.h"
 
 UIManager::UIManager()
 {
+	toolbar = Toolbar();
+	allWidgets = map<string, Widget*>();
 }
 
 UIManager::~UIManager()
 {
+	// TODO a opti?
+	for (const pair<string, Widget*>& _pair : allWidgets)
+		delete _pair.second;
 }
 
-void UIManager::Init(GLFWwindow* _window)
+void UIManager::InitPanels()
 {
+	new ConsoleWidget(true);
+	new ContentWidget(true);
+	new HierarchyWidget(true);
+	new SceneWidget(true);
+	new InspectorWidget(true);
+	new ProjectSettingsWidget(false);
+	new EditorPreferencesWidget(false);
+	new SpawnActorWidget(true);
+}
+
+void UIManager::Init(GLFWwindow* _window, World* _world)
+{
+	window = _window;
+	world = _world;
 	IMGUI_CHECKVERSION();
 	CreateContext();
 	ImGuiIO& _io = GetIO();
 	_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	_io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	_io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	ImGui_ImplGlfw_InitForOpenGL(_window, true);
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
+	InitPanels();
 }
 
 void UIManager::StartLoop()
@@ -40,4 +67,47 @@ void UIManager::Destroy()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	DestroyContext();
+}
+
+void UIManager::RegisterWidget(const string& _widgetName, Widget* _widget)
+{
+	allWidgets[_widgetName] = _widget;
+}
+
+void UIManager::DrawAll()
+{
+	toolbar.Draw();
+	DockSpaceOverViewport(GetMainViewport()->ID);
+	// TODO a opti?
+	for (const pair<string, Widget*>& _pair : allWidgets)
+	{
+		if (_pair.second->GetIsActiveRef())
+		{
+			Begin(_pair.first.c_str(), &_pair.second->GetIsActiveRef());
+			_pair.second->Draw();
+			End();
+		}
+	}
+
+}
+
+void UIManager::OpenPanel(const string& _widgetName)
+{
+	if (allWidgets.contains(_widgetName))
+		allWidgets[_widgetName]->SetIsActive(true);
+}
+
+void UIManager::ClosePanel(const string& _widgetName)
+{
+	if (allWidgets.contains(_widgetName))
+		allWidgets[_widgetName]->SetIsActive(false);
+}
+
+void UIManager::TogglePanel(const string& _widgetName)
+{
+	if (allWidgets.contains(_widgetName))
+	{
+		if (allWidgets[_widgetName]->GetIsActiveRef()) allWidgets[_widgetName]->SetIsActive(false);
+		else allWidgets[_widgetName]->SetIsActive(true);
+	}
 }

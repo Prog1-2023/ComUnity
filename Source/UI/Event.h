@@ -16,10 +16,10 @@ public:
 
 public:
 	Event() = default;
-	template <typename Callable, typename = enable_if_t<!is_same_v<Action, decay_t<Callable>>>>
-	Action(Callable& _callable)
+	template <typename Callable, typename = enable_if_t<!is_same_v<Event, decay_t<Callable>>>>
+	Event(Callable&& _callable)
 	{
-		Add(forward<Callable>(_callable)));
+		Add(forward<Callable>(_callable));
 	}
 
 public:
@@ -42,7 +42,7 @@ public:
 		const vector<pair<int, function<ReturnType(Args...)>>>::iterator& _iterator = find_if(actions.begin(), _end,
 			[&_action](const pair<int, function<ReturnType(Args...)>>& _otherAction)
 			{
-				return _otherAction.second.target<ReturnType>(Args...) > () == _action.target<ReturnType(Args...)>();
+				return _otherAction.second.target<ReturnType>(Args...)() == _action.target<ReturnType(Args...)>();
 			});
 		if (_iterator != _end)
 			actions.erase(_iterator);
@@ -60,7 +60,7 @@ public:
 		const vector<pair<int, function<ReturnType(Args...)>>>::iterator& _iterator = find_if(actions.begin(), _end,
 			[&_actionToRemove](const pair<int, function<ReturnType(Args...)>>& _otherAction)
 			{
-				return _otherAction.second.target<void(Args...)>() == _action.target<void(Args...)>();
+				return _otherAction.second.target<void(Args...)>() == _actionToRemove.target<void(Args...)>();
 			});
 		if (_iterator != _end)
 			actions.erase(_iterator);
@@ -69,7 +69,7 @@ public:
 	{
 		const unsigned int& _size = Count();
 		constexpr const bool& _isVoid = is_void<ReturnType>::value;
-		for (unsigned int _index = 1; _index < _size; _index++)
+		for (unsigned int _index = 0; _index < _size; _index++)
 		{
 			const pair<int, function<ReturnType(Args...)>>& _pair = actions[_index];
 			if (_isVoid) _pair.second(_args...);
