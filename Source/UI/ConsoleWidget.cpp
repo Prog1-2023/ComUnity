@@ -1,9 +1,11 @@
 #include "ConsoleWidget.h"
 #include <iostream>
+#include "UIText.h"
 
 ConsoleWidget::ConsoleWidget(const bool& _openedByDefault)
     :Widget("Console", _openedByDefault), toggleWarning(true), toggleError(true), toggleLog(true), clear(false)
 {
+    //TODO changer les couleurs 
     elements.push_back({ "Warnings", &toggleWarning, ImVec4(1.0f, 1.0f, 0.0f, 1.0f), ImVec4(0.5f, 0.5f, 0.5f, 1.0f) });
     elements.push_back({ "Errors", &toggleError, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), ImVec4(0.5f, 0.5f, 0.5f, 1.0f) });
     elements.push_back({ "Logs", &toggleLog, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), ImVec4(0.5f, 0.5f, 0.5f, 1.0f) });
@@ -15,9 +17,11 @@ void ConsoleWidget::Draw()
 
     for (size_t i = 0; i < elements.size(); ++i)
     {
+        //TODO à voir pour séparator
         DrawButton(elements[i]);
-        if (i < elements.size() - 1)
-            SameLine();
+        SameLine();
+        if (i >= elements.size() - 1)
+            Separator();
     }
 
     for (const string& _log : logs)
@@ -35,10 +39,17 @@ void ConsoleWidget::Draw()
         logs.clear();
     }
 
+    //TODO à voir
+    /*FontManager& fontManager = FontManager::GetInstance();
+    UIText* uiText = new UIText("bite");
+
+    uiText->Draw();*/
+
     End();
 }
 
 
+//TODO à voir
 void ConsoleWidget::DrawButton(const ButtonConsoleElement& _button)
 {
     PushStyleColor(ImGuiCol_Button, *_button.toggleState ? _button.activeColor : _button.inactiveColor);
@@ -49,6 +60,7 @@ void ConsoleWidget::DrawButton(const ButtonConsoleElement& _button)
     PopStyleColor();
 }
 
+//TODO à voir pcq ça log pas
 void ConsoleWidget::AddLog(const string& _message, LogType _type)
 {
     string _logMessage;
