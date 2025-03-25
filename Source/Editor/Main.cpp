@@ -73,7 +73,7 @@ int main()
 
 #pragma endregion
 
-	Canvas* _canva = new Canvas(_world,"Canva");
+	//Canvas* _canva = new Canvas(_world,"Canva");
 	//UIImage* _image = new UIImage(_world,"Image Test");
 	//_canva->Add(_image);
 
@@ -174,7 +174,7 @@ int main()
 
 #pragma endregion
 
-	delete _canva;
+	//delete _canva;
 	//delete _image;
 
 	Shutdown(_window.GetWindow());
