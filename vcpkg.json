@@ -1,0 +1,9 @@
+{
+  "name": "comunity",
+  "version": "1.0.0",
+  "dependencies": [
+    "fmt",
+    "assimp",
+    "imgui"
+  ]
+}
