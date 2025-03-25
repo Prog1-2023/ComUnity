@@ -3,13 +3,34 @@
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
 
+struct ButtonConsoleElement
+{
+    const char* label;
+    bool* toggleState;
+    ImVec4 activeColor;
+    ImVec4 inactiveColor;
+};
+
 class ConsoleWidget : public Widget
 {
-	
-public:
-	ConsoleWidget(const bool& _openedByDefault);
-	virtual ~ConsoleWidget() = default;
+private:
+    bool toggleWarning;
+    bool toggleError;
+    bool toggleLog;
+    bool clear;
+
+    vector<ButtonConsoleElement> elements;
+    vector<string> logs; 
 
 public:
-	void Draw() override;
+    ConsoleWidget(const bool& _openedByDefault);
+    virtual ~ConsoleWidget() = default;
+
+    void Draw() override;
+
+private:
+    void DrawButton(const ButtonConsoleElement& _button);
+
+public:
+    void AddLog(const string& _message, LogType _type);
 };

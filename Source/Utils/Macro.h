@@ -49,3 +49,22 @@ void AssertDebug(const char* _exprStr, const bool _expr, const char* _msg, const
 void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg);
 
 string GetAbsolutePath();
+
+
+#pragma region Log
+
+enum LogType
+{
+	WARNING,
+	ERROR,
+	LOG,
+};
+
+#define LOG(_msg, _type) \
+	LogMessage(_msg, _type, __FILE__, __LINE__)
+
+void LogMessage(const string& _message, LogType _type, const char* _file, int _line);
+
+#pragma endregion
+
+

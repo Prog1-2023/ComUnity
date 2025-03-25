@@ -15,11 +15,12 @@ class UIText : public UIElement
     ImVec4 color;
 
 public:
-    UIText(FontManager* _fontManager, World* _world, const string& _name = "UIText"); 
-    UIText(FontManager* _fontManager, World* _world, const string& _text, const string& _fontName, const string& _name = "UIText");
-    UIText(FontManager* _fontManager, World* _world, const string& _text, const string& _fontName, float _x, float _y, const string& _name = "UIText");
-    UIText(FontManager* _fontManager, World* _world, const string& _text, const string& _fontName, float _x, float _y, float _scale, const string& _name = "UIText");
-    UIText(FontManager* _fontManager, World* _world, const string& _text, const string& _fontName, float _x, float _y, float _scale, const ImVec4& _color, const string& _name = "UIText");
+    UIText(FontManager* _fontManager); 
+    UIText(FontManager* _fontManager, const string& _text);
+    UIText(FontManager* _fontManager, const string& _text, const string& _fontName);
+    UIText(FontManager* _fontManager, const string& _text, const string& _fontName, float _x, float _y);
+    UIText(FontManager* _fontManager, const string& _text, const string& _fontName, float _x, float _y, float _scale);
+    UIText(FontManager* _fontManager, const string& _text, const string& _fontName, float _x, float _y, float _scale, const ImVec4& _color);
     ~UIText();
 
     void SetText(const string& _text);

@@ -39,11 +39,10 @@ int main()
     _uiManager.Init(_window.GetWindow(), _world);
 
     //Test text
-    FontManager* fontManager = new FontManager();
-    fontManager->LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
+    FontManager& fontManager = FontManager::GetInstance();
+    fontManager.LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
 
-    UIText uiText(fontManager, _world,"Hello World");
-
+    //UIText uiText(fontManager,"Hello World");
 
 
     while (!glfwWindowShouldClose(_window.GetWindow()))
@@ -57,7 +56,7 @@ int main()
         _window.GetController()->PollEvents();
 
         //Test text
-        uiText.Draw();
+        //uiText.Draw();
 
         _uiManager.DrawAll();
 

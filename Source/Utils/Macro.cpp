@@ -76,3 +76,35 @@ string GetAbsolutePath()
     cerr << "The 'ComUnity' folder was not found in the current path." << endl;
     return "";
 }
+
+void LogMessage(const string& _message, LogType _type, const char* _file, int _line)
+{
+	string _logMessage;
+	switch (_type)
+	{
+	case WARNING:
+		_logMessage = "Log Warning: ";
+		break;
+	case ERROR:
+		_logMessage = "Log Error: ";
+		break;
+	case LOG:
+		_logMessage = "Log Temp: ";
+		break;
+	}
+
+	_logMessage += _message + " (" + _file + ":" + to_string(_line) + ")";
+
+	switch (_type)
+	{
+	case WARNING:
+		TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), _logMessage.c_str());
+		break;
+	case ERROR:
+		TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), _logMessage.c_str());
+		break;
+	case LOG:
+		Text(_logMessage.c_str());
+		break;
+	}
+}
