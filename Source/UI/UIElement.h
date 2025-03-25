@@ -2,14 +2,12 @@
 #include "../Utils/CoreMinimal.h"
 #include "../Actors/Actor.h"
 
-class UIElement : public Actor
+class UIElement
 {
-protected:
-	string name;
 
 public:
-	UIElement(World* _world,const string& _name);
-	~UIElement();
+	UIElement() = default;
+	virtual ~UIElement() = default;
 
 public:
 	virtual void Draw() = 0;

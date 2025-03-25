@@ -6,13 +6,13 @@
 
 struct SpawnActorTab
 {
-	map<string, Event<>> actorList;
+	unordered_map<string, Event<>> actorList;
 };
 
 class SpawnActorWidget : public Widget
 {
 
-	map<string, SpawnActorTab> tabList;
+	unordered_map<string, SpawnActorTab> tabList;
 	string currentOpenedTab;
 	
 public:

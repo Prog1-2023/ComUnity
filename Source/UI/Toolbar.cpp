@@ -5,6 +5,7 @@
 Toolbar::Toolbar()
 {
 	allToggleablePanels = vector<string>();
+
 	allToggleablePanels.push_back("Console");
 	allToggleablePanels.push_back("Content");
 	allToggleablePanels.push_back("Hierarchy");
@@ -13,6 +14,8 @@ Toolbar::Toolbar()
 	allToggleablePanels.push_back("Project settings");
 	allToggleablePanels.push_back("Editor Preferences");
 	allToggleablePanels.push_back("Spawn Actors");
+
+	isGameRunning = false;
 }
 
 void Toolbar::Draw()
@@ -28,7 +31,7 @@ void Toolbar::Draw()
 			if (MenuItem("Save all"))
 				cout << "Save all" << endl;
 			if (MenuItem("Close"))
-				cout << "Close" << endl;
+				glfwSetWindowShouldClose(UIManager::GetInstance().GetWindow(), true);
 			EndMenu();
 		}
 
@@ -46,6 +49,21 @@ void Toolbar::Draw()
 				EndMenu();
 			}
 		}
+		Separator();
+		BeginDisabled(isGameRunning);
+		if (Button("Start"))
+		{
+			isGameRunning = true;
+			onGameStatusChanged.Invoke(true);
+		}
+		EndDisabled();
+		BeginDisabled(!isGameRunning);
+		if (Button("Stop"))
+		{
+			isGameRunning = false;
+			onGameStatusChanged.Invoke(false);
+		}
+		EndDisabled();
 		EndMainMenuBar();
 	}
 }

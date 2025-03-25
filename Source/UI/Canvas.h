@@ -2,15 +2,18 @@
 #include "../Utils/CoreMinimal.h"
 #include "UIElement.h"
 
+class UILayout;
+
 class Canvas : public UIElement
 {
 	vector<UIElement*> allElements;
-	class UILayout* layout;
-	bool isDraw;
+	UILayout* layout;
+	bool isVisible;
+	string canvasName;
 
 public:
-	Canvas(World* _world, const string& _name);
-	~Canvas();
+	Canvas(const string& _canvasName);
+	virtual ~Canvas();
 
 public:
 	void Add(UIElement* _element)

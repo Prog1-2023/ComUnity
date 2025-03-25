@@ -36,6 +36,7 @@ void UIManager::InitPanels()
 
 void UIManager::Init(GLFWwindow* _window, World* _world)
 {
+	window = _window;
 	world = _world;
 	IMGUI_CHECKVERSION();
 	CreateContext();
@@ -43,7 +44,7 @@ void UIManager::Init(GLFWwindow* _window, World* _world)
 	_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	_io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	_io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	ImGui_ImplGlfw_InitForOpenGL(_window, true);
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 	InitPanels();
 }
