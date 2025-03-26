@@ -77,34 +77,36 @@ string GetAbsolutePath()
     return "";
 }
 
-void LogMessage(const string& _message, LogType _type, const char* _file, int _line)
+void LogMessage(const string& _message, Log_Severity _type, const char* _file, int _line)
 {
-	string _logMessage;
-	switch (_type)
-	{
-	case WARNING:
-		_logMessage = "Log Warning: ";
-		break;
-	case ERROR:
-		_logMessage = "Log Error: ";
-		break;
-	case LOG:
-		_logMessage = "Log Temp: ";
-		break;
-	}
+	vector<string> _logs;
+    string _typeStr;
+    ImVec4 _color;
 
-	_logMessage += _message + " (" + _file + ":" + to_string(_line) + ")";
+    switch (_type)
+    {
+    case WARNING:
+        _typeStr = "WARNING";
+        _color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+        break;
+    case ERROR:
+        _typeStr = "ERROR";
+        _color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+        break;
+    case LOG:
+        _typeStr = "LOG";
+        _color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+        break;
+    }
 
-	switch (_type)
-	{
-	case WARNING:
-		TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), _logMessage.c_str());
-		break;
-	case ERROR:
-		TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), _logMessage.c_str());
-		break;
-	case LOG:
-		Text(_logMessage.c_str());
-		break;
-	}
+    string fullMessage = "[" + _typeStr + "] (" + _file + ":" + std::to_string(_line) + ") " + _message;
+
+	_logs.push_back(fullMessage);
+
+    cout << fullMessage << endl;
+
+    Begin("Logs");
+    TextColored(_color, "%s", fullMessage.c_str());
+    End();
 }
+

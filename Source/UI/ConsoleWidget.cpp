@@ -3,53 +3,47 @@
 #include "UIText.h"
 
 ConsoleWidget::ConsoleWidget(const bool& _openedByDefault)
-    :Widget("Console", _openedByDefault), toggleWarning(true), toggleError(true), toggleLog(true), clear(false)
+    : Widget("Console", _openedByDefault), toggleWarning(true), toggleError(true), toggleLog(true), clear(false)
 {
-    //TODO changer les couleurs 
     elements.push_back({ "Warnings", &toggleWarning, ImVec4(1.0f, 1.0f, 0.0f, 1.0f), ImVec4(0.5f, 0.5f, 0.5f, 1.0f) });
     elements.push_back({ "Errors", &toggleError, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), ImVec4(0.5f, 0.5f, 0.5f, 1.0f) });
     elements.push_back({ "Logs", &toggleLog, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), ImVec4(0.5f, 0.5f, 0.5f, 1.0f) });
+
+    logs.clear();
 }
 
+ConsoleWidget::~ConsoleWidget() = default;
 void ConsoleWidget::Draw()
 {
     Begin("Console");
 
     for (size_t i = 0; i < elements.size(); ++i)
     {
-        //TODO à voir pour séparator
         DrawButton(elements[i]);
         SameLine();
         if (i >= elements.size() - 1)
             Separator();
     }
 
-    for (const string& _log : logs)
+    for (const Log* _log : logs)
     {
-        if ((_log.find("WARNING:") != string::npos && toggleWarning) ||
-            (_log.find("ERROR:") != string::npos && toggleError) ||
-            (_log.find("LOG:") != string::npos && toggleLog))
+        if ((_log->GetText().find("WARNING:") != string::npos && toggleWarning) ||
+            (_log->GetText().find("ERROR:") != string::npos && toggleError) ||
+            (_log->GetText().find("LOG:") != string::npos && toggleLog))
         {
-            Text("%s", _log.c_str());
+            Text("%s", _log->GetText().c_str());
         }
     }
 
     if (Button("Clear"))
     {
-        logs.clear();
+        ClearLogs();
     }
-
-    //TODO à voir
-    /*FontManager& fontManager = FontManager::GetInstance();
-    UIText* uiText = new UIText("bite");
-
-    uiText->Draw();*/
 
     End();
 }
 
 
-//TODO à voir
 void ConsoleWidget::DrawButton(const ButtonConsoleElement& _button)
 {
     PushStyleColor(ImGuiCol_Button, *_button.toggleState ? _button.activeColor : _button.inactiveColor);
@@ -60,8 +54,7 @@ void ConsoleWidget::DrawButton(const ButtonConsoleElement& _button)
     PopStyleColor();
 }
 
-//TODO à voir pcq ça log pas
-void ConsoleWidget::AddLog(const string& _message, LogType _type)
+void ConsoleWidget::AddLog(const string& _message, Log_Severity _type)
 {
     string _logMessage;
 
@@ -78,7 +71,82 @@ void ConsoleWidget::AddLog(const string& _message, LogType _type)
         break;
     }
 
-    logs.push_back(_logMessage);
+    Log* log = new Log(GetCurrentTime(), _type, _logMessage);
+    logs.push_back(log);
+
+    LOG(_logMessage);           
+    LOG_WARNING(_logMessage);   
+    LOG_ERROR(_logMessage);    
 
     cout << _logMessage << endl;
+}
+
+
+
+void ConsoleWidget::ShowLogs()
+{
+    if (BeginChild("Console", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_HorizontalScrollbar))
+    {
+        for (size_t i = 0; i < logs.size(); ++i)
+        {
+            const Log* log = logs[i]; 
+            if ((log->GetText().find("WARNING:") != string::npos && toggleWarning) ||
+                (log->GetText().find("ERROR:") != string::npos && toggleError) ||
+                (log->GetText().find("LOG:") != string::npos && toggleLog))
+            {
+                Text("%s", log->GetText().c_str());
+            }
+        }
+
+        if (autoScroll && GetScrollY() >= GetScrollMaxY())
+        {
+            SetScrollHereY(1.0f);
+        }
+    }
+
+    EndChild();
+}
+
+vector<LogGroup*> ConsoleWidget::GetLogs()
+{
+    vector<LogGroup*> logGroups;
+
+    for (const Log* log : logs)
+    {
+        string logText = log->GetText(); 
+        string fullText = log->GetFullText(); 
+
+        LogGroup* group = new LogGroup(logText, fullText, log->GetColor()); 
+        logGroups.push_back(group);
+    }
+
+    return logGroups;
+}
+
+
+void ConsoleWidget::ClearLogs()
+{
+    logs.clear();
+}
+
+bool ConsoleWidget::IsFiltered(const Log_Severity& _severity, const string& _text)
+{
+    return IsSeverityFiltered(_severity) || filter.IsActive() && !filter.PassFilter(_text.c_str());
+}
+
+bool ConsoleWidget::IsSeverityFiltered(Log_Severity _severity)
+{
+    switch (_severity)
+    {
+    case LOG:
+        return !showMessages;
+
+    case WARNING:
+        return !showWarnings;
+
+    case ERROR:
+        return !showErrors;
+    }
+
+    return false;
 }

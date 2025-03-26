@@ -10,6 +10,7 @@
 #include "..\UI\Widget.h"
 #include "..\UI\ConsoleWidget.h"
 #include "../UI/UIText.h"
+#include "../UI/ConsoleWidget.h"
 
 void Shutdown(GLFWwindow* _window);
 
@@ -40,7 +41,7 @@ int main()
 
     //Test text
     FontManager& fontManager = FontManager::GetInstance();
-    //fontManager->LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
+    fontManager.LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
 
     /*UIText* uiText = new UIText(fontManager, _world);
     uiText->SetText("Hello World");

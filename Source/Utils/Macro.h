@@ -10,6 +10,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <chrono>  
+#include <ctime>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -25,6 +28,8 @@
 #include "../IMGUI/imgui_impl_glfw.h"
 #include "../IMGUI/imgui_impl_opengl3.h"
 
+enum Log_Severity { LOG, WARNING, ERROR };
+
 using namespace std;
 using namespace filesystem;
 using namespace glm;
@@ -38,10 +43,10 @@ using namespace ImGui;
 #define DEBUG
 
 #ifdef DEBUG
-	#define Assert(Expr, Msg) \
+#define Assert(Expr, Msg) \
 		AssertDebug(#Expr, Expr, Msg, __FILE__, __LINE__)
 #else
-	#define Assert(Expr, Msg) \
+#define Assert(Expr, Msg) \
 		AssertNoDebug(#Expr, Expr, Msg)
 #endif
 
@@ -53,17 +58,12 @@ string GetAbsolutePath();
 
 #pragma region Log
 
-enum LogType
-{
-	WARNING,
-	ERROR,
-	LOG,
-};
+void LogMessage(const string& _message, Log_Severity _type, const char* _file, int _line);
 
-#define LOG(_msg, _type) \
-	LogMessage(_msg, _type, __FILE__, __LINE__)
+		#define LOG(_msg) LogMessage(_msg, LOG, __FILE__, __LINE__)
+		#define LOG_WARNING(_msg) LogMessage(_msg, WARNING, __FILE__, __LINE__)
+		#define LOG_ERROR(_msg) LogMessage(_msg, ERROR, __FILE__, __LINE__)
 
-void LogMessage(const string& _message, LogType _type, const char* _file, int _line);
 
 #pragma endregion
 
