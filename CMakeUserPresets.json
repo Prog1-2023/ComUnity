@@ -5,7 +5,7 @@
             "name": "default",
             "inherits": "vcpkg",
             "environment": {
-                "VCPKG_ROOT": "D:/p2vs/ComUnity/Dependencies/vcpkg"
+                "VCPKG_ROOT": "D:/Moteur/ComUnity/Dependencies/vcpkg"
           }
         }
     ]
