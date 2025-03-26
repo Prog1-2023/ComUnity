@@ -17,14 +17,12 @@ public:
 		x = Type();
 		y = Type();
 		z = Type();
-		w = Type();
 	}
 	Vector4(const Type& _value)
 	{
 		x = _value;
 		y = _value;
 		z = _value;
-		w = _value;
 	}
 	Vector4(const Type& _x, const Type& _y, const Type& _z, const Type& _w)
 	{

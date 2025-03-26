@@ -1,7 +1,10 @@
 #include "Component.h"
-#include "../Actors/Actor.h"
 
-Component::Component(Actor* _actor)
+Component::Component(Actor* _owner)
 {
-	owner = _actor;
+	owner = _owner;
+}
+
+Component::~Component()
+{
 }

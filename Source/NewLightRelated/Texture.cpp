@@ -52,6 +52,12 @@ void Texture::LoadTexture(const char* _path)
 	};
 
 	const GLint& _format = _formats[_channelsCount];
+	if (_format == GL_RGBA)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, _format, _textureWidth, _textureHeight, 0, _format, GL_UNSIGNED_BYTE, _data);
 
@@ -157,10 +163,10 @@ void Texture::LoadTexture(const Vector4f& _value)
 			break;
 		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
 			break;
-		case aiTextureType_ANISOTROPY:
-			break;
-		case aiTextureType_GLTF_METALLIC_ROUGHNESS:
-			break;
+		//case aiTextureType_ANISOTROPY:
+		//	break;
+		//case aiTextureType_GLTF_METALLIC_ROUGHNESS:
+		//	break;
 		case _aiTextureType_Force32Bit:
 			break;
 		default:

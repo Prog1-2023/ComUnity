@@ -1,9 +1,19 @@
 #include "TransformComponent.h"
+#include "../Actors/Actor.h"
 
-TransformComponent::TransformComponent(Actor* _owner) : Component(_owner)
+TransformComponent::TransformComponent(Actor* _owner, const Vector3f& _position, const Vector3f& _rotation, const Vector3f& _scale) : Component(_owner)
 {
-	position = Vector3f(0.0f,0.0f,0.0f);
-	LocalPosition = Vector3f(0.0f,0.0f,0.0f);
-	rotation = Vector3f(0.0f,0.0f,0.0f);
-	scale = Vector3f(0.0f,0.0f,0.0f);
+	position = _position;
+	rotation = _rotation;
+	scale = _scale;
+}
+
+void TransformComponent::Move(const Vector3f& _offset)
+{
+	position += _offset;
+}
+
+void TransformComponent::Rotate(const Vector3f& _offset)
+{
+	rotation += _offset;
 }

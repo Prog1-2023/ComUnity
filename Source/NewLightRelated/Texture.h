@@ -4,7 +4,6 @@
 #include "Managers/TextureManager.h"
 
 #include <string>
-#include "Shader.h"
 
 class Texture
 {

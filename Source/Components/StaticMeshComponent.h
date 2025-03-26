@@ -1,8 +1,7 @@
 #pragma once
+
 #include "../Utils/CoreMinimal.h"
 #include "Component.h"
-#include "../NewLightRelated/Texture.h"
-#include "../NewLightRelated/Material.h"
 
 class Actor;
 
@@ -37,19 +36,19 @@ struct Vertex
 	}
 };
 
-//struct Texture
-//{
-//	GLuint id;
-//	string path;
-//	aiTextureType type;
-//
-//	Texture(const GLuint& _id, const string& _path, const aiTextureType& _type)
-//	{
-//		id = _id;
-//		path = _path;
-//		type = _type;
-//	}
-//};
+struct DeprTexture
+{
+	GLuint id;
+	string path;
+	aiTextureType type;
+
+	DeprTexture(const GLuint& _id, const string& _path, const aiTextureType& _type)
+	{
+		id = _id;
+		path = _path;
+		type = _type;
+	}
+};
 
 class StaticMeshComponent : public Component
 {
@@ -68,7 +67,7 @@ class StaticMeshComponent : public Component
 	int vertexDataSize;
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
-	vector<Texture> textures;
+	vector<DeprTexture> textures;
 
 	GLuint VBO;
 	GLuint VAO;
@@ -82,8 +81,6 @@ class StaticMeshComponent : public Component
 	GLuint viewID;
 	GLuint projectionID;
 
-	Material* material;
-
 	map<string, GLuint> allTextures;
 
 	// TODO get from cameraManager
@@ -93,10 +90,9 @@ public:
 	FORCEINLINE void SetMVP(const mat4& _model, const mat4& _view, const mat4& _projection)
 	{
 		glUseProgram(shaderProgram);
-		material->SetMVP(_model, _view, _projection);
-		/*SetUniformModelMatrix(_model);
+		SetUniformModelMatrix(_model);
 		SetUniformViewMatrix(_view);
-		SetUniformProjectionMatrix(_projection);*/
+		SetUniformProjectionMatrix(_projection);
 	}
 	FORCEINLINE void SetUniformModelMatrix(const mat4& _model)
 	{
@@ -111,7 +107,7 @@ public:
 		glUniformMatrix4fv(projectionID, 1, GL_FALSE, value_ptr(_projection));
 	}
 	FORCEINLINE GLuint GetShaderProgram() { return shaderProgram; }
-
+	
 	FORCEINLINE void SetCameraLocation(const vec3& _cameraLocation) { cameraLocation = _cameraLocation; }
 
 public:
@@ -120,14 +116,14 @@ public:
 
 protected:
 	virtual void BeginPlay();
-	virtual void Tick(const float& _deltaTime) override;
+	virtual void Tick(const float& _deltaTime);
 	virtual void BeginDestroy();
 
 private:
 	void InitShaders();
 	void InitShape();
 	bool Generate2DShape(const vector<float> _outerColor, const vector<float> _innerColor);
-	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
+	vector<DeprTexture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
 	bool Generate3DShape(const vector<float> _color);
 	float RoundFloat(const float& _value);
 	bool IsNearlyEqual(const float& _a, const float& _b, const float& _tolerance = numeric_limits<float>::epsilon());
