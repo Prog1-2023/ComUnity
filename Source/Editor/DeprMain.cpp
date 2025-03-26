@@ -69,6 +69,7 @@ int deprMain()
 		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 	};
+
 	// first, configure the cube's VAO (and VBO)
 	unsigned int _VBO, _cubeVAO;
 	glGenVertexArrays(1, &_cubeVAO);
@@ -95,7 +96,6 @@ int deprMain()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glEnable(GL_DEPTH_TEST);
 
 	//StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
 

@@ -772,10 +772,10 @@ void StaticMeshComponent::UpdateTextures()
 			break;
 		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
 			break;
-		case aiTextureType_ANISOTROPY:
-			break;
-		case aiTextureType_GLTF_METALLIC_ROUGHNESS:
-			break;
+		//case aiTextureType_ANISOTROPY:
+		//	break;
+		//case aiTextureType_GLTF_METALLIC_ROUGHNESS:
+		//	break;
 		case _aiTextureType_Force32Bit:
 			break;
 		default:
