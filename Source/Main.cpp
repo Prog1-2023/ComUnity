@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 // FMT
 #include <fmt/core.h>
@@ -21,7 +22,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Editor/Engine.h"
+// GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
 using namespace Assimp;
@@ -29,19 +32,93 @@ using namespace fmt;
 using namespace reactphysics3d;
 using namespace irrklang;
 
+#pragma region MyRegion
+
+
+struct VarMetaData;
+
+struct ClassMetaData
+{
+	const char* className;
+	vector<VarMetaData> allVarsMetaData;
+
+public:
+	ClassMetaData(const char* _className)
+	{
+		className = _className;
+	}
+
+	void RegisterVarMetaData(const VarMetaData& _varMetaData)
+	{
+		allVarsMetaData.push_back(_varMetaData);
+	}
+};
+
+struct VarMetaData
+{
+
+};
+
+class TestClass;
+
+#define SETUP_VAR(Type, Var) \
+private: \
+    Type Var; \
+public: \
+    void Set##Var(const Type& _value) { Var = _value; } \
+    Type Get##Var() { return Var; } \
+	Type* Get##Var##Type() \
+	{ \
+		const size_t& _hasValue = typeid(Var).hash_code(); \
+		return reinterpret_cast<Type*>(_hasValue); \
+	} \
+	const char* Get##Var##TypeName() { return #Type; }
+
+#define GENERATED_BODY(Class) \
+	SETUP_VAR(Class, MetaData)
+
+#define UPROPERTY(Type, Var) \
+	SETUP_VAR(Type, Var)
+
+using namespace std;
+
+struct Coucou
+{
+
+};
+
+class TestClass
+{
+	//GENERATED_BODY(TestClass)
+
+	UPROPERTY(Coucou, Value)
+
+public:
+	TestClass() {}
+
+	void Test()
+	{
+		//SetMetaData(GetMetaDataTestClass());
+
+		/*SetValue(12);
+		cout << Value << endl;
+		cout << GetValue() << endl;
+		cout << GetValueType() << endl;
+		cout << GetValueTypeName() << endl;
+		cout << typeid(Value).name() << endl;*/
+	}
+};
+
+#pragma endregion
+
 int main()
 {
-	Engine _engine;
-	_engine.Start();
-
-
-	return 0;
-}
-
-
-int debug_main()
-{
 	cout << "ComUnity : l'Engine des Communistes !" << endl;
+
+	TestClass _test = TestClass();
+	_test.Test();
+
+	return EXIT_SUCCESS;
 
 	// FMT
 	print("value : {}!\n", 12);
@@ -64,7 +141,7 @@ int debug_main()
 	// for logging and memory management
 	PhysicsCommon physicsCommon;
 
-	// Create a physics world
+	// Create a physics world 
 	PhysicsWorld* world = physicsCommon.createPhysicsWorld();
 
 	// Create a rigid body in the world
@@ -141,6 +218,16 @@ int debug_main()
 	// Nettoyer et quitter
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	// GLM
+	glm::vec3 positionGLM(1.0f, 2.0f, 3.0f);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::vec4 transformedPosition = model * glm::vec4(positionGLM, 1.0f);
+	std::cout << "Transformed position: ("
+		<< transformedPosition.x << ", "
+		<< transformedPosition.y << ", "
+		<< transformedPosition.z << ")\n";
 
 	return EXIT_SUCCESS;
 }
