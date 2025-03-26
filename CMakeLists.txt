@@ -83,6 +83,10 @@ target_link_libraries(ComUnity PRIVATE assimp::assimp)
 find_package(imgui CONFIG REQUIRED)
 target_link_libraries(ComUnity PRIVATE imgui::imgui)
 
+# GLM
+find_package(glm CONFIG REQUIRED)
+target_link_libraries(ComUnity PRIVATE glm::glm)
+
 # Includes
 set(INCLUDES 
 
