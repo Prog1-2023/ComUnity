@@ -21,6 +21,7 @@
 // OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Main.h"
 
 // GLM
 #include <glm/glm.hpp>
@@ -100,7 +101,7 @@ int InitMain()
 	// for logging and memory management
 	PhysicsCommon physicsCommon;
 
-	// Create a physics world 
+	// Create a physics world
 	PhysicsWorld* world = physicsCommon.createPhysicsWorld();
 
 	// Create a rigid body in the world
