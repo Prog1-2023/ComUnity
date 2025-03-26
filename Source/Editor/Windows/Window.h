@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../Utils/CoreMinimal.h"
 #include "../Controller.h"
 
@@ -11,14 +10,22 @@ class Window
 	Controller* controller;
 
 public:
-	FORCEINLINE Vector2i GetSize() const { return size; }
-	FORCEINLINE GLFWwindow* GetWindow() const { return window; }
-	FORCEINLINE Controller* GetController() const { return controller; }
-
+	FORCEINLINE GLFWwindow* GetWindow() const
+	{
+		return window;
+	}
+	FORCEINLINE Controller* GetController() const
+	{
+		return controller;
+	}
+	FORCEINLINE Vector2i GetSize() const
+	{
+		return size;
+	}
 public:
 	Window(const string& _name = "Unknown");
-	Window(const string& _name, const int& _width, const int& _height);
-	Window(const string& _name, const Vector2i& _windowSize);
+	Window(const string& _name, const int _width, const int _height);
+	Window(const string& _name,const Vector2i& _windowSize);
 	~Window();
 
 private:

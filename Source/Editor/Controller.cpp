@@ -1,17 +1,19 @@
 #include "Controller.h"
-
-vector<Input> allInputs = vector<Input>();
+#include "map"
+//InputController currentInput;
+vector<Input> currentInput;
+map<int,Input> allInputs;
 
 Controller::Controller(GLFWwindow* _window)
 {
-	// TODO move into Camera class
-	//viewRadius = 50.0f;
+	//TODO move into Camera class
 	viewRadius = 5.0f;
 	theta = 0.0f;
 	phi = 0.0f;
 	speed = 0.05f;
 	zoomSpeed = 0.1f;
 
+	//Window
 	window = _window;
 	glfwSetKeyCallback(window, InputCallback);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
@@ -19,49 +21,131 @@ Controller::Controller(GLFWwindow* _window)
 
 void Controller::ProcessInputs()
 {
-	int _offset = 0;
-	FOR_OFFSET(allInputs, _offset)
+	vector<int> _tempToDestroy;
+
+	for (const pair<int, Input>& _pair : allInputs)
 	{
-		const Input& _currentInput = allInputs[_index];
+		Input _input = _pair.second;
 
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_ESCAPE }))
-			glfwSetWindowShouldClose(window, true);
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_UP, GLFW_KEY_W }))
-			phi += speed;
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_DOWN, GLFW_KEY_S }))
-			phi -= speed;
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_LEFT, GLFW_KEY_A }))
-			theta += speed;
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_RIGHT, GLFW_KEY_D }))
-			theta -= speed;
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_E }))
-			viewRadius += zoomSpeed;
-		if (IsValidKey(_currentInput.scancode, { GLFW_KEY_Q }))
-			viewRadius -= zoomSpeed;
+		//if (_input.action != GLFW_PRESS && _input.action != GLFW_REPEAT) return;
 
-		if (_currentInput.action == GLFW_RELEASE)
+		if (IsValidKey(_input.scancode, { GLFW_KEY_ESCAPE }))
 		{
-			allInputs.erase(allInputs.begin() + _index);
-			_index--;
-			_offset++;
+			glfwSetWindowShouldClose(window, true);
 		}
+
+		if (IsValidKey(_input.scancode, { GLFW_KEY_UP, GLFW_KEY_W }))
+		{
+			cout << "HAUT" << endl;
+			phi += speed;
+		}
+
+		if (IsValidKey(_input.scancode, { GLFW_KEY_DOWN, GLFW_KEY_S }))
+		{
+			cout << "DOWN" << endl;
+			phi -= speed;
+		}
+
+		if (IsValidKey(_input.scancode, { GLFW_KEY_LEFT, GLFW_KEY_A }))
+		{
+			cout << "LEFT" << endl;
+			theta -= speed;
+		}
+
+		if (IsValidKey(_input.scancode, { GLFW_KEY_RIGHT, GLFW_KEY_D }))
+		{
+			cout << "RIGHT" << endl;
+			theta += speed;
+		}
+
+		if (IsValidKey(_input.scancode, { GLFW_KEY_Q }))
+		{
+			cout << "ZOOM" << endl;
+			viewRadius += zoomSpeed;
+		}
+
+		if (IsValidKey(_input.scancode, { GLFW_KEY_E }))
+		{
+			cout << "DE-ZOOM" << endl;
+			viewRadius -= zoomSpeed;
+		}
+
+		if (_input.action == GLFW_RELEASE)
+			_tempToDestroy.push_back(_pair.first);
 	}
+	int _size = _tempToDestroy.size();
+	for (int i = 0; i < _size; i++)
+	{
+		allInputs.erase(_tempToDestroy[i]);
+	}
+
+	/*for (int i = 0; i < currentInput.size(); i++)
+	{
+		if (currentInput[i].action != GLFW_PRESS && currentInput[i].action != GLFW_REPEAT) return;
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_ESCAPE }))
+		{
+			glfwSetWindowShouldClose(window, true);
+		}
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_UP, GLFW_KEY_W }))
+		{
+			cout << "HAUT" << endl;
+			phi += speed;
+		}
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_DOWN, GLFW_KEY_S }))
+		{
+			cout << "DOWN" << endl;
+			phi -= speed;
+		}
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_LEFT, GLFW_KEY_A }))
+		{
+			cout << "LEFT" << endl;
+			theta -= speed;
+		}
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_RIGHT, GLFW_KEY_D }))
+		{
+			cout << "RIGHT" << endl;
+			theta += speed;
+		}
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_Q }))
+		{
+			cout << "ZOOM" << endl;
+			viewRadius += zoomSpeed;
+		}
+
+		if (IsValidKey(currentInput[i].scancode, { GLFW_KEY_E }))
+		{
+			cout << "DE-ZOOM" << endl;
+			viewRadius -= zoomSpeed;
+		}
+
+	}*/
 }
 
 void InputCallback(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
 {
-	if (_action != GLFW_PRESS && _action != GLFW_RELEASE)
-		return;
-
-	FOR(allInputs)
+	//currentInput = InputController(_window, _key, _scancode, _action, _mods);
+	/*InputController _controller = InputController(_window, _key, _scancode, _action, _mods);
+	if (_action == GLFW_PRESS)
+		currentInput.push_back(_controller);
+	else
 	{
-		Input& _currentInput = allInputs[_index];
-
-		if (_currentInput.scancode == _scancode)
+		for (int i = 0; i < currentInput.size(); i++)
 		{
-			_currentInput.action = _action;
-			return;
+			if (currentInput[i].scancode == _controller.scancode)
+			{
+				currentInput.erase(currentInput.begin() + i);
+				break;
+			}
+
 		}
-	}
-	allInputs.push_back(Input(_window, _key, _scancode, _action, _mods));
+	}*/
+	
+	allInputs[_scancode] = (Input(_window, _key, _scancode, _action, _mods));
+	
 }
