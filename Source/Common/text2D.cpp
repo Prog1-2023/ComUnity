@@ -1,5 +1,6 @@
 #include "text2D.hpp"
 
+
 unsigned int Text2DTextureID;
 unsigned int Text2DVertexBufferID;
 unsigned int Text2DUVBufferID;

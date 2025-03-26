@@ -81,13 +81,14 @@ void Actor::ComputeMesh(const aiScene* _scene, const aiNode* _node)
 }
 */
 #include "Actor.h"
-//#include "ActorManager.h"
+#include "../Manager/ActorManager.h"
+#include"../Manager/Level.h"
 //#include "TimerManager.h"
-//#include "Level.h"
 
-Actor::Actor(Level* _level, const string& _name, const Transform& _transform)
+
+Actor::Actor(Level* _world, const string& _name, const Transform& _transform):Core(_world)
 {
-	level = _level; // Setup level in first
+	
 
 	isToDelete = false;
 	id = 0;
@@ -102,7 +103,7 @@ Actor::Actor(Level* _level, const string& _name, const Transform& _transform)
 	children = set<Actor*>();
 }
 
-Actor::Actor(const Actor& _other)
+Actor::Actor(const Actor& _other):Core(_other.world)
 {
 	isToDelete = _other.isToDelete;
 	id = _other.id;
@@ -112,7 +113,7 @@ Actor::Actor(const Actor& _other)
 	
 	for (Component* _component : _other.components)
 	{
-		AddComponent(_component->Clone(this));
+		//AddComponent(_component->Clone(this));
 	}
 
 	root = GetComponent<TransformComponent>();
@@ -122,7 +123,7 @@ Actor::Actor(const Actor& _other)
 	{
 		children.insert(new Actor(*_child));
 	}
-	level = _other.level;
+	
 }
 
 Actor::~Actor()
@@ -136,14 +137,13 @@ Actor::~Actor()
 
 void Actor::Construct()
 {
-	if (!level)
-	{
-		LOG(Fatal, "Tried to construct an actor (\"" + name + "\") with no level associated !");
-		return;
-	}
+	
+	Assert(world, "ERROR Construct => Level of Actor is nullptr");
 
-	id = GetUniqueID();
-	//displayName = level->GetActorManager().GetAvailableName(name);
+		
+
+	//id = GetUniqueID();
+	displayName = world->GetActorManager().GetAvailableName(name);
 	SetActive(true);
 
 	for (Component* _component : components)
@@ -195,12 +195,12 @@ void Actor::BeginDestroy()
 
 void Actor::Register()
 {
-	//level->GetActorManager().AddActor(this);
+	world->GetActorManager().AddActor(this);
 }
 
 void Actor::Unregister()
 {
-	//level->GetActorManager().RemoveActor(this);
+	world->GetActorManager().RemoveActor(this);
 }
 
 void Actor::SetName(const string& _name)
@@ -208,13 +208,13 @@ void Actor::SetName(const string& _name)
 	if (name == _name) return;
 
 	name = _name;
-	//displayName = level->GetActorManager().GetDisplayName(this);
+	displayName = world->GetActorManager().GetDisplayName(this);
 }
 
 void Actor::CreateSocket(const string& _name, const Transform& _transform, const AttachmentType& _type)
 {
-	//Actor* _socket = level->SpawnActor<Actor>(_name, _transform);
-	//AddChild(_socket, _type);
+	Actor* _socket = world->SpawnActor<Actor>(_name, _transform);
+	AddChild(_socket, _type);
 }
 
 void Actor::Destroy()

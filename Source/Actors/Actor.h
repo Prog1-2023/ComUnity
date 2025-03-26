@@ -74,6 +74,8 @@ public:
 #include"../Utils/CoreMinimal.h"
 #include "Core.h"
 #include "../Components/TransformComponent.h"
+#include"../Components/ITransformableModifier.h"
+#include"../Components/ITransformableViewer.h"
 
 //#include "TransformableModifier.h"
 //#include "TransformableViewer.h"
@@ -81,7 +83,7 @@ public:
 //#include "RootComponent.h"
 //#include "Layer.h"
 
-class Level;
+
 struct CollisionData;
 
 enum AttachmentType
@@ -105,12 +107,12 @@ enum LayerType
 
 //using namespace Layer;
 
-class Actor : public Core
+class Actor : public Core, public ITransformableModifier, public ITransformableViewer
 {
 	bool isToDelete;
 	u_int id;
 protected:
-	//int zOrder;
+	
 	float lifeSpan;
 	LayerType layer;
 private:
@@ -124,7 +126,7 @@ private:
 	Transform oldTransform;
 
 protected:
-	Level* level;
+	
 
 public:
 #pragma region Delete
@@ -166,7 +168,7 @@ public:
 
 #pragma region Level
 
-	template<typename Type = Level, IS_BASE_OF(Level, Type)>
+	/*template<typename Type = Level, IS_BASE_OF(Level, Type)>
 	FORCEINLINE Type* GetLevel()
 	{
 		if (InstanceOf<Type>(level))
@@ -175,15 +177,8 @@ public:
 		}
 
 		return Cast<Type>(level);
-	}
-	/*FORCEINLINE virtual int GetZOrder() const
-	{
-		return zOrder;
-	}
-	FORCEINLINE virtual void SetZOrder(const int _zOrder)
-	{
-		zOrder = _zOrder;
 	}*/
+	
 
 #pragma endregion
 
@@ -194,76 +189,62 @@ private:
 	{
 		parent = _parent;
 	}
-	/*FORCEINLINE void UpdateChildTransform(Actor* _child)
+	FORCEINLINE void UpdateChildTransform(Actor* _child)
 	{
 		UpdateChildPosition(_child);
 		UpdateChildRotation(_child);
 		UpdateChildScale(_child);
-		UpdateChildOrigin(_child);
-	}*/
-	//FORCEINLINE void UpdateChildPosition(Actor* _child)
-	//{
-	//	const vector<function<Vector2f()>>& _computePosition =
-	//	{
-	//		// Keep the child’s relative position to the parent.
-	//		[&]() { return _child->GetPosition() + GetPosition() - oldTransform.position; },
-	//		// Keep the child’s world position.
-	//		[&]() { return _child->GetPosition(); },
-	//		// Snap the child to the parent's position.
-	//		[&]() { return GetPosition(); },
-	//	};
+		
+	}
+	FORCEINLINE void UpdateChildPosition(Actor* _child)
+	{
+		const vector<function<Vector3f()>>& _computePosition =
+		{
+			// Keep the child’s relative position to the parent.
+			[&]() { return _child->GetPosition() + GetPosition() - oldTransform.location; },
+			// Keep the child’s world position.
+			[&]() { return _child->GetPosition(); },
+			// Snap the child to the parent's position.
+			[&]() { return GetPosition(); },
+		};
 
-	//	const AttachmentType& _type = _child->GetAttachmentType();
-	//	_child->SetPosition(_computePosition[_type]());
-	//}
-	//FORCEINLINE void UpdateChildRotation(Actor* _child)
-	//{
-	//	const vector<function<Angle()>>& _computeRotation =
-	//	{
-	//		// Keep the child’s relative rotation to the parent.
-	//		[&]() { return _child->GetRotation() + GetRotation() - oldTransform.rotation; },
-	//		// Keep the child’s world rotation.
-	//		[&]() { return _child->GetRotation(); },
-	//		// Snap the child to the parent's rotation.
-	//		[&]() { return GetRotation(); },
-	//	};
+		const AttachmentType& _type = _child->GetAttachmentType();
+		_child->SetPosition(_computePosition[_type]());
+	}
+	FORCEINLINE void UpdateChildRotation(Actor* _child)
+	{
+		const vector<function<Vector3f()>>& _computeRotation =
+		{
+			// Keep the child’s relative rotation to the parent.
+			[&]() { return _child->GetRotation() + GetRotation() - oldTransform.location; },
+			// Keep the child’s world rotation.
+			[&]() { return _child->GetRotation(); },
+			// Snap the child to the parent's rotation.
+			[&]() { return GetRotation(); },
+		};
 
-	//	const AttachmentType& _type = _child->GetAttachmentType();
-	//	_child->SetRotation(_computeRotation[_type]());
-	//}
-	//FORCEINLINE void UpdateChildScale(Actor* _child)
-	//{
-	//	const vector<function<Vector2f()>>& _computeScale =
-	//	{
-	//		// Keep the child’s relative scale to the parent.
-	//		[&]()
-	//		{
-	//			return Vector2f(_child->GetScale().x * GetScale().x, _child->GetScale().y * GetScale().y);
-	//		},
-	//		// Keep the child’s world scale.
-	//		[&]() { return _child->GetScale(); },
-	//		// Snap the child to the parent's scale.
-	//		[&]() { return GetScale(); },
-	//	};
+		const AttachmentType& _type = _child->GetAttachmentType();
+		_child->SetRotation(_computeRotation[_type]());
+	}
+	FORCEINLINE void UpdateChildScale(Actor* _child)
+	{
+		const vector<function<Vector3f()>>& _computeScale =
+		{
+			// Keep the child’s relative scale to the parent.
+			[&]()
+			{
+				return Vector3f(_child->GetScale().x * GetScale().x, _child->GetScale().y * GetScale().y, _child->GetScale().z * GetScale().z);
+			},
+			// Keep the child’s world scale.
+			[&]() { return _child->GetScale(); },
+			// Snap the child to the parent's scale.
+			[&]() { return GetScale(); },
+		};
 
-	//	const AttachmentType& _type = _child->GetAttachmentType();
-	//	_child->SetScale(_computeScale[_type]());
-	//}
-	//FORCEINLINE void UpdateChildOrigin(Actor* _child)
-	//{
-	//	const vector<function<Vector2f()>>& _computePosition =
-	//	{
-	//		// Keep the child’s relative position to the parent.
-	//		[&]() { return _child->GetOrigin() + GetOrigin() - oldTransform.origin; },
-	//		// Keep the child’s world position.
-	//		[&]() { return _child->GetOrigin(); },
-	//		// Snap the child to the parent's position.
-	//		[&]() { return GetOrigin(); },
-	//	};
-
-	//	const AttachmentType& _type = _child->GetAttachmentType();
-	//	_child->SetOrigin(_computePosition[_type]());
-	//}
+		const AttachmentType& _type = _child->GetAttachmentType();
+		_child->SetScale(_computeScale[_type]());
+	}
+	
 
 public:
 	FORCEINLINE void AddChild(Actor* _child, const AttachmentType& _type)
@@ -305,136 +286,138 @@ public:
 
 #pragma endregion
 
-//#pragma region Transformable
-//
-//#pragma region Viewer
-//
-//	FORCEINLINE virtual Vector2f GetOrigin() const override
-//	{
-//		return root->GetOrigin();
-//	}
-//	FORCEINLINE virtual Vector2f GetPosition() const override
-//	{
-//		return root->GetPosition();
-//	}
-//	FORCEINLINE virtual Angle GetRotation() const override
-//	{
-//		return root->GetRotation();
-//	}
-//	FORCEINLINE virtual Vector2f GetScale() const override
-//	{
-//		return root->GetScale();
-//	}
-//	FORCEINLINE virtual TransformData GetTransform() const override
-//	{
-//		return root->GetTransform();
-//	}
-//	FORCEINLINE Vector2f GetForwardVector() const
-//	{
-//		const Angle& _angle = GetRotation();
-//		const float _radians = _angle.asRadians();
-//		return Vector2f(cos(_radians), sin(_radians));
-//	}
-//	FORCEINLINE Vector2f GetDownVector() const
-//	{
-//		const Angle& _angle = GetRotation();
-//		const float _radians = _angle.asRadians();
-//		return Vector2f(sin(_radians), -cos(_radians));
-//	}
-//	FORCEINLINE Vector2f GetRightVector() const
-//	{
-//		const Angle& _angle = GetRotation();
-//		const float _radians = _angle.asRadians();
-//		return Vector2f(cos(_radians), -sin(_radians));
-//	}
-//	FORCEINLINE Vector2f GetLeftVector() const
-//	{
-//		const Angle& _angle = GetRotation();
-//		const float _radians = _angle.asRadians();
-//		return Vector2f(-cos(_radians), sin(_radians));
-//	}
-//	FORCEINLINE Vector2f GetBackVector() const
-//	{
-//		const Angle& _angle = GetRotation();
-//		const float _radians = _angle.asRadians();
-//		return Vector2f(-cos(_radians), -sin(_radians));
-//	}
-//
-//#pragma endregion
-//
-//#pragma region Modifier
-//
-//	FORCEINLINE virtual void SetPosition(const Vector2f& _position) override
-//	{
-//		oldTransform.position = GetPosition();
-//		root->SetPosition(_position);
-//
-//		for (Actor* _child : children)
-//		{
-//			UpdateChildPosition(_child);
-//		}
-//	}
-//	FORCEINLINE virtual void SetRotation(const Angle& _rotation) override
-//	{
-//		oldTransform.rotation = GetRotation();
-//		root->SetRotation(_rotation);
-//
-//		for (Actor* _child : children)
-//		{
-//			UpdateChildRotation(_child);
-//		}
-//	}
-//	FORCEINLINE virtual void SetScale(const Vector2f& _scale) override
-//	{
-//		oldTransform.scale = GetScale();
-//		root->SetScale(_scale);
-//
-//		for (Actor* _child : children)
-//		{
-//			UpdateChildScale(_child);
-//		}
-//	}
-//	FORCEINLINE virtual void SetOrigin(const Vector2f& _origin) override
-//	{
-//		oldTransform.origin = GetOrigin();
-//		root->SetOrigin(_origin);
-//
-//		for (Actor* _child : children)
-//		{
-//			UpdateChildOrigin(_child);
-//		}
-//	}
-//	FORCEINLINE virtual void Move(const Vector2f& _offset) override
-//	{
-//		root->Move(_offset);
-//
-//		for (Actor* _child : children)
-//		{
-//			_child->Move(_offset);
-//		}
-//	}
-//	FORCEINLINE virtual void Rotate(const Angle& _angle) override
-//	{
-//		root->Rotate(_angle);
-//
-//		for (Actor* _child : children)
-//		{
-//			_child->Rotate(_angle);
-//		}
-//	}
-//	FORCEINLINE virtual void Scale(const Vector2f& _factor) override
-//	{
-//		root->Scale(_factor);
-//
-//		for (Actor* _child : children)
-//		{
-//			_child->Scale(_factor);
-//		}
-//	}
-//
-//#pragma endregion
-//
-//#pragma endregion
+#pragma region Transformable
+
+#pragma region Viewer
+
+	
+	FORCEINLINE virtual Vector3f GetPosition() const override
+	{
+		return root->GetLocation();
+	}
+	FORCEINLINE virtual Vector3f GetRotation() const override
+	{
+		return root->GetRotation();
+	}
+	FORCEINLINE virtual Vector3f GetScale() const override
+	{
+		return root->GetScale();
+	}
+	FORCEINLINE virtual Transform GetTransform() const override
+	{
+		return root->GetTransform();
+	}
+	FORCEINLINE Vector3f GetForwardVector() const
+	{
+		/** Yaw (degrees) around Z axis */
+		Vector3f _rotation = GetRotation();
+		float _yaw = _rotation.z;
+		float _pitch = _rotation.y;
+
+		float _cosYaw = cos(Angle(_yaw, false).GetRadiant());
+		float _cosPitch = cos(Angle(_pitch, false).GetRadiant());
+		
+		float _sinYaw = sin(Angle(_yaw, false).GetRadiant());
+		float _sinPitch = sin(Angle(_pitch, false).GetRadiant());
+		//Todo Normalize
+
+		return Vector3f(_cosPitch * _cosYaw, _sinPitch, _cosPitch * _sinYaw);
+	}
+	FORCEINLINE Vector3f GetUpVector() const
+	{
+		Vector3f _rotation = GetRotation();
+		float _yaw = _rotation.z;
+		float _pitch = _rotation.y;
+
+		float _cosYaw = cos(Angle(_yaw, false).GetRadiant());
+		float _cosPitch = cos(Angle(_pitch, false).GetRadiant());
+
+		float _sinYaw = sin(Angle(_yaw, false).GetRadiant());
+		float _sinPitch = sin(Angle(_pitch, false).GetRadiant());
+		return Vector3f(_sinPitch * _sinYaw, -_cosPitch, _cosPitch * _cosYaw);
+	}
+	FORCEINLINE Vector3f GetRightVector() const
+	{
+		Vector3f _rotation = GetRotation();
+		float _yaw = _rotation.z;
+		float _pitch = _rotation.y;
+
+		float _cosYaw = cos(Angle(_yaw, false).GetRadiant());
+		float _cosPitch = cos(Angle(_pitch, false).GetRadiant());
+
+		float _sinYaw = sin(Angle(_yaw, false).GetRadiant());
+		float _sinPitch = sin(Angle(_pitch, false).GetRadiant());
+		return Vector3f(_sinYaw*_cosPitch,0,-_cosYaw*_cosPitch);
+	}
+	
+	
+
+#pragma endregion
+
+#pragma region Modifier
+
+	FORCEINLINE virtual void SetPosition(const Vector3f& _position) override
+	{
+		oldTransform.location = GetPosition();
+		root->SetLocation(_position);
+
+		for (Actor* _child : children)
+		{
+			UpdateChildPosition(_child);
+		}
+	}
+	FORCEINLINE virtual void SetRotation(const Vector3f& _rotation) override
+	{
+		oldTransform.rotation = GetRotation();
+		root->SetRotation(_rotation);
+
+		for (Actor* _child : children)
+		{
+			UpdateChildRotation(_child);
+		}
+	}
+	FORCEINLINE virtual void SetScale(const Vector3f& _scale) override
+	{
+		oldTransform.scale = GetScale();
+		root->SetScale(_scale);
+
+		for (Actor* _child : children)
+		{
+			UpdateChildScale(_child);
+		}
+	}
+	
+	FORCEINLINE virtual void Move(const Vector3f& _offset) override
+	{
+		root->Move(_offset);
+
+		for (Actor* _child : children)
+		{
+			_child->Move(_offset);
+		}
+	}
+	FORCEINLINE virtual void Rotate(const Vector3f& _offset) override
+	{
+		root->Rotate(_offset);
+
+		for (Actor* _child : children)
+		{
+			_child->Rotate(_offset);
+		}
+	}
+	FORCEINLINE virtual void Scale(const Vector3f& _factor) override
+	{
+		root->Scale(_factor);
+
+		for (Actor* _child : children)
+		{
+			_child->Scale(_factor);
+		}
+	}
+
+#pragma endregion
+
+#pragma endregion
 
 #pragma region Component
 protected:
@@ -459,7 +442,7 @@ public:
 #pragma endregion
 
 public:
-	Actor(Level* _level, const string& _name = "Actor", const Transform& _transform = Transform());
+	Actor(Level* _world, const string& _name = "Actor", const Transform& _transform = Transform());
 	Actor(const Actor& _other);
 	virtual ~Actor();
 
@@ -480,6 +463,7 @@ public:
 
 	void AddComponent(Component* _component);
 	void RemoveComponent(Component* _component);
+
 	template <typename Type, IS_BASE_OF(Component, Type)>
 	Type* GetComponent()
 	{

@@ -1,11 +1,9 @@
 #include "Shader.h"
 #include <fstream>
-#include <iostream>
 #include <sstream>
-#include <string>
 #include <vector>
 
-using namespace std;
+
 
 TShader::TShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath)
 {
@@ -114,9 +112,9 @@ void TShader::Use() const
 {
     glUseProgram(id);
 }
-
 GLuint TShader::LoadShaders(const char * vertex_file_path,const char * fragment_file_path)
 {
+
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -207,28 +205,23 @@ GLuint TShader::LoadShaders(const char * vertex_file_path,const char * fragment_
 
     return ProgramID;
 }
-string TShader::ReadShader(const string& _path)
+ string TShader::ReadShader(const string& _path)
 {
-    string _vertexShader = string();
-    ifstream _vertexShaderStream(_path, ios::in);
+  
 
-    try
-    {
-        if (!_vertexShaderStream.is_open())
-        {
-            throw exception(("Impossible to open" + _path + ". Are you in the right directory ? Don't forget to read the FAQ !").c_str());
-        }
-
-        stringstream _sstr;
-        _sstr << _vertexShaderStream.rdbuf();
-        _vertexShader = _sstr.str();
-        _vertexShaderStream.close();
+    // Read the Vertex Shader code from the file
+    string _vertexShader;
+    ifstream VertexShaderStream(_path, ios::in);
+    if (VertexShaderStream.is_open()) {
+        stringstream sstr;
+        sstr << VertexShaderStream.rdbuf();
+        _vertexShader = sstr.str();
+        VertexShaderStream.close();
     }
-    catch (const std::exception& _error)
-    {
-        cerr << _error.what() << endl;
+    else {
+        cerr<<"Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n" << _path;
+        return string();
     }
-    
     return _vertexShader;
 }
 unsigned TShader::ID() const
@@ -274,7 +267,7 @@ void TShader::SetFloat(const std::string& name, float value) const
     glUniform1f(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void TShader::SetVec2(const std::string& name, const glm::vec2& value) const
+void TShader::SetVec2(const std::string& name, const Vector2f& value) const
 {
     glUniform2fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
 }
@@ -283,7 +276,7 @@ void TShader::SetVec2(const std::string& name, float x, float y) const
     glUniform2f(glGetUniformLocation(id, name.c_str()), x, y);
 }
 
-void TShader::SetVec3(const std::string& name, const glm::vec3& value) const
+void TShader::SetVec3(const std::string& name, const Vector3f& value) const
 {
     glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
 }
@@ -292,7 +285,7 @@ void TShader::SetVec3(const std::string& name, float x, float y, float z) const
     glUniform3f(glGetUniformLocation(id, name.c_str()), x, y, z);
 }
 
-void TShader::SetVec4(const std::string& name, const glm::vec4& value) const
+void TShader::SetVec4(const std::string& name, const Vector4f& value) const
 {
     glUniform4fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
 }
@@ -301,15 +294,15 @@ void TShader::SetVec4(const std::string& name, float x, float y, float z, float 
     glUniform4f(glGetUniformLocation(id, name.c_str()), x, y, z, w);
 }
 
-void TShader::SetMat2(const std::string& name, const glm::mat2& mat) const
+void TShader::SetMat2(const std::string& name, const Matrix2x2f& mat) const
 {
     glUniformMatrix2fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
-void TShader::SetMat3(const std::string& name, const glm::mat3& mat) const
+void TShader::SetMat3(const std::string& name, const Matrix3x3f& mat) const
 {
     glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
-void TShader::SetMat4(const std::string& name, const glm::mat4& mat) const
+void TShader::SetMat4(const std::string& name, const Matrix4x4f& mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }

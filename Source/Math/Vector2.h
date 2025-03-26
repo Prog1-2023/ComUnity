@@ -185,6 +185,15 @@ public:
 		return x == _otherVector.x && y == _otherVector.y;
 	}
 
+
+	Type& operator[] (int index) {
+		return (&x)[index];
+	}
+	const Type& operator[] (int index) const {
+		return (&x)[index];
+	}
+
+
 #pragma endregion
 
 public:

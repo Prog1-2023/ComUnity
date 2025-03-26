@@ -23,13 +23,14 @@
 *                                                                               *
 ********************************************************************************/
 
-#ifndef REACTPHYSICS3D_MATRIX2X2_H
-#define REACTPHYSICS3D_MATRIX2X2_H
+#ifndef MATRIX2X2_H
+#define MATRIX2X2_H
 
 // Libraries
 #include <cassert>
 //#include <reactphysics3d/mathematics/Vector2.h>
 #include "../Utils/CoreMinimal.h"
+#include "Vector2.h"
 
 
 template <typename Type>

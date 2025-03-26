@@ -1,9 +1,11 @@
 #pragma once
 #include"../Utils/CoreMinimal.h"
-#include"../Editor/Window.h"
+#include"../Editor/Windows/Window.h"
 #include"../Actors/Actor.h"
 
 #include "../Manager/ActorManager.h"
+#include "../Utils/SubclassOf.h"
+
 //#include "CameraManager.h"
 //#include "CollisionManager.h"
 //#include "AudioManager.h"
@@ -23,26 +25,11 @@ class Level
 	AudioManager audioManager;*/
 
 protected:
-	Window window;
+	
 	//GameMode* gameMode;
 
 public:
-#pragma region Window
 
-	FORCEINLINE bool IsActive() const
-	{
-		return window.GetWindow();
-	}
-	FORCEINLINE Window& GetWindow()
-	{
-		return window;
-	}
-	FORCEINLINE Vector2i GetWindowSize() 
-	{
-		return window.GetSize();
-	}
-
-#pragma endregion
 
 	FORCEINLINE string GetName() const
 	{
@@ -114,15 +101,15 @@ public:
 		return _actor;
 	}
 
-	template <typename Type, IS_BASE_OF(Actor, Type)>
-	FORCEINLINE Type* SpawnActor(const SubclassOf<Type>& _actorRef)
-	{
-		Type* _actor = Spawn<Type>(_actorRef);
-		_actor->Construct();
-		_actor->Register();
+	//template <typename Type, IS_BASE_OF(Actor, Type)>
+	//FORCEINLINE Type* SpawnActor(const SubclassOf<Type>& _actorRef)
+	//{
+	//	Type* _actor = Spawn<Type>(_actorRef);
+	//	_actor->Construct();
+	//	_actor->Register();
 
-		return _actor;
-	}
+	//	return _actor;
+	//}
 
 #pragma endregion
 
@@ -161,7 +148,7 @@ public:
 	Level(const string& _name);
 
 private:
-	void UpdateWindow();
+	
 
 protected:
 	virtual void InitLevel();

@@ -1,5 +1,7 @@
 #include "texture.hpp"
-#include <string>
+#include <stdio.h>
+#include <string.h>
+#include <corecrt_malloc.h>
 
 GLuint loadBMP_custom(const char * imagepath){
 

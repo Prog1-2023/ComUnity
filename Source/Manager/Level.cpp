@@ -19,23 +19,13 @@ Level::Level(const string& _name)
 	/*window.create(VideoMode({ 1200, 600 }), _name);
 	window.setVisible(false);*/
 	
-	window =  Window(_name);
+	
 
 	//M_LEVEL.RegisterLevel(_name, this);
 }
 
 
-void Level::UpdateWindow()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glfwSwapBuffers(window.GetWindow());
 
-	
-	/*window.clear();
-	cameraManager.Render(window, GetGameMode()->IsSplitScreen());
-	window.display();*/
-
-}
 
 void Level::InitLevel()
 {
@@ -45,13 +35,10 @@ void Level::InitLevel()
 
 void Level::Update(const float _deltaTime)
 {
-	UpdateWindow();
+	
 	actorManager.Update(_deltaTime);
 
-	/*if (!window.isOpen())
-	{
-		M_LEVEL.SetLevel(nullptr);
-	}*/
+	
 }
 
 void Level::Load()
@@ -62,15 +49,12 @@ void Level::Load()
 		isLoaded = true;
 	}
 	
-	/*window.setVisible(true);
-	*/
+	
 	actorManager.BeginPlay();
 }
 
 void Level::Unload()
 {
-	/*window.setVisible(false);
-	window.clear();
-	*/
+	
 	actorManager.BeginDestroy();
 }
