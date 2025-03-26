@@ -19,6 +19,9 @@ public:
 	SpawnActorWidget(const bool& _openedByDefault);
 	virtual ~SpawnActorWidget() = default;
 
+private:
+	void ExecuteEvent(const string& _id);
+
 public:
 	void Draw() override;
 };

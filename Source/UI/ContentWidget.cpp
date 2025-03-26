@@ -6,8 +6,8 @@ ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _
 {
 	currentPath = "";
 	elements = vector<string>();
-	newFolderName = new char;
-	newClassName = new char;
+	newFolderName = new char[0];
+	newClassName = new char[0];
 	UpdateElements();
 }
 

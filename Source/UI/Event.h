@@ -68,12 +68,13 @@ public:
 	ReturnType Invoke(Args... _args) const
 	{
 		const unsigned int& _size = Count();
-		constexpr const bool& _isVoid = is_void<ReturnType>::value;
+		//constexpr const bool& _isVoid = is_void<ReturnType>::value;
 		for (unsigned int _index = 0; _index < _size; _index++)
 		{
 			const pair<int, function<ReturnType(Args...)>>& _pair = actions[_index];
-			if (_isVoid) _pair.second(_args...);
-			else return _pair.second(_args...);
+			return _pair.second(_args...);
+			//if (_isVoid) _pair.second(_args...);
+			//else return _pair.second(_args...);
 		}
 		return ReturnType();
 	}
