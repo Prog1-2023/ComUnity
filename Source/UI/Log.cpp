@@ -1,13 +1,13 @@
 #include "Log.h"
 
-Log::Log(double _time, Log_Severity _severity, const string& _text)
-    : time(_time), severity(_severity), text(_text) 
+Log::Log(Log_Severity _severity, const string& _text)
+    : severity(_severity), text(_text) 
 {
 }
 
 string Log::GetFullText() const
 {
-    return string("[") + to_string(time) + "] " + GetSeverityString(severity) + ": " + text;
+    return GetSeverityString(severity) + ": " + text;
 }
 
 
@@ -41,15 +41,34 @@ string Log::GetSeverityString(Log_Severity _severity) const
     }
 }
 
-LogGroup::LogGroup(const string& _text, const string& _fullText, ImVec4 _color)
+void Logger::LogMessage(const string& _message, Log_Severity _type, const char* _file, int _line)
 {
-    Text = _text;
-    FullText = _fullText;
-    Color = _color;
-    count = 1;
+    string _typeStr;
+    ImVec4 _color;
+
+    switch (_type)
+    {
+    case WARNING:
+        _typeStr = "WARNING";
+        _color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+        break;
+    case ERROR:
+        _typeStr = "ERROR";
+        _color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+        break;
+    case LOG:
+        _typeStr = "LOG";
+        _color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+        break;
+    }
+
+    string _fullMessage = "[" + _typeStr + "] (" + _file + ":" + std::to_string(_line) + ") " + _message;
+    Log _log(_type, _fullMessage);
+    logs.push_back(_log);
+    onNewLog.Invoke();
 }
 
-bool LogGroup::IsEquals(const string& _text) const
+void Logger::ClearLogs()
 {
-    return Text == _text;
+    logs.clear();
 }

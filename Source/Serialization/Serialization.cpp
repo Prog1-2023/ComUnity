@@ -4,7 +4,6 @@
 #include <direct.h> 
 using namespace filesystem;
 
-#include "../FString.h"
 
 
 Serialization::Serialization()
@@ -25,9 +24,6 @@ Serialization::~Serialization()
 
 void Serialization::StartSerialization()
 {
-	FString _str = FString("azerty");
-
-	_str.Contains("rty");
 
 
 

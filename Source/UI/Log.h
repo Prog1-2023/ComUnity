@@ -1,17 +1,16 @@
 #pragma once
-
 #include "../Utils/CoreMinimal.h"
-#include "Log.h"
+#include "Singleton.h"
+#include "Event.h"
 
 class Log
 {
 private:
-    double time;
     Log_Severity severity;
     string text;
 
 public:
-    Log(double _time, Log_Severity _severity, const string& _text);
+    Log(Log_Severity _severity, const string& _text);
 
     Log_Severity GetSeverity() const { return severity; }
     const string& GetText() const { return text; }
@@ -24,17 +23,18 @@ private:
     string GetSeverityString(Log_Severity _severity) const;
 };
 
+//=========================================================================
 
-class LogGroup
+class Logger : public Singleton<Logger>
 {
-public:
-    int count;
-    string Text;
-    string FullText;
-    ImVec4 Color;
+    Event<> onNewLog;
+    vector<Log> logs;
+
+public :
+    Event<>& OnNewLog() { return onNewLog; }
+    vector<Log> GetLogs() const { return logs; }
 
 public:
-    LogGroup(const string& _text, const string& _fullText, ImVec4 _color);
-
-    bool IsEquals(const string& _text) const;
+    void LogMessage(const string& _message, Log_Severity _type, const char* _file, int _line);
+    void ClearLogs();
 };

@@ -41,15 +41,7 @@ int main()
 
     //Test text
     FontManager& fontManager = FontManager::GetInstance();
-    fontManager.LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
-
-    /*UIText* uiText = new UIText(fontManager, _world);
-    uiText->SetText("Hello World");
-    uiText->SetFont("RubikGlitch-Regular.ttf");
-    uiText->SetPosition(100, 100);
-    uiText->SetScale(1.0f);
-    uiText->SetColor(ImVec4(1, 1, 0, 1)); */
-
+    //fontManager.LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
 
     while (!glfwWindowShouldClose(_window.GetWindow()))
     {
@@ -60,9 +52,6 @@ int main()
         glfwGetFramebufferSize(_window.GetWindow(), &_width, &_height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         _window.GetController()->PollEvents();
-
-        //Test text
-        //uiText->Draw();
 
         _uiManager.DrawAll();
 

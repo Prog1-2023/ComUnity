@@ -1,22 +1,11 @@
 #include "FontManager.h"
 #include <GL/glew.h>
+#include "FileManager.h"
 
 FontManager::FontManager()
 {
-    LoadFont(GetAbsolutePath() + "/Content/Fonts/DefaultSans-Regular.ttf", 20.0f);
+    LoadFont(FileManager::GetInstance().GetContentPath() + "/Fonts/DefaultSans-Regular.ttf", 20.0f);
     defaultFont = fontList["DefaultSans-Regular.ttf"];
-}
-
-FontManager::~FontManager()
-{
-    for (const pair<string, ImFont*>& _pair : fontList)
-    {
-        delete _pair.second;
-        /*if (ImGui::GetIO().Fonts->TexID) {
-            GLuint texID = (GLuint)(intptr_t)ImGui::GetIO().Fonts->TexID;
-            glDeleteTextures(1, &texID);
-        }*/
-    }
 }
 
 bool FontManager::LoadFont(const string& _fontPath, float _fontSize)

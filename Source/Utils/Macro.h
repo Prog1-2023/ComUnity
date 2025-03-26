@@ -53,17 +53,11 @@ using namespace ImGui;
 void AssertDebug(const char* _exprStr, const bool _expr, const char* _msg, const char* _file, const int _line);
 void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg);
 
-string GetAbsolutePath();
-
-
 #pragma region Log
 
-void LogMessage(const string& _message, Log_Severity _type, const char* _file, int _line);
-
-		#define LOG(_msg) LogMessage(_msg, LOG, __FILE__, __LINE__)
-		#define LOG_WARNING(_msg) LogMessage(_msg, WARNING, __FILE__, __LINE__)
-		#define LOG_ERROR(_msg) LogMessage(_msg, ERROR, __FILE__, __LINE__)
-
+#define LOG(_msg) Logger::GetInstance().LogMessage(_msg, LOG, __FILE__, __LINE__)
+#define LOG_WARNING(_msg) Logger::GetInstance().LogMessage(_msg, WARNING, __FILE__, __LINE__)
+#define LOG_ERROR(_msg) Logger::GetInstance().LogMessage(_msg, ERROR, __FILE__, __LINE__)
 
 #pragma endregion
 
