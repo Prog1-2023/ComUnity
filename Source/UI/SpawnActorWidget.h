@@ -20,7 +20,7 @@ public:
 	virtual ~SpawnActorWidget() = default;
 
 private:
-	void ExecuteEvent(const string& _id);
+	void ExecuteEvent(const int& _id);
 
 public:
 	void Draw() override;

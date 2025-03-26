@@ -2,7 +2,7 @@
 
 SceneWidget::SceneWidget(const bool& _openedByDefault) : Widget("Scene", _openedByDefault)
 {
-	onDroppedElement = Event<void, string>();
+	onDroppedElement = Event<void, int>();
 }
 
 void SceneWidget::Draw()
@@ -12,8 +12,8 @@ void SceneWidget::Draw()
 	{
 		if (const ImGuiPayload* _payload = AcceptDragDropPayload("SPAWN_ACTOR"))
 		{
-			const string* _text = static_cast<string*>(_payload->Data);
-			onDroppedElement.Invoke(*_text);
+			const int* _int = static_cast<int*>(_payload->Data);
+			onDroppedElement.Invoke(*_int);
 		}
 		EndDragDropTarget();
 	}
