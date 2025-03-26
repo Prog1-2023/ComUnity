@@ -111,6 +111,17 @@ public:
 
 #pragma endregion
 
+//int main()
+//{
+//	Engine _engine;
+//	_engine.Start();
+//
+//
+//	return 0;
+//}
+
+
+//int debug_main()
 int main()
 {
 	cout << "ComUnity : l'Engine des Communistes !" << endl;
