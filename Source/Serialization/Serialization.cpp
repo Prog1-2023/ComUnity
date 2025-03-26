@@ -1,57 +1,79 @@
 #include "Serialization.h"
+
 #include <fstream>
 #include <direct.h> 
+using namespace filesystem;
+
+#include "../FString.h"
+
 
 Serialization::Serialization()
 {
-	values = vector<SerializedValue*>();
+	storedValues = map<string, vector<SerializedValue*>>();
 }
 
 Serialization::~Serialization()
 {
-	for (SerializedValue* _value : values)
+	for (pair<string,vector<SerializedValue*>> _pair : storedValues)
 	{
-		delete _value;
+		for (SerializedValue* _value : _pair.second)
+		{
+			delete _value;
+		}
 	}
 }
 
 void Serialization::StartSerialization()
 {
+	FString _str = FString("azerty");
+
+	_str.Contains("rty");
+
+
+
+	return ;
 	const size_t size = 1024;
-	// Allocate a character array to store the directory path
 	char buffer[size];
+	Assert(getcwd(buffer, size),"Can't Read Directory for Serialization");
 
-	// Call _getcwd to get the current working directory and store it in buffer
-	if (getcwd(buffer, size) != NULL) {
-		// print the current working directory
-		cout << "Current working directory: " << buffer << endl;
-	}
-	else {
-		// If _getcwd returns NULL, print an error message
-		cerr << "Error getting current working directory" << endl;
-	}
+	path _path = buffer;
+	_path = _path.remove_filename();
+	_path = _path += "Source";
 
-	//const string& _path = "C:/Users/PUEC1602/Documents/GitHub/ComUnity/Source/Serialization/Serialization.h";
-	//ReadFile(_path);
+	string _pathstring = _path.string();
+	vector<string> _allFiles = vector<string>();
+
+	SearchFileInDirectory(_pathstring,_allFiles);
+
+	ReadFile(_allFiles);
 }
 
-void Serialization::ReadFile(const string& _path)
+void Serialization::ReadFile(const vector<string> _allFiles)
 {
-	ifstream _stream = ifstream(_path);
-
-	if (!_stream)
-		return;
-
-	string _line;
-
-	while (getline(_stream, _line))
+	for (string _file : _allFiles)
 	{
-		if (Contains(_line,"SERIALIZE"))
+		ifstream _stream = ifstream(_file);
+
+		if (!_stream)
+			return;
+
+		string _line;
+
+		while (getline(_stream, _line))
 		{
-			SerializedValue* _value = RetreiveValue(_line);
-			values.push_back(_value);
+			if (Contains(_line, "SERIALIZE"))
+			{
+				SerializedValue* _value = RetreiveValue(_line);
+
+				if (_value)
+				{
+					const path& _filePath = _file;
+					string _fileName = GetFileName(_filePath);
+					storedValues[_fileName].push_back(_value);
+				}
+			}
 		}
-	}
+	}	
 }
 
 bool Serialization::Contains(const string& _toCheck, const string& _toCompare)
@@ -80,6 +102,16 @@ bool Serialization::Contains(const string& _toCheck, const string& _toCompare)
 	return false;
 }
 
+bool Serialization::ContainsInVector(const string& _toCheck, vector<string> _toCompare)
+{
+	for (string _string : _toCompare)
+	{
+		if (Contains(_toCheck, _string))
+			return true;
+	}
+	return false;
+}
+
 SerializedValue* Serialization::RetreiveValue(string _line)
 {
 	const unsigned int _status = GetSerializeStatus(_line);
@@ -95,6 +127,8 @@ unsigned int Serialization::GetSerializeStatus(const string& _line)
 		return 0;
 	else if (Contains(_line, "WRITE"))
 		return 1;
+
+	return -1;
 }
 
 string Serialization::GetNextWord(string& _line)
@@ -116,7 +150,6 @@ string Serialization::GetNextWord(string& _line)
 string Serialization::GetValue(string& _line)
 {
 	_line = _line.substr(_line.find_first_of('=') + 1);
-
 	int _index = 0;
 	for (string::iterator _it = _line.begin(); _it != _line.end(); _it++, _index++)
 	{
@@ -127,4 +160,44 @@ string Serialization::GetValue(string& _line)
 	}
 	_line.pop_back();
 	return _line;
+}
+
+void Serialization::SearchFileInDirectory(const string& _path, vector<string>& _allFiles)
+{
+	vector<string> _typeToIgnore = { ".vert", ".frag", ".hpp" };
+	vector<string> _typeToFind = { ".h", ".cpp" }; //TODO cpp remove ? 
+	vector<string> _fileToIgnore = { "Serialization.cpp" , "SerializationValue.h" };
+
+ 	for (const directory_entry& _entry : directory_iterator(_path))
+	{
+		path _filepath = _entry.path();
+		string _file = _filepath.filename().string();
+
+		if (ContainsInVector(_file, _fileToIgnore) || ContainsInVector(_file, _typeToIgnore))
+			continue;
+
+		else if (ContainsInVector(_file, _typeToFind))
+		{
+			_allFiles.push_back(_filepath.string());
+		}
+		else
+		{
+			SearchFileInDirectory(_filepath.string(), _allFiles);
+		}
+	}
+}
+
+string Serialization::GetFileName(const path& _file)
+{
+	string _fileName = _file.filename().string();
+	string _newName = "";
+
+	for (char _char : _fileName)
+	{
+		if (_char == '.')
+			return _newName;
+		_newName += _char;
+	}
+
+	return _newName;
 }
