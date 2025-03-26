@@ -25,12 +25,23 @@ SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn
 
 	SceneWidget* _sceneWidget = UIManager::GetInstance().GetWidgetOfType<SceneWidget>();
 	if (_sceneWidget)
-		_sceneWidget->OnDroppedElement().Add([this](const string& _id) { ExecuteEvent(_id); });
+		_sceneWidget->OnDroppedElement().Add([this](const int& _id) { ExecuteEvent(_id); });
 }
 
-void SpawnActorWidget::ExecuteEvent(const string& _id)
+void SpawnActorWidget::ExecuteEvent(const int& _id)
 {
-	tabList[currentOpenedTab].actorList[_id].Invoke();
+	const unsigned int& _meshesAmount = tabList["Meshes"].actorList.size();
+	const string& _actorType = (_id < _meshesAmount ? "Meshes" : "Lights");
+	unsigned int _currentIndex = _actorType == "Lights" ? _meshesAmount : 0;
+	for (const pair<string, Event<>>& _pair : tabList[_actorType].actorList)
+	{
+		if (_currentIndex == _id)
+		{
+			_pair.second.Invoke();
+			break;
+		}
+		_currentIndex++;
+	}
 }
 
 void SpawnActorWidget::Draw()
@@ -46,6 +57,7 @@ void SpawnActorWidget::Draw()
 	}
 
 	Separator();
+	int _index = currentOpenedTab == "Lights" ? tabList["Meshes"].actorList.size() : 0;
 	for (const pair<string, Event<>>& _pair : tabList[currentOpenedTab].actorList)
 	{
 		Image(0, ImVec2(50.0f, 50.0f));
@@ -53,9 +65,10 @@ void SpawnActorWidget::Draw()
 		Selectable(_pair.first.c_str());
 		if (BeginDragDropSource())
 		{
-			SetDragDropPayload("SPAWN_ACTOR", &(_pair.first), sizeof(string));
+			SetDragDropPayload("SPAWN_ACTOR", &_index, sizeof(int));
 			Text(_pair.first.c_str());
 			EndDragDropSource();
 		}
+		_index++;
 	}
 }

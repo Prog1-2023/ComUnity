@@ -7,8 +7,13 @@ class ContentWidget : public Widget
 {
 	string currentPath;
 	vector<string> elements;
-	char* newFolderName;
-	char* newClassName;
+	char* popupEnterName;
+	string fileToRename;
+	bool openRename;
+	bool openCreateFolder;
+	bool openCreateClass;
+	bool openImportFile;
+	int maxNameLength;
 
 public:
 	ContentWidget(const bool& _openedByDefault);
@@ -21,6 +26,9 @@ private:
 	void CreateFolder();
 	void CreateClass();
 	void ImportFile();
+	void DeleteFile(const string& _fileName);
+	void RenameFile();
+	void ResetInput(const string& _newInput = "");
 
 public:
 	void Draw() override;

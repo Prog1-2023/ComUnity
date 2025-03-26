@@ -6,10 +6,10 @@
 
 class SceneWidget : public Widget
 {
-	Event<void, string> onDroppedElement;
+	Event<void, int> onDroppedElement;
 
 public:
-	FORCEINLINE Event<void, string>& OnDroppedElement() { return onDroppedElement; }
+	FORCEINLINE Event<void, int>& OnDroppedElement() { return onDroppedElement; }
 
 public:
 	SceneWidget(const bool& _openedByDefault);

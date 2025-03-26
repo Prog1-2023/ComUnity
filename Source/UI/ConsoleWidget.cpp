@@ -6,5 +6,6 @@ ConsoleWidget::ConsoleWidget(const bool& _openedByDefault) : Widget("Console", _
 
 void ConsoleWidget::Draw()
 {
+	
 }
 
