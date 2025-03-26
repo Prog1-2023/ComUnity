@@ -21,6 +21,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Editor/Engine.h"
+
 using namespace std;
 using namespace Assimp;
 using namespace fmt;
@@ -28,6 +30,16 @@ using namespace reactphysics3d;
 using namespace irrklang;
 
 int main()
+{
+	Engine _engine;
+	_engine.Start();
+
+
+	return 0;
+}
+
+
+int debug_main()
 {
 	cout << "ComUnity : l'Engine des Communistes !" << endl;
 
