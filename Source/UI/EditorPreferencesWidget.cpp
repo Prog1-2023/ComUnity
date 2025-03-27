@@ -3,10 +3,13 @@
 EditorPreferencesWidget::EditorPreferencesWidget(const bool& _openedByDefault) : Widget("Editor Preferences", _openedByDefault),
 themes{ "Dark" , "Light" , "Darker-Purple", "Custom" }
 {
-	selectedTheme = 0;
+	editorSave = SaveData("Preferences");
+	selectedTheme = editorSave.GetInt("themeIndex");
+	if (selectedTheme < 0)
+		selectedTheme = 0;
 
 	customTheme.push_back(CustomThemeData("Text color", ImGuiCol_Text, { 1.0f, 1.0f, 1.0f, 1.0f }));
-	customTheme.push_back(CustomThemeData("Disabled Text color", ImGuiCol_Text, { 0.5f, 0.5f, 0.5f, 1.0f }));
+	customTheme.push_back(CustomThemeData("Disabled Text color", ImGuiCol_TextDisabled, { 0.5f, 0.5f, 0.5f, 1.0f }));
 	customTheme.push_back(CustomThemeData("Background color 1", ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 1.0f }));
 	customTheme.push_back(CustomThemeData("Background color 2", ImGuiCol_ChildBg, { 0.0f, 0.0f, 0.0f, 1.0f }));
 	customTheme.push_back(CustomThemeData("Popup Background color", ImGuiCol_PopupBg, { 0.0f, 0.0f, 0.0f, 1.0f }));
@@ -64,6 +67,29 @@ themes{ "Dark" , "Light" , "Darker-Purple", "Custom" }
 	customTheme.push_back(CustomThemeData("Nav Windowing Highlight color", ImGuiCol_NavWindowingHighlight, { 1.0f, 0.7f, 0.7f, 1.0f }));
 	customTheme.push_back(CustomThemeData("Nav Windowing Dimmed color", ImGuiCol_NavWindowingDimBg, { 0.5f, 0.7f, 0.7f, 1.0f }));
 	customTheme.push_back(CustomThemeData("Modal Window Dimmed color", ImGuiCol_ModalWindowDimBg, { 0.2f, 0.2f, 0.2f, 1.0f }));
+
+	LoadCustomColors();
+
+	UpdateTheme();
+}
+
+void EditorPreferencesWidget::LoadCustomColors()
+{
+	const map<string, string>& _allData = editorSave.GetData();
+	const unsigned int& _customThemeColorAmount = static_cast<const unsigned int>(customTheme.size());
+	for (const pair<string, string>& _pair : _allData)
+	{
+		for (unsigned int _index = 0; _index < _customThemeColorAmount; _index++)
+		{
+			if (customTheme[_index].title == _pair.first)
+			{
+			    const vector<string>& _results = String::Split(_pair.second, "@");
+				customTheme[_index].color[0] = stof(_results[0]);
+				customTheme[_index].color[1] = stof(_results[1]);
+				customTheme[_index].color[2] = stof(_results[2]);
+			}
+		}
+	}
 }
 
 void EditorPreferencesWidget::DrawCustomStyleSettings()
@@ -83,7 +109,11 @@ void EditorPreferencesWidget::CustomColor(const string& _colorTitle, float* _col
 	SetNextItemWidth(200.0f);
 	ImGuiStyle& _style = GetStyle();
 	if (ColorEdit3(_colorTitle.c_str(), _color, ImGuiColorEditFlags_NoLabel))
+	{
 		_style.Colors[_type] = ImVec4(_color[0], _color[1], _color[2], 1.0f);
+		const string& _colorString = to_string(_color[0]) + "@" + to_string(_color[1]) + "@" + to_string(_color[2]);
+		editorSave.SetData(_colorTitle, _colorString);
+	}
 }
 
 void EditorPreferencesWidget::LoadCustomStyle()
@@ -97,6 +127,14 @@ void EditorPreferencesWidget::LoadCustomStyle()
 	}
 }
 
+void EditorPreferencesWidget::UpdateTheme()
+{
+	if (selectedTheme == 0) StyleColorsDark();
+	else if (selectedTheme == 1) StyleColorsLight();
+	else if (selectedTheme == 2) StyleColorsClassic();
+	else if (selectedTheme == 3) LoadCustomStyle();
+}
+
 void EditorPreferencesWidget::Draw()
 {
 	Text("Editor style");
@@ -104,10 +142,8 @@ void EditorPreferencesWidget::Draw()
 	SetNextItemWidth(150.0f);
 	if (Combo("##", &selectedTheme, themes, IM_ARRAYSIZE(themes)))
 	{
-		if (selectedTheme == 0) StyleColorsDark();
-		else if (selectedTheme == 1) StyleColorsLight();
-		else if (selectedTheme == 2) StyleColorsClassic();
-		else if (selectedTheme == 3) LoadCustomStyle();
+		editorSave.SetData("themeIndex", to_string(selectedTheme));
+		UpdateTheme();
 	}
 	Separator();
 	BeginDisabled(selectedTheme != 3);

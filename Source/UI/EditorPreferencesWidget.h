@@ -2,6 +2,7 @@
 
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
+#include "FileManager.h"
 
 struct CustomThemeData
 {
@@ -36,15 +37,18 @@ class EditorPreferencesWidget : public Widget
 	vector<CustomThemeData> customTheme;
 	int selectedTheme;
 	const char* themes[4];
+	SaveData editorSave;
 
 public:
 	EditorPreferencesWidget(const bool& _openedByDefault);
 	virtual ~EditorPreferencesWidget() = default;
 
 private:
+	void LoadCustomColors();
 	void DrawCustomStyleSettings();
 	void CustomColor(const string& _colorTitle, float* _color, const ImGuiCol_& _type);
 	void LoadCustomStyle();
+	void UpdateTheme();
 
 public:
 	void Draw() override;

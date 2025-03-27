@@ -3,6 +3,32 @@
 #include "../Utils/CoreMinimal.h"
 #include "Singleton.h"
 
+class SaveData
+{
+	string saveName;
+	map<string, string> data;
+
+public:
+	FORCEINLINE map<string, string> GetData() const { return data; }
+
+public:
+	SaveData() = default;
+	SaveData(const string& _saveName);
+	~SaveData();
+
+private:
+	bool DoesKeyExist(const string& _key);
+	void Load();
+	void Save();
+
+public:
+	int GetInt(const string& _key);
+	string GetString(const string& _key);
+	float GetFloat(const string& _key);
+	bool GetBool(const string& _key);
+	void SetData(const string& _key, const string& _value);
+};
+
 class FileManager : public Singleton<FileManager>
 {
 
