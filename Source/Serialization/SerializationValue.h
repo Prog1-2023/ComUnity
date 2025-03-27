@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#define SERIALIZE(Ref,Class,Status,Type,Name) SerializeValue(Ref,#Class,Status,#Type,#Name,new Type(Name))
+#define SERIALIZE(Ref,Class,Status,Type,Name) SerializeValue(Ref,#Class,Status,#Type,#Name,&Name)
 
 #define READ 0
 #define WRITE 1
