@@ -30,7 +30,7 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 {
 	shaderProgram = 0;
 	vertexShaderPath = "VertexShader.vert";
-	fragmentShaderPath = "FragmentLightShaderV2.frag";
+	fragmentShaderPath = "FragmentLightShaderV3.frag";
 
 	lightColor = { 1.0f, 1.0f, 1.0f };
 	rainbowColor = false;
@@ -47,7 +47,7 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 	VAO = 0;
 	EBO = 0;
 
-	material = new Material("VertexShader.vert", "FragmentLightShaderV2.frag");
+	material = new Material("VertexShader.vert", "FragmentLightShaderV3.frag");
 
 	allTextures =
 	{
