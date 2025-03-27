@@ -46,18 +46,4 @@ public:
 
 public:
 	FORCEINLINE vector<ValueAttachedToObject*>& GetStoredValues() { return storedValues; }
-
-public:
-	void StartSerialization();
-private:
-	void ReadFile(const vector<string> _allFiles);
-	bool Contains(const string& _toCheck, const string& _toCompare);
-	bool ContainsInVector(const string& _toCheck, vector<string> _toCompare);
-	SerializedValue* RetreiveValue(string _line);
-	unsigned int GetSerializeStatus(const string& _line);
-	string GetNextWord(string& _line);
-	string GetValue(string& _line);
-
-	void SearchFileInDirectory(const string& _path, vector<string>& _allFiles);
-	string GetFileName(const path& _file);
 };
