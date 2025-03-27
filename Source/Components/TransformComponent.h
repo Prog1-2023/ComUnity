@@ -20,7 +20,7 @@ class TransformComponent : public Component
 
 	Mobility mobility;
 
-	bool physics = false;
+	bool physics;
 	int moveSpeed = 10;
 	float rotateSpeed = 50.25f;
 

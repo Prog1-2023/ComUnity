@@ -8,9 +8,11 @@ TransformComponent::TransformComponent(Actor* _owner) : Component(_owner)
 	rotation = Vector3f();
 	scale = Vector3f();
 
-	SERIALIZE(this,TransformComponent,READ,bool,physics);
-	SERIALIZE(this,TransformComponent,READ,int, moveSpeed);
-	SERIALIZE(this,TransformComponent,READ,float, rotateSpeed);
+	physics = false;
+
+	SERIALIZE(owner,TransformComponent,READ,bool,physics);
+	SERIALIZE(owner,TransformComponent,READ,int, moveSpeed);
+	SERIALIZE(owner,TransformComponent,WRITE,float, rotateSpeed);
 }
 
 TransformComponent::~TransformComponent()

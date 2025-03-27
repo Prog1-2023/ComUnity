@@ -3,6 +3,7 @@
 
 class Component
 {
+public:
 	class Actor* owner;
 public:
 	Component(Actor* _owner);

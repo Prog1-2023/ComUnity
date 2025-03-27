@@ -28,7 +28,7 @@ void InspectorWidget::DrawComponents()
 
 	for (ValueAttachedToObject* _valAttached : _serializedValues)
 	{
-		if (_valAttached->object == this)
+		if (_valAttached->object == currentSelectedActor)
 		{
 			vector<Component*> _allComponents = currentSelectedActor->GetComponents();
 
@@ -67,7 +67,6 @@ void InspectorWidget::DrawComponents()
 						ImGui::InputText(_value->name.c_str(), _buffer, 10);
 						string _result = _buffer;
 						*_var = stof(_result);
-
 					}
 					else if (_value->type == "bool")
 					{
