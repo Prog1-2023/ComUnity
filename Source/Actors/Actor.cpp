@@ -1,7 +1,6 @@
 #include "Actor.h"
-
-#include "..\Components\TransformComponent.h"
-#include "..\Components\StaticMeshComponent.h"
+#include "../Components/StaticMeshComponent.h"
+#include "../Editor/World.h"
 
 Actor::Actor(World* _world)
 {
@@ -15,6 +14,7 @@ Actor::Actor(World* _world)
 
 Actor::~Actor()
 {
+	BeginDestroy(); 
 	const int& _size = static_cast<const int>(allComponents.size());
 	for (unsigned int _index = 0; _index < _size; _index++)
 		delete allComponents[_index];
@@ -24,21 +24,30 @@ void Actor::BeginPlay()
 {
 	const int& _size = static_cast<const int>(allComponents.size());
 	for (unsigned int _index = 0; _index < _size; _index++)
+	{
+		if (!allComponents[_index]) continue;
 		allComponents[_index]->BeginPlay();
+	}
 }
 void Actor::Tick(const float& _deltaTime)
 {
 	const int& _size = static_cast<const int>(allComponents.size());
 	for (unsigned int _index = 0; _index < _size; _index++)
+	{
+		if (!allComponents[_index]) continue;
 		allComponents[_index]->Tick(_deltaTime);
+	}
 }
 
 void Actor::BeginDestroy()
 {
 	const int& _size = static_cast<const int>(allComponents.size());
 	for (unsigned int _index = 0; _index < _size; _index++)
+	{
+		if (!allComponents[_index]) continue;
 		allComponents[_index]->BeginDestroy();
-		
+	}
+
 }
 
 void Actor::LoadModel(const string& _path)
@@ -48,13 +57,6 @@ void Actor::LoadModel(const string& _path)
 	const aiScene* _scene = _importer.ReadFile(_fullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
 	const string& _errorMessage = "Error => " + string(_importer.GetErrorString());
 	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorMessage.c_str());
-	
-	//const string& _directory = _path.substr(0, _path.find_last_of('/'));
-
-	/*StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
-	ComputeMesh(_meshComponent, _scene, _scene->mRootNode);
-	allComponents.push_back(_meshComponent);*/
-
 	ComputeMeshes(_scene, _scene->mRootNode);
 }
 

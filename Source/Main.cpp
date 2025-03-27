@@ -30,6 +30,9 @@
 #include "Editor/Windows/Window.h"	
 #include "Editor/World.h"
 #include "NewLightRelated/Material.h"
+#include "Actors/Cameras/CameraActor.h"
+#include "Actors/Skybox.h"
+#include "Components/StaticMeshComponent.h"
 
 using namespace std;
 using namespace Assimp;
@@ -38,109 +41,66 @@ using namespace irrklang;
 namespace rea = reactphysics3d;
 
 int InitMain();
+void Shutdown(GLFWwindow* _window);
 
 int main()
 {
-	if(InitMain())return -1;
+	if (InitMain())return -1;
 
-	// Créer une fenêtre GLFW
-	
+	#pragma region INITIALIZATION_OF_LIFETIME_TYPES
+	// Create a GLFW window
 	Window _window = Window("Engine window", 600, 600);
+	// Create the world
 	World* _world = new World();
 	_world->SetWindow(&_window);
-
-
+	// Create the controller
 	Controller* _controller = _window.GetController();
-	Material _material("NewVertTest.vert", "NewFragTest.frag");
-	//_material.InitAlbedo(Vector4f(0, 1, 1, .5f));
-	_material.InitAlbedo("Face.png");
+	#pragma endregion
 
-	float _vertices[] = {
-		// positions          // normals           // texture coords
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+	#pragma region LIGHT_DEMO_INITIALISATION
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	Actor* _actor = _world->SpawnActor<CameraActor>();
+	_actor->LoadModel("backpack/Model/backpack.obj");
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	LightActor* _light = _world->SpawnLight(NONE);
+	LightActor* _light2 = _world->SpawnLight(DIRECTIONAL);
 
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	Skybox* _skybox = _world->SpawnActor<Skybox>();
 
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+	_skybox->Init({ "cube_right.png", "cube_left.png",
+		 "cube_down.png", "cube_up.png", "cube_front.png","cube_back.png" }, 1.f);
 
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-	};
+	StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
+	CameraComponent* _camera = _actor->GetComponent<CameraComponent>();
 
-	// first, configure the cube's VAO (and VBO)
-	unsigned int _VBO, _cubeVAO;
-	glGenVertexArrays(1, &_cubeVAO);
-	glGenBuffers(1, &_VBO);
+	#pragma endregion
 
-	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), _vertices, GL_STATIC_DRAW);
+	//Begin play on all Actors
+	int _size = _world->GetAllActors().size();
+	for (size_t i = 0; i < _size; i++)
+		_world->GetAllActors()[i]->BeginPlay();
 
-	glBindVertexArray(_cubeVAO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	// second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
-	unsigned int _lightCubeVAO;
-	glGenVertexArrays(1, &_lightCubeVAO);
-	glBindVertexArray(_lightCubeVAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-	// note that we update the lamp's position attribute's stride to reflect the updated buffer data
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-
+	//Init time and size of window variables
 	int _width, _height;
 	double _deltaTime = 0.0;
 	double _time = glfwGetTime();
 	vec3 _targetPosition = vec3(0.0f);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+	//Set the gl clear color
+	glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
+	//The polygon mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
+	//Enable the depth
 	glEnable(GL_DEPTH_TEST);
+
 	// Boucle de rendu
-	while (!glfwWindowShouldClose(_window.GetWindow())) 
+	while (!glfwWindowShouldClose(_window.GetWindow()))
 	{
 		#pragma region Computing
 		// Compute deltaTime
 		_deltaTime = glfwGetTime() - _time;
 		_time = glfwGetTime();
+		// Processing inputs
 		_window.GetController()->ProcessInputs();
 		#pragma endregion
 
@@ -148,40 +108,43 @@ int main()
 		glfwGetFramebufferSize(_window.GetWindow(), &_width, &_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		#pragma endregion
+		
+		#pragma region TICK_ACTORS
+		// Tick all actors of the world
+		for (size_t i = 0; i < _size; i++)
+			_world->GetAllActors()[i]->Tick(_deltaTime);
+		#pragma endregion
 
-		//_actor->Tick(_deltaTime);
-		#pragma region Compute MVP
+		#pragma region COMPUTE_MVP
 		mat4 _view = mat4(1.0f);
+		mat4 _skyboxView = mat4(1.0f);
+		_view = _camera->ComputeView();
+
 		const float& _pitch = cos(_controller->phi) * cos(_controller->theta) * _controller->viewRadius;
 		const float& _yaw = sin(_controller->phi) * _controller->viewRadius;
 		const float& _roll = cos(_controller->phi) * sin(_controller->theta) * _controller->viewRadius;
 		const vec3& _cameraPosition = vec3(_pitch, _yaw, _roll) + _targetPosition;
 
-		//_mesh->SetCameraLocation(_cameraPosition);
+		_mesh->SetCameraLocation(_cameraPosition);
+
 		vec3 _up = normalize(vec3(0.0f, cosf(_controller->phi), 0.0f));
 		_view = lookAt(_cameraPosition, _targetPosition, _up);
+		_skyboxView = _view;
 
 		//const GLuint& _uniformViewPosition = glGetUniformLocation(_mesh->GetShaderProgram(), "uniformViewPosition");
-		const GLuint& _uniformViewPosition = glGetUniformLocation(_material.GetShader()->GetShaderProgram(), "uniformViewPosition");
-		glUniform3f(_uniformViewPosition, _cameraPosition.x, _cameraPosition.y, _cameraPosition.z);
+		//const GLuint& _uniformViewPosition = glGetUniformLocation(_material.GetShader()->GetShaderProgram(), "uniformViewPosition");
+		//glUniform3f(_uniformViewPosition, _cameraPosition.x, _cameraPosition.y, _cameraPosition.z);
 
 		mat4 _projection = mat4();
 		if (_height != 0.0f)
 			_projection = perspective(radians(90.0f), (float)_width / (float)_height, 0.1f, 100.0f);
 
+		mat4 _skyboxModel = mat4(1.0f);
 		mat4 _model = mat4(1.0f);
+		_skyboxModel = translate(_skyboxModel, _cameraPosition);
+		_skybox->SetMVP(_skyboxModel, _skyboxView, _projection);
+		_mesh->SetMVP(_model, _view, _projection);
 		#pragma endregion	
-
-		_material.SetMVP(_model, _view, _projection);
-		_material.Update();
-
-		//_mesh->SetMVP(_model, _view, _projection);
-		//_mesh->Update();
-
-		//Draw
-		glBindVertexArray(_cubeVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
 
 		#pragma region Update
 		glfwSwapBuffers(_window.GetWindow());
@@ -189,10 +152,11 @@ int main()
 		#pragma endregion
 	}
 
-	// Nettoyer et quitter
+	// Clean and quit
 	glfwDestroyWindow(_window.GetWindow());
 	glfwTerminate();
-
+	delete _world;
+	_world = nullptr;
 	return EXIT_SUCCESS;
 }
 
@@ -258,4 +222,10 @@ int InitMain()
 	}
 
 	return EXIT_SUCCESS;
+}
+
+void Shutdown(GLFWwindow* _window)
+{
+	glfwDestroyWindow(_window);
+	glfwTerminate();
 }

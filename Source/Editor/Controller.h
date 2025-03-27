@@ -1,7 +1,5 @@
 #pragma once
-
 #include "../Utils/CoreMinimal.h"
-
 #define KEY(GLFW_KEY) glfwGetKeyScancode(GLFW_KEY)
 
 struct Input
@@ -13,7 +11,7 @@ struct Input
 	int mods;
 
 	Input() = default;
-	Input(GLFWwindow* _window, const int& _key, const int& _scancode, const int& _action, const int& _mods)
+	Input(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
 	{
 		window = _window;
 		key = _key;
@@ -21,34 +19,39 @@ struct Input
 		action = _action;
 		mods = _mods;
 	}
+	
 };
+
+
 
 class Controller
 {
+	//TODO move into Camera class
 public:
-	// TODO move into Camera class
 	float viewRadius;
 	float theta;
 	float phi;
 	float speed;
 	float zoomSpeed;
-
 private:
 	GLFWwindow* window;
-
-private:
-	FORCEINLINE bool IsValidKey(const unsigned int& _scancode, const vector<unsigned int> _allKeys)
-	{
-		const unsigned int& _keysCount = static_cast<const unsigned int>(_allKeys.size());
-		for (unsigned int _index = 0; _index < _keysCount; _index++)
-			if (_scancode == KEY(_allKeys[_index]))
-				return true;
-		return false;
-	}
 
 public:
 	Controller(GLFWwindow* _window);
 	~Controller() = default;
+
+private:
+
+	FORCEINLINE bool IsValidKey(const unsigned int _scancode, const vector<unsigned int>& _allKeys) const
+	{
+		const unsigned int _keysCount = _allKeys.size();
+		for (unsigned int _index = 0; _index < _keysCount; _index++)
+		{
+			if (_scancode == KEY(_allKeys[_index])) return true;
+		}
+
+		return false;
+	}
 
 public:
 	void ProcessInputs();

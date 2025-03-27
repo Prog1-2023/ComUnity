@@ -6,7 +6,6 @@
 
 class World;
 class StaticMeshComponent;
-class DeprTexture;
 
 class Actor
 {
@@ -14,18 +13,20 @@ protected:
 	vector<Component*> allComponents;
 	TransformComponent* transform;
 	World* world;
-	std::vector<DeprTexture> texturesAlreadyLoaded;
 
 public:
 	FORCEINLINE World* GetWorld() const { return world; }
-	FORCEINLINE std::vector<DeprTexture>& GetTextureAlreadyLoadedRef() { return texturesAlreadyLoaded; }
+	FORCEINLINE vector<Component*> GetAllComponents() const { return allComponents; }
+	FORCEINLINE TransformComponent* GetTransform() const { return transform; }
 
 public:
 	Actor(World* _world);
 	virtual ~Actor();
 
+public:
 	virtual void BeginPlay();
 	virtual void Tick(const float& _deltaTime);
+private:
 	virtual void BeginDestroy();
 
 private:
@@ -39,9 +40,11 @@ public:
 	template <typename Type>
 	Type* GetComponent()
 	{
-		FOR(allComponents)
-			if (Type* _type = dynamic_cast<Type*>(allComponents[_index]))
+		for (int i = 0; i < allComponents.size(); i++)
+		{
+			if (Type* _type = dynamic_cast<Type*>(allComponents[i]))
 				return _type;
+		}
 		return nullptr;
 	}
 };

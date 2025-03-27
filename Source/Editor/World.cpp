@@ -8,7 +8,16 @@ World::World()
 
 World::~World()
 {
-	const int& _size = static_cast<const int>(allActors.size());
-	for (unsigned int _index = 0; _index < _size; _index++)
-		delete allActors[_index];
+	for (Actor* _actor : allActors)
+	{
+		delete _actor;
+		_actor = nullptr;
+	}
+}
+
+LightActor* World::SpawnLight(LightType _type)
+{
+	LightActor* _light = SpawnActor<LightActor>();
+	_light->SetType(_type);
+	return _light;
 }
