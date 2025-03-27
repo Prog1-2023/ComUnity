@@ -51,6 +51,7 @@ struct Vertex
 //	}
 //};
 
+
 class StaticMeshComponent : public Component
 {
 	//GLuint vertexArrayID;
@@ -83,7 +84,6 @@ class StaticMeshComponent : public Component
 	GLuint projectionID;
 
 	Material* material;
-
 	map<string, GLuint> allTextures;
 
 	// TODO get from cameraManager
@@ -94,9 +94,6 @@ public:
 	{
 		glUseProgram(shaderProgram);
 		material->SetMVP(_model, _view, _projection);
-		/*SetUniformModelMatrix(_model);
-		SetUniformViewMatrix(_view);
-		SetUniformProjectionMatrix(_projection);*/
 	}
 	FORCEINLINE void SetUniformModelMatrix(const mat4& _model)
 	{
@@ -115,12 +112,23 @@ public:
 	FORCEINLINE void SetCameraLocation(const vec3& _cameraLocation) { cameraLocation = _cameraLocation; }
 
 public:
+	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
+	{
+		return new StaticMeshComponent(_owner, *this);
+	}
+
+
+public:
 	StaticMeshComponent(Actor* _owner);
+	StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other);
 	~StaticMeshComponent() = default;
+
+	virtual void Construct() override;
+	virtual void Deconstruct() override;
 
 protected:
 	virtual void BeginPlay();
-	virtual void Tick(const float& _deltaTime) override;
+	virtual void Tick(const float& _deltaTime);
 	virtual void BeginDestroy();
 
 private:

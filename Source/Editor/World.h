@@ -10,24 +10,23 @@ class World
 {
 	vector<Actor*> allActors;
 	Window* window;
+
+	
+
+public:
+	World();
+	World(Window* _window);
+	~World();
+
 public:
 	FORCEINLINE vector<Actor*> GetAllActors() const
 	{
 		return allActors;
 	}
-	FORCEINLINE void SetWindow(Window* _window)
-	{
-		window = _window;
-	}
-	FORCEINLINE Window* GetWindow()
-	{
-		return window;
-	}
 public:
-	World();
-	~World();
-
-private:
+	void Start();
+	void Update();
+	void Stop();
 
 public:
 	template<typename Type = Actor>
@@ -40,4 +39,3 @@ public:
 
 	LightActor* SpawnLight(LightType _type);
 };
-

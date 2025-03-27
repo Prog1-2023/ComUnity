@@ -221,7 +221,7 @@ struct Vector3
 			&& y == _otherVec.y
 			&& z == _otherVec.z;
 	}
-	
+
 	/*Vector3<Type> operator = (const Vector3<Type>& _other)
 	{
 		return *this = Vector3<Type>(_other);
