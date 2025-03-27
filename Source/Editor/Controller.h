@@ -57,21 +57,10 @@ class Controller
 {
 	map<string, InputAction> inputMappingContext;
 
-	//TODO move into camera class
 	GLFWwindow* window;
 
 private:
-	/*FORCEINLINE bool IsValidKey(const GLuint& _scancode, const vector<unsigned int>& _allKeys)
-	{
-		const GLuint& _keysCount = _allKeys.size();
-		for (unsigned int _i = 0; _i < _keysCount; _i++)
-		{
-			if (_scancode == KEY(_allKeys[_i]))
-				return true;
-		}
 
-		return false;
-	}*/
 	FORCEINLINE void ComputeKey(const GLuint& _scancode)
 	{
 		for (pair <string, InputAction> _pair : inputMappingContext)
