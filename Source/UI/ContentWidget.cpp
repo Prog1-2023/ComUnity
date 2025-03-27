@@ -3,7 +3,7 @@
 #include "FileManager.h"
 #include "Log.h"
 
-ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault)
+ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault), newClassTypes{"empty", "actor", "component"}
 {
     currentPath = "";
     fileToRename = "";
@@ -15,6 +15,8 @@ ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _
     maxNameLength = 30;
     popupEnterName = new char[30] { "" };
     UpdateElements();
+
+	selectedClassType = 0;
 
 	const string& _contentPath = FileManager::GetContentPath();
 	TextureManager::GetInstance().LoadTexture(_contentPath + "/EditorIcons/Folder.png", folderTexture);
@@ -84,6 +86,28 @@ void ContentWidget::CreateFolder()
         }
         EndPopup();
     }
+	SetNextWindowSize(ImVec2(350.0f, 150.0f));
+	if (BeginPopupModal("Create Folder", nullptr, ImGuiWindowFlags_NoResize))
+	{
+		Text("Name");
+		SameLine();
+		InputText("##", popupEnterName, maxNameLength);
+		if (Button("Cancel", ImVec2(100.0f, 40.0f)))
+		{
+			openCreateFolder = false;
+			CloseCurrentPopup();
+		}
+		SameLine(GetWindowWidth() - 30.0f - 100.0f);
+		if (Button("Confirm", ImVec2(100.0f, 40.0f)))
+		{
+			openCreateFolder = false;
+			CloseCurrentPopup();
+			const string& _path = FileManager::GetContentPath() + "/" + currentPath;
+			FileManager::CreateFolder(_path, popupEnterName);
+			UpdateElements();
+		}
+		EndPopup();
+	}
 }
 
 void ContentWidget::CreateClass()
@@ -117,6 +141,39 @@ void ContentWidget::CreateClass()
         }
         EndPopup();
     }
+	SetNextWindowSize(ImVec2(350.0f, 150.0f));
+	if (BeginPopupModal("Create Class", nullptr, ImGuiWindowFlags_NoResize))
+	{
+		Text("Name");
+		SameLine();
+		InputText("##name", popupEnterName, maxNameLength);
+		Text("Type ");
+		SameLine();
+		Combo("##", &selectedClassType, newClassTypes, IM_ARRAYSIZE(newClassTypes));
+		if (Button("Cancel", ImVec2(100.0f, 40.0f)))
+		{
+			openCreateClass = false;
+			CloseCurrentPopup();
+		}
+		SameLine(GetWindowWidth() - 30.0f - 100.0f);
+		if (Button("Confirm", ImVec2(100.0f, 40.0f)))
+		{
+			openCreateClass = false;
+			CloseCurrentPopup();
+			const string& _className = string(popupEnterName);
+			const string& _templatePath = FileManager::GetSourcePath() + "/UI/Templates/";
+			const string& _contentPath = FileManager::GetContentPath() + "/" + currentPath + "/";
+			const string& _headerFilePath = _contentPath + _className + ".h";
+			const string& _cppFilePath = _contentPath + _className + ".cpp";
+			const string& _templateClassName = newClassTypes[selectedClassType];
+			FileManager::CopyFile(_templatePath + _templateClassName + ".htemplate", _headerFilePath);
+			FileManager::CopyFile(_templatePath + _templateClassName + ".cpptemplate", _cppFilePath);
+			FileManager::ReplaceFileContent(_headerFilePath, "[NAME]", _className);
+			FileManager::ReplaceFileContent(_cppFilePath, "[NAME]", _className);
+			UpdateElements();
+		}
+		EndPopup();
+	}
 }
 
 void ContentWidget::ImportFile()
