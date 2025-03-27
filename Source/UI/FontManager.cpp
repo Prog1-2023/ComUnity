@@ -78,7 +78,7 @@ void FontManager::RenderText(const string& _fontName, const string& _text, float
         }
     }
 
-    ImDrawList* _drawList = ImGui::GetForegroundDrawList();
+    ImDrawList* _drawList = GetForegroundDrawList();
     _drawList->AddText(
         _font,
         _font->FontSize * _scale,

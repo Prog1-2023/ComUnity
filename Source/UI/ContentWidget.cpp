@@ -240,32 +240,8 @@ void ContentWidget::ResetInput(const string& _newInput)
 
 void ContentWidget::Draw()
 {
-    if (openRename)
-    {
-        OpenPopup("Rename File##RenameFilePopup");
-        RenameFile();
-    }
-    if (openCreateFolder)
-    {
-        OpenPopup("Create Folder##CreateFolderPopup");
-        CreateFolder();
-    }
-    if (openCreateClass)
-    {
-        OpenPopup("Create Class##CreateClassPopup");
-        CreateClass();
-    }
-    if (openImportFile)
-    {
-        OpenPopup("Import File##ImportFilePopup");
-        ImportFile();
-    }
-
     BeginDisabled(currentPath.empty());
-    if (Button(" < ##GoBack"))
-        GoBack();
     EndDisabled();
-    SameLine();
     if (Button("Import##ImportFile"))
         openImportFile = true;
     SameLine();
@@ -284,26 +260,7 @@ void ContentWidget::Draw()
     if (Button("Refresh##Refresh"))
         UpdateElements();
 
-    if (BeginPopupContextWindow("ContentRCC"))
-    {
-        if (MenuItem("Import File##ImportFileMenu"))
-            openImportFile = true;
-        if (MenuItem("Create Folder##CreateFolderMenu"))
-        {
-            ResetInput("");
-            openCreateFolder = true;
-        }
-        if (MenuItem("Create Class##CreateClassMenu"))
-        {
-            ResetInput("");
-            openCreateClass = true;
-        }
-        if (MenuItem("Refresh##RefreshMenu"))
-            UpdateElements();
-        EndPopup();
-    }
-
-    Separator();
+    Separator(); 
 
     vector<string> _pathSegments;
     string _tempPath = "";
@@ -322,9 +279,9 @@ void ContentWidget::Draw()
     }
     SameLine();
     Text("/");
-    
+
     for (size_t _index = 0; _index < _pathSegments.size(); _index++)
-    {   
+    {
         if (_pathSegments[_index].empty())
             continue;
         if (!_tempPath.empty())
@@ -347,55 +304,33 @@ void ContentWidget::Draw()
 
     Separator();
 
+    BeginChild("ContentScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
+    const string& _basePath = FileManager::GetContentPath() + currentPath + "/";
     for (unsigned int _index = 0; _index < elements.size(); _index++)
     {
-        if (Button((elements[_index] + "##ElementButton" + to_string(_index)).c_str()))
+        const string& _path = _basePath + elements[_index];
+        Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f));
+        SameLine(0.0f, 0.0f);
+        if (Button(elements[_index].c_str()))
             Open(elements[_index]);
 
-        if (_index >= elements.size())
-            return;
-
-        if (BeginPopupContextItem((elements[_index] + "RCC##" + to_string(_index)).c_str())) 
+        if (BeginPopupContextItem((elements[_index] + "RCC").c_str()))
         {
-            if (MenuItem(("Open##Open" + to_string(_index)).c_str())) 
+            if (MenuItem("Open"))
                 Open(elements[_index]);
-
-            if (MenuItem(("Rename##Rename" + to_string(_index)).c_str()))
+            if (MenuItem("Rename"))
             {
                 fileToRename = elements[_index];
                 ResetInput(fileToRename);
                 openRename = true;
             }
-
-            if (MenuItem(("Delete##Delete" + to_string(_index)).c_str())) 
+            if (MenuItem("Delete"))
                 DeleteFile(elements[_index]);
-
+            EndPopup();
         }
     }
-	const string& _basePath = FileManager::GetContentPath() + currentPath + "/";
-	for (unsigned int _index = 0; _index < elements.size(); _index++)
-	{
-		const string& _path = _basePath + elements[_index];
-		Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f));
-		SameLine(0.0f, 0.0f);
-		if (Button(elements[_index].c_str()))
-			Open(elements[_index]);
-		if (_index >= elements.size())
-			return;
-		if (BeginPopupContextItem((elements[_index] + "RCC").c_str()))
-		{
-			if (MenuItem("Open"))
-				Open(elements[_index]);
-			if (MenuItem("Rename"))
-			{
-				fileToRename = elements[_index];
-				ResetInput(fileToRename);
-				openRename = true;
-			}
-			if (MenuItem("Delete"))
-				DeleteFile(elements[_index]);
-			EndPopup();
-		}
-	}
+
+    EndChild();
 }
+

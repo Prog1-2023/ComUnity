@@ -15,6 +15,8 @@ ConsoleWidget::ConsoleWidget(const bool& _openedByDefault)
 
 void ConsoleWidget::Draw()
 {
+    BeginChild("ConsoleTopBar", ImVec2(0, 30), false, ImGuiWindowFlags_NoScrollbar);
+
     for (size_t i = 0; i < elements.size(); ++i)
     {
         DrawButton(elements[i]);
@@ -26,7 +28,10 @@ void ConsoleWidget::Draw()
     {
         ClearLogs();
     }
-    Separator();
+
+    EndChild();
+
+    BeginChild("ConsoleLogArea", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
     for (const Log& _log : logs)
     {
@@ -54,7 +59,18 @@ void ConsoleWidget::Draw()
             PopStyleColor();
         }
     }
+
+    float scrollY = GetScrollY();
+    float maxScrollY = GetScrollMaxY();
+
+    if (scrollY >= maxScrollY - 1.0f)
+    {
+        SetScrollHereY(1.0f);
+    }
+
+    EndChild();
 }
+
 
 void ConsoleWidget::DrawButton(const ButtonConsoleElement& _button)
 {
