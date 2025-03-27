@@ -83,6 +83,10 @@ target_link_libraries(ComUnity PRIVATE assimp::assimp)
 find_package(imgui CONFIG REQUIRED)
 target_link_libraries(ComUnity PRIVATE imgui::imgui)
 
+# GLM
+find_package(glm CONFIG REQUIRED)
+target_link_libraries(ComUnity PRIVATE glm::glm)
+
 # Includes
 set(INCLUDES 
 
@@ -98,7 +102,7 @@ target_include_directories(ComUnity PRIVATE ${INCLUDES})
 set(LIBRARIES_DIR "${DEPENDENCIES}/Libraries")
 file(GLOB_RECURSE STATIC_LIBRARIES "${LIBRARIES_DIR}/Statics/*.lib")
 target_link_libraries(ComUnity PRIVATE ${STATIC_LIBRARIES})
-#message(STATUS "Libraries found: ${STATIC_LIBRARIES}")
+message(STATUS "Libraries found: ${STATIC_LIBRARIES}")
 
 # DLLs
 set(DYNAMIC_LIBRARIES "${LIBRARIES_DIR}/Dynamics/")
