@@ -17,6 +17,8 @@ class ContentWidget : public Widget
 	int maxNameLength;
 	TextureData folderTexture;
 	TextureData fileTexture;
+	const char* newClassTypes[3];
+	int selectedClassType;
 
 public:
 	ContentWidget(const bool& _openedByDefault);
