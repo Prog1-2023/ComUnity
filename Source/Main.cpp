@@ -1,5 +1,7 @@
 #include "Utils/CoreMinimal.h"
 
+#include "Editor/Engine.h"
+/*
 #pragma region MyRegion
 
 struct VarMetaData;
@@ -72,29 +74,38 @@ public:
 		cout << GetValue() << endl;
 		cout << GetValueType() << endl;
 		cout << GetValueTypeName() << endl;
-		cout << typeid(Value).name() << endl;*/
+		cout << typeid(Value).name() << endl;
 	}
 };
 
 #pragma endregion
+*/
 
-//int main()
-//{
-//	Engine _engine;
-//	_engine.Start();
-//
-//
-//	return 0;
-//}
+void InitConfig()
+{
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	Logger::Reset();
+	system("cls");
+}
 
-
-//int debug_main()
 int main()
+{
+	InitConfig();	
+
+	Engine _engine;
+	_engine.Run();
+
+
+	return 0;
+}
+
+int debug_main()
+//int main()
 {
 	cout << "ComUnity : l'Engine des Communistes !" << endl;
 
-	TestClass _test = TestClass();
-	_test.Test();
+	/*TestClass _test = TestClass();
+	_test.Test();*/
 
 	return EXIT_SUCCESS;
 

@@ -136,11 +136,21 @@ typedef long long l_long;
 
 //class SubclassOf;
 
+#define DEBUG_PATH
+#ifdef DEBUG_PATH
+#define PATH __FUNCTION__
+#else
+#define PATH __FILE__
+#endif // DEBUG_FILE
 
 #define FORCEINLINE __forceinline
 #define SUPER __super
+#define CAST(_type, _expr) static_cast<_type>(_expr) 
+#define DEBUG_INFO "(File: " + CAST(string, PATH) + " | Line: " + to_string(__LINE__) + ")"
 #define IS_BASE_OF(_base, _type) typename = enable_if_t<is_base_of_v<_base, _type>>
 #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define NO_DISCARD _NODISCARD
+
 
 #if _DEBUG
 #define DEBUG
@@ -168,11 +178,11 @@ string GetPath(const FolderType& _folderType);
 //    return ++_id;
 //}
 
-template <typename Type, typename ...Args>
-Type* Spawn(Args&&... _args)
-{
-    return new Type(forward<Args>(_args)...);
-}
+//template <typename Type, typename ...Args>
+//Type* Spawn(Args&&... _args)
+//{
+//    return new Type(forward<Args>(_args)...);
+//}
 
 //template <typename Type>
 //Type* Spawn(const SubclassOf<Type>& _ref)

@@ -1,10 +1,10 @@
 #pragma once
 #include"../Utils/CoreMinimal.h"
-#include"../Editor/Windows/Window.h"
+//#include"../Editor/Window.h"
 #include"../Actors/Actor.h"
 
 #include "../Manager/ActorManager.h"
-#include "../Utils/SubclassOf.h"
+#include "../Utils/Utility.h"
 
 //#include "CameraManager.h"
 //#include "CollisionManager.h"
@@ -25,7 +25,7 @@ class Level
 	AudioManager audioManager;*/
 
 protected:
-	
+
 	//GameMode* gameMode;
 
 public:
@@ -94,22 +94,15 @@ public:
 	template <typename Type, typename ...Args, IS_BASE_OF(Actor, Type)>
 	FORCEINLINE Type* SpawnActor(Args&&... _args)
 	{
-		Type* _actor = Spawn<Type>(this, forward<Args>(_args)...);
+		Type* _actor = new Type(this, forward<Args>(_args)...);
+		const SubclassOf<Type>& _actorRef = *_actor;
+		_actor = Spawn<Type>(_actorRef);
 		_actor->Construct();
 		_actor->Register();
 
 		return _actor;
 	}
 
-	//template <typename Type, IS_BASE_OF(Actor, Type)>
-	//FORCEINLINE Type* SpawnActor(const SubclassOf<Type>& _actorRef)
-	//{
-	//	Type* _actor = Spawn<Type>(_actorRef);
-	//	_actor->Construct();
-	//	_actor->Register();
-
-	//	return _actor;
-	//}
 
 #pragma endregion
 
@@ -136,7 +129,7 @@ public:
 		return _sample;
 	}*/
 
-	
+
 
 #pragma endregion
 
@@ -146,9 +139,10 @@ public:
 
 public:
 	Level(const string& _name);
+	~Level();
 
 private:
-	
+
 
 protected:
 	virtual void InitLevel();

@@ -116,7 +116,7 @@ Actor::Actor(const Actor& _other):Core(_other.world)
 		//AddComponent(_component->Clone(this));
 	}
 
-	root = GetComponent<TransformComponent>();
+	root = CreateComponent<TransformComponent>(_other.GetTransform());
 	parent = _other.parent;
 	attachment = _other.attachment;
 	for (Actor* _child : _other.children)
@@ -148,7 +148,7 @@ void Actor::Construct()
 
 	for (Component* _component : components)
 	{
-		//_component->Construct();
+		_component->Construct();
 	}
 }
 
@@ -225,6 +225,7 @@ void Actor::Destroy()
 void Actor::AddComponent(Component* _component)
 {
 	components.insert(_component);
+	_component->Construct();
 }
 
 void Actor::RemoveComponent(Component* _component)

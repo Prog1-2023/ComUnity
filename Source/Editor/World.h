@@ -24,9 +24,13 @@ public:
 
 public:
 	World();
+	World(Window* _window);
 	~World();
 
-private:
+public:
+	void Start();
+	void Update();
+	void Stop();
 
 public:
 	template<typename Type = Actor>
@@ -37,4 +41,3 @@ public:
 		return _actor;
 	}
 };
-

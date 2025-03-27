@@ -18,13 +18,14 @@ Window::Window(const string& _name, const Vector2i& _windowSize)
 Window::~Window()
 {
 	delete controller;
+	//delete renderWindow;
 }
 
 void Window::Construct(const string& _name, const Vector2i& _windowSize)
 {
 	name = _name;
 	size = _windowSize;
-	window = nullptr;
+	renderWindow = nullptr;
 	controller = nullptr;
 
 	Init();
@@ -44,10 +45,10 @@ void Window::InitWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 
-	window = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);
-	Assert(window, "Window creation failed !");
+	renderWindow = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);
+	Assert(renderWindow, "Window creation failed !");
 
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(renderWindow);
 }
 
 void Window::InitGLEW()
@@ -63,5 +64,11 @@ void Window::InitGLEW()
 
 void Window::InitController()
 {
-	controller = new Controller(window);
+	controller = new Controller(renderWindow);
+}
+
+void Window::Update()
+{
+	if (!controller) return;
+	controller->ProcessInputs();
 }

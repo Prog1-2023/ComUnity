@@ -30,8 +30,8 @@ bool StaticMeshComponent::CheckShaderForErrors(const GLuint& _shader, const stri
 StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 {
 	shaderProgram = 0;
-	vertexShaderPath = "VertexShader.vs";
-	fragmentShaderPath = "BackPack.fshader";
+	vertexShaderPath = "VertexShader.vert";
+	fragmentShaderPath = "FragmentShader.frag";
 
 	lightColor = { 1.0f, 1.0f, 1.0f };
 	rainbowColor = false;
@@ -50,12 +50,12 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 
 	allTextures =
 	{
-		{ "ao.jpg", 0 },
-		{ "diffuse.jpg", 0 },
+		//{ "ao.jpg", 0 },
+		/*{ "diffuse.jpg", 0 },
 		{ "diffuse.jpg", 0 },
 		{ "normal.png", 0 },
 		{ "roughness.jpg", 0 },
-		{ "specular.jpg", 0 },
+		{ "specular.jpg", 0 },*/
 		//{ "Cthulhu.png", 0 },
 		//{ "Face.png", 0 },
 	};
@@ -318,177 +318,50 @@ vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const a
 
 bool StaticMeshComponent::Generate3DShape(const vector<float> _color)
 {
-	/*// Position + Color + Normal + Texture
-	vertices = {
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+	//float _vertices[] = {
+	//	// positions          // normals           // texture coords
+	//	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+	//	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+	//	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+	//	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+	//	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+	//	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+	//	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	//	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+	//	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+	//	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+	//	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+	//	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	//	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	//	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+	//	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	//	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	//	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+	//	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,-1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,-1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,-1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,-1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,-1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,-1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	//	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+	//	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+	//	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	//	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+	//	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+	//	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	//	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+	//	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+	//	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+	//	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+	//	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+	//	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+	//	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+	//	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+	//	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+	//	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+	//	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+	//	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+	//};
 
-		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-	};*/
-
-	/*if (verticesCount <= 0)
-		return false;*/
-
-		//const vector<vec3>& _offsets = {
-		//	{ 0.0f, 0.0f, 0.75f },
-		//	{ 0.0f, 0.0f, -0.75f },
-		//};
-		//const unsigned int _offsetCount = static_cast<const unsigned int>(_offsets.size());
-		//const float _angleStep = 2.0f * M_PI / verticesCount;
-		//unsigned int _vertexOffset = 0;  // Décomptage du décalage pour les indices de sommets
-		//for (unsigned int _offsetIndex = 1; _offsetIndex <= _offsetCount; _offsetIndex++)
-		//{
-		//	const vec3& _offset = _offsets[_offsetIndex - 1];
-		//	for (unsigned int _index = 1; _index <= verticesCount; _index++)
-		//	{
-		//		const float _angle = _angleStep * _index;
-		//		// Position
-		//		vertices.push_back(RoundFloat(cosf(_angle) + _offset.x));
-		//		vertices.push_back(RoundFloat(sinf(_angle) + _offset.y));
-		//		vertices.push_back(_offset.z);
-		//		// Colors
-		//		if (useColor)
-		//		{
-		//			vertices.push_back(_color[0]);
-		//			vertices.push_back(_color[1]);
-		//			vertices.push_back(_color[2]);
-		//		}
-		//		// Textures
-		//		if (useTextures)
-		//		{
-		//			vertices.push_back(RoundFloat(cosf(_angle) + _offset.x));
-		//			vertices.push_back(RoundFloat(sinf(_angle) + _offset.y));
-		//		}
-		//		vertices.push_back(0);  vertices.push_back(0);  vertices.push_back(0);
-		//	}
-		//	if (_offsetIndex == 1) // Z = -0.5f
-		//	{
-		//		// Face inférieure (2 triangles)
-		//		edges.push_back(0);  edges.push_back(1);  edges.push_back(2);
-		//		edges.push_back(0);  edges.push_back(2);  edges.push_back(3);
-		//	}
-		//	else if (_offsetIndex == 2) // Z = +0.5f
-		//	{
-		//		// Face supérieure (2 triangles)
-		//		edges.push_back(4);  edges.push_back(5);  edges.push_back(6);
-		//		edges.push_back(4);  edges.push_back(6);  edges.push_back(7);
-		//	}
-		//	// Faces latérales
-		//	if (_offsetIndex == 1)
-		//	{
-		//		// Face avant
-		//		edges.push_back(0);  edges.push_back(1);  edges.push_back(5);
-		//		edges.push_back(0);  edges.push_back(5);  edges.push_back(4);
-		//	}
-		//	else if (_offsetIndex == 2)
-		//	{
-		//		// Face arrière
-		//		edges.push_back(2);  edges.push_back(3);  edges.push_back(7);
-		//		edges.push_back(2);  edges.push_back(7);  edges.push_back(6);
-		//	}
-		//	// Faces latérales restantes
-		//	if (_offsetIndex == 1)
-		//	{
-		//		// Face gauche
-		//		edges.push_back(0);  edges.push_back(4);  edges.push_back(7);
-		//		edges.push_back(0);  edges.push_back(7);  edges.push_back(3);
-		//	}
-		//	else if (_offsetIndex == 2)
-		//	{
-		//		// Face droite
-		//		edges.push_back(1);  edges.push_back(2);  edges.push_back(6);
-		//		edges.push_back(1);  edges.push_back(6);  edges.push_back(5);
-		//	}
-		//}
-
-		//const int& _latitudeSteps = verticesCount / 2;
-		//const int& _longitudeSteps = verticesCount;
-		//const float& _radius = 10.0f;
-		//const int& _dataSize = ((_latitudeSteps + 1) * _longitudeSteps) * vertexDataSize;
-		//verticesData.resize(_dataSize);
-		//for (unsigned int _firstIndex = 0; _firstIndex < _latitudeSteps + 1; _firstIndex++)
-		//{
-		//	const float& _sphereTheta = M_PI * (float(_firstIndex) / _latitudeSteps);
-		//	for (unsigned int _secondIndex = 0; _secondIndex < _longitudeSteps; _secondIndex++)
-		//	{
-		//		const float& _spherePhi = 2.0f * M_PI * (float(_secondIndex) / _longitudeSteps);
-		//		const float& _x = _radius * sin(_sphereTheta) * cos(_spherePhi);
-		//		const float& _y = _radius * sin(_sphereTheta) * sin(_spherePhi);
-		//		const float& _z = _radius * cos(_sphereTheta);
-		//		// Position
-		//		const int& _vertexIndex = _firstIndex * _longitudeSteps + _secondIndex;
-		//		verticesData[_vertexIndex * vertexDataSize + 0] = _x;
-		//		verticesData[_vertexIndex * vertexDataSize + 1] = _y;
-		//		verticesData[_vertexIndex * vertexDataSize + 2] = _z;
-		//		// Colors
-		//		verticesData[_vertexIndex * vertexDataSize + 3] = _color[0];
-		//		verticesData[_vertexIndex * vertexDataSize + 4] = _color[1];
-		//		verticesData[_vertexIndex * vertexDataSize + 5] = _color[2];
-		//		// Textures
-		//		if (useTextures)
-		//		{
-		//			verticesData[_vertexIndex * vertexDataSize + 6] = 0.0f;
-		//			verticesData[_vertexIndex * vertexDataSize + 7] = 0.0f;
-		//		}
-		//	}
-		//}
-		//for (unsigned int _firstIndex = 0; _firstIndex < _latitudeSteps + 1; _firstIndex++)
-		//{
-		//	for (unsigned int _secondIndex = 0; _secondIndex < _longitudeSteps; _secondIndex++)
-		//	{
-		//		// Points
-		//		const unsigned int& _pointA = _firstIndex * _longitudeSteps + _secondIndex;
-		//		const unsigned int& _pointB = (_firstIndex + 1) * _longitudeSteps + _secondIndex;
-		//		const unsigned int& _pointC = (_firstIndex + 1) * _longitudeSteps + (_secondIndex + 1) % _longitudeSteps;
-		//		const unsigned int& _pointD = _firstIndex * _longitudeSteps + (_secondIndex + 1) % _longitudeSteps;
-		//		// First triangle in rectangle
-		//		edges.push_back(_pointA);
-		//		edges.push_back(_pointB);
-		//		edges.push_back(_pointC);
-		//		// Second triangle in rectangle
-		//		edges.push_back(_pointA);
-		//		edges.push_back(_pointC);
-		//		edges.push_back(_pointD);
-		//	}
-		//}
-		//
 	return true;
 }
 

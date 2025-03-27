@@ -1,5 +1,5 @@
 #pragma once
-#include "../Utils/CoreMinimal.h"
+#include "../Utils/Macro.h"
 
 template <typename T>
 class Singleton

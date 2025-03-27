@@ -6,7 +6,7 @@ class Window
 {
 	string name;
 	Vector2i size;
-	GLFWwindow* window;
+	GLFWwindow* renderWindow;
 	Controller* controller;
 
 public:
@@ -16,7 +16,7 @@ public:
 	}
 	FORCEINLINE GLFWwindow* GetWindow() const
 	{
-		return window;
+		return renderWindow;
 	}
 	FORCEINLINE Controller* GetController() const
 	{
@@ -35,4 +35,7 @@ private:
 	void InitWindow();
 	void InitGLEW();
 	void InitController();
+
+public:
+	void Update();
 };

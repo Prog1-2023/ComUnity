@@ -420,7 +420,7 @@ public:
 #pragma endregion
 
 #pragma region Component
-protected:
+public: //TODO protected
 	template <typename Type, typename ...Args, IS_BASE_OF(Component, Type)>
 	FORCEINLINE Type* CreateComponent(Args&&... _args)
 	{
@@ -465,7 +465,7 @@ public:
 	void RemoveComponent(Component* _component);
 
 	template <typename Type, IS_BASE_OF(Component, Type)>
-	Type* GetComponent()
+	Type* GetComponent() const
 	{
 		for (Component* _component : components)
 		{
