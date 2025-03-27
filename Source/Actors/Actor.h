@@ -475,6 +475,13 @@ public:
 		return nullptr;
 	}
 
+private:
+	void ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node);
+
+public:
+	void LoadModel(const string& _path);
+
+	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
 #pragma endregion
 
 #pragma region Collision

@@ -58,3 +58,10 @@ void World::Stop()
 		_actor->BeginDestroy();
 	}
 }
+
+LightActor* World::SpawnLight(LightType _type)
+{
+	LightActor* _light = SpawnActor<LightActor>();
+	_light->SetType(_type);
+	return _light;
+}

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../Utils/CoreMinimal.h"
 #define KEY(GLFW_KEY) glfwGetKeyScancode(GLFW_KEY)
 
@@ -29,7 +28,7 @@ struct InputController
 
 class Controller
 {
-	//TODO MOVE into camera class
+	//TODO move into Camera class
 public:
 	float viewRadius;
 	float theta;
@@ -39,12 +38,8 @@ public:
 
 	GLFWwindow* window;	
 
-public:
-	Controller(GLFWwindow* _window);
-
 private:
-
-	FORCEINLINE bool IsValidKey(const unsigned int _scancode, const vector<unsigned int>& _allKeys)
+	FORCEINLINE bool IsValidKey(const unsigned int _scancode, const vector<unsigned int>& _allKeys) const
 	{
 		const unsigned int _keysCount = _allKeys.size();
 		for (unsigned int _index = 0; _index < _keysCount; _index++)
@@ -53,6 +48,10 @@ private:
 		}
 		return false;
 	}
+
+public:
+	Controller(GLFWwindow* _window);
+	~Controller() = default;
 
 public:
 	void ProcessInputs();

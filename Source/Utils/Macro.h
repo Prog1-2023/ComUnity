@@ -168,27 +168,11 @@ enum FolderType
     SHADERS,
     CONTENT,
     TEXTURES,
+
+    COUNT
 };
 void AssertDebug(const char* _exprStr, const bool _expr, const char* _msg, const char* _file, const int _line);
 void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg);
 string GetPath(const FolderType& _folderType);
-//u_int GetUniqueID()
-//{
-//    static u_int _id = 0;
-//    return ++_id;
-//}
-
-//template <typename Type, typename ...Args>
-//Type* Spawn(Args&&... _args)
-//{
-//    return new Type(forward<Args>(_args)...);
-//}
-
-//template <typename Type>
-//Type* Spawn(const SubclassOf<Type>& _ref)
-//{
-//    return new Type(_ref.GetObject());
-//}
-
 
 const float MACHINE_EPSILON = std::numeric_limits<float>::epsilon();

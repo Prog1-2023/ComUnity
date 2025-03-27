@@ -1,5 +1,7 @@
 #pragma once
+
 #include "../Utils/Macro.h"
+
 
 template <typename Type>
 struct Vector3

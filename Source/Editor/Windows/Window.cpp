@@ -5,14 +5,14 @@ Window::Window(const string& _name)
 	Construct(_name, Vector2i());
 }
 
-Window::Window(const string& _name, const int _width, const int _height)
+Window::Window(const string& _name, const int& _width, const int& _height)
 {
 	Construct(_name, Vector2i(_width, _height));
 }
 
 Window::Window(const string& _name, const Vector2i& _windowSize)
 {
-	Construct(_name, _windowSize);	
+	Construct(_name, _windowSize);
 }
 
 Window::~Window()
@@ -40,7 +40,7 @@ void Window::Init()
 
 void Window::InitWindow()
 {
-	Assert(glfwInit(), "Initialization of GLFW failed !");
+	Assert(glfwInit(), "Initialization of GLFW failed!");
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

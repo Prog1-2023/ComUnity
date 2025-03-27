@@ -2,6 +2,9 @@
 #include "../Utils/CoreMinimal.h"
 #include "../Actors/Actor.h"
 #include "Windows/Window.h"
+#include "../Actors/Lights/LightActor.h"
+
+using namespace std;
 
 class World
 {
@@ -9,6 +12,10 @@ class World
 	Window* window;
 
 public:
+	FORCEINLINE vector<Actor*> GetAllActors() const
+	{
+		return allActors;
+	}
 	FORCEINLINE void SetWindow(Window* _window)
 	{
 		window = _window;
@@ -16,10 +23,6 @@ public:
 	FORCEINLINE Window* GetWindow()
 	{
 		return window;
-	}
-	FORCEINLINE vector<Actor*> GetAllActors() const
-	{
-		return allActors;
 	}
 
 public:
@@ -32,6 +35,7 @@ public:
 	void Update();
 	void Stop();
 
+	LightActor* SpawnLight(LightType _type);
 public:
 	template<typename Type = Actor>
 	Type* SpawnActor()

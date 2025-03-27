@@ -1,7 +1,8 @@
 #pragma once
-
 #include "../Utils/CoreMinimal.h"
 #include "Component.h"
+#include "../NewLightRelated/Texture.h"
+#include "../NewLightRelated/Material.h"
 
 class Actor;
 
@@ -50,8 +51,6 @@ struct Texture
 	}
 };
 
-
-
 class StaticMeshComponent : public Component
 {
 	//GLuint vertexArrayID;
@@ -70,7 +69,6 @@ class StaticMeshComponent : public Component
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
-	
 
 	GLuint VBO;
 	GLuint VAO;
@@ -84,6 +82,8 @@ class StaticMeshComponent : public Component
 	GLuint viewID;
 	GLuint projectionID;
 
+	Material* material;
+
 	map<string, GLuint> allTextures;
 
 	// TODO get from cameraManager
@@ -96,6 +96,7 @@ public:
 		SetUniformModelMatrix(_model);
 		SetUniformViewMatrix(_view);
 		SetUniformProjectionMatrix(_projection);
+		material->SetMVP(_model, _view, _projection);
 	}
 	FORCEINLINE void SetUniformModelMatrix(const mat4& _model)
 	{
@@ -110,15 +111,11 @@ public:
 		glUniformMatrix4fv(projectionID, 1, GL_FALSE, value_ptr(_projection));
 	}
 	FORCEINLINE GLuint GetShaderProgram() { return shaderProgram; }
-
 	FORCEINLINE void SetCameraLocation(const vec3& _cameraLocation) { cameraLocation = _cameraLocation; }
-
 	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
 	{
 		return new StaticMeshComponent(_owner, *this);
 	}
-
-
 
 public:
 	StaticMeshComponent(Actor* _owner);
@@ -138,6 +135,7 @@ private:
 	bool Generate2DShape(const vector<float> _outerColor, const vector<float> _innerColor);
 	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
 	bool Generate3DShape(const vector<float> _color);
+	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
 	float RoundFloat(const float& _value);
 	bool IsNearlyEqual(const float& _a, const float& _b, const float& _tolerance = numeric_limits<float>::epsilon());
 	void InitBuffers();
@@ -146,6 +144,7 @@ private:
 	bool CheckShaderForErrors(const GLuint& _shader, const string& _shaderName);
 	void UpdateColors();
 	void UpdateTextures();
+
 	void Draw();
 
 public:

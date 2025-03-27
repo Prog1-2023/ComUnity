@@ -57,7 +57,7 @@ public:
 public:
 	TransformComponent (Actor* _owner);
 	TransformComponent (Actor* _owner,Transform _transform);
-	~TransformComponent();
+	~TransformComponent() = default();
 
 public:
 	virtual Component* Clone(Actor* _owner) const override { return nullptr; }

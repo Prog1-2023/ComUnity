@@ -1,11 +1,12 @@
 #include "StaticMeshComponent.h"
 
 static vector<Texture> texturesLoaded;
+#include "../Managers/LightManager.h"
 
 unsigned int CreateShader(const string& _shaderPath, const bool& _isVertex)
 {
 	unsigned int _shader = glCreateShader(_isVertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
-	const string& _shaderCode = TShader::ReadShader(GetPath(SHADERS) + _shaderPath);
+	const string& _shaderCode = Shader::ReadShader(GetPath(SHADERS) + _shaderPath);
 	const char* _shaderData = _shaderCode.c_str();
 	glShaderSource(_shader, 1, &_shaderData, NULL);
 	glCompileShader(_shader);
@@ -31,7 +32,8 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 {
 	shaderProgram = 0;
 	vertexShaderPath = "VertexShader.vert";
-	fragmentShaderPath = "FragmentShader.frag";
+	//fragmentShaderPath = "FragmentShader.frag";
+	fragmentShaderPath = "FragmentLightShaderV2.frag";
 
 	lightColor = { 1.0f, 1.0f, 1.0f };
 	rainbowColor = false;
@@ -50,15 +52,13 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 
 	allTextures =
 	{
-		//{ "ao.jpg", 0 },
-		/*{ "diffuse.jpg", 0 },
-		{ "diffuse.jpg", 0 },
-		{ "normal.png", 0 },
-		{ "roughness.jpg", 0 },
-		{ "specular.jpg", 0 },*/
+		/*{ "Container.png", 0 },
+		{ "Container_specular.png", 0 },*/
 		//{ "Cthulhu.png", 0 },
 		//{ "Face.png", 0 },
 	};
+
+	material = new Material("VertexShader.vert", "FragmentLightShaderV2.frag");
 }
 
 StaticMeshComponent::StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other) : Component(_owner)
@@ -100,6 +100,7 @@ void StaticMeshComponent::Deconstruct()
 void StaticMeshComponent::BeginPlay()
 {
 	SUPER::BeginPlay();
+	Init();
 }
 
 void StaticMeshComponent::Tick(const float& _deltaTime)
@@ -120,6 +121,10 @@ void StaticMeshComponent::Init()
 	vertexDataSize = dimension + 3 + 3 + (useTextures ? 2 : 0);
 	InitShaders();
 	InitShape();
+	//InitShaders();
+	
+	//material->InitAlbedo(Vector4f(1.0f,1.0f,1.0f,1.0f));
+	material->InitAlbedo("/backpack/diffuse.jpg");
 	InitBuffers();
 	InitTextures();
 }
@@ -134,7 +139,8 @@ void StaticMeshComponent::InitShaders()
 
 	// FragmentShader
 	unsigned int _fragmentShader = CreateShader(fragmentShaderPath, false);
-	Assert(CheckShaderForErrors(_fragmentShader, "FragmentShader"), "Init of FragmentShader failed!");
+	//Assert(CheckShaderForErrors(_fragmentShader, "FragmentShader"), "Init of FragmentShader failed!");
+	Assert(CheckShaderForErrors(_fragmentShader, "FragmentLightShader"), "Init of FragmentShader failed!");
 
 	// Link shaders
 	shaderProgram = glCreateProgram();
@@ -291,28 +297,25 @@ vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const a
 	{
 		aiString _path;
 		_material->GetTexture(_type, _textureIndex, &_path);
-
-		bool _isAlreadyLoaded = false;
-		for (GLuint _loadedTextureIndex = 0; _loadedTextureIndex < texturesLoaded.size(); _loadedTextureIndex++)
+		bool skip = false;
+		for (unsigned int j = 0; j < textures.size(); j++)
 		{
-			if (strcmp(texturesLoaded[_loadedTextureIndex].path.data(), _path.C_Str()) == 0)
+			if (std::strcmp(textures[j].GetStringKey().data(), _path.C_Str()) == 0)
 			{
-				textures.push_back(texturesLoaded[_loadedTextureIndex]);
-				_isAlreadyLoaded = true;
+				textures.push_back(textures[j]);
+				skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
 				break;
 			}
 		}
-		if (!_isAlreadyLoaded)
+		if (!skip)
 		{
 			const GLuint& _id = LoadTexture(_path.C_Str());
-			const Texture& _texture = Texture(_id, _path.C_Str(), _type);
-			_textures.push_back(_texture);
-			texturesLoaded.push_back(_texture);
+			//const Texture& _texture = Texture(_id, _path.C_Str(), _type);
+			Texture* _texture = TextureManager::GetInstance().CreateTexture(_path.C_Str(), _type);
+			_textures.push_back(*_texture);
 
 		}
 	}
-		
-
 	return _textures;
 }
 
@@ -390,11 +393,11 @@ void StaticMeshComponent::InitBuffers()
 
 	// Setup vertices
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, SizeOf<GLsizei>(vertices.size()), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, SizeOf<GLsizei, Vertex>(vertices.size()), vertices.data(), GL_STATIC_DRAW);
 
 	// Setup edges
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, SizeOf<GLsizei>(indices.size()), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, SizeOf<GLsizei, GLuint>(indices.size()), indices.data(), GL_STATIC_DRAW);
 
 	const GLsizei& _vertexSize = SizeOf<GLsizei, Vertex>();
 
@@ -430,47 +433,6 @@ void StaticMeshComponent::InitBuffers()
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindVertexArray(VAO);
 
-	/*
-	//// Inits
-	//glGenVertexArrays(1, &VAO);
-	//glGenBuffers(1, &VBO);
-	//glGenBuffers(1, &EBO);
-
-	//// Bindings
-	//glBindVertexArray(VAO);
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-	//// Setup vertices
-	//glBufferData(GL_ARRAY_BUFFER, SizeOf<GLsizei>(vertices.size()), vertices.data(), GL_STATIC_DRAW);
-
-	//// Setup edges
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, SizeOf<GLsizei>(edges.size()), edges.data(), GL_STATIC_DRAW);
-
-	//// Position attributes
-	//const GLsizei& _sizeAttrib0 = SizeOf<GLsizei>(vertexDataSize);
-	//glVertexAttribPointer(0, dimension, GL_FLOAT, GL_FALSE, _sizeAttrib0, SizeOf(0));
-	//glEnableVertexAttribArray(0);
-
-	//// Color attributes
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _sizeAttrib0, SizeOf(dimension));
-	//glEnableVertexAttribArray(1);
-
-	//// Normal attributes
-	//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, _sizeAttrib0, SizeOf(dimension + 3));
-	//glEnableVertexAttribArray(3);
-
-	//// Texture attributes
-	//if (useTextures)
-	//{
-	//	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, _sizeAttrib0, SizeOf(dimension + 3 + 3));
-	//	glEnableVertexAttribArray(2);
-	//}
-
-	//// Applying VBO and VAO
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBindVertexArray(VAO);
-	*/
 }
 
 GLuint StaticMeshComponent::LoadTexture(const string& _textureName)
@@ -490,7 +452,7 @@ GLuint StaticMeshComponent::LoadTexture(const string& _textureName)
 	int _textureHeight;
 	int _channelsCount;
 	const string& _texturePath = GetPath(CONTENT);
-	string _filePath = _texturePath +"Survival_BackPack/Textures/" + _textureName;
+	string _filePath = _texturePath + "backpack/Textures/" + _textureName;
 
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* _data = stbi_load(_filePath.c_str(), &_textureWidth, &_textureHeight, &_channelsCount, 0);
@@ -520,16 +482,16 @@ void StaticMeshComponent::InitTextures()
 	{
 		try
 		{
-			glUseProgram(shaderProgram);
+			glUseProgram(material->GetShader()->GetShaderProgram());
 			for (const pair<string, GLuint>& _pair : allTextures)
 				allTextures[_pair.first] = LoadTexture(_pair.first);
 
-			const GLuint& _uniformMaterialDiffuse = glGetUniformLocation(shaderProgram, "uniformMaterial.diffuse");
-			glUniform1i(_uniformMaterialDiffuse, 0);
-			const GLuint& _uniformMaterialSpecular = glGetUniformLocation(shaderProgram, "uniformMaterial.specular");
-			glUniform1i(_uniformMaterialSpecular, 1);
-			const GLuint& _uniformMaterialShininess = glGetUniformLocation(shaderProgram, "uniformMaterial.shininess");
-			glUniform1f(_uniformMaterialShininess, 64.0f);
+			//ManagerLight
+			//ApplyLight
+			LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
+
+			//Manager donne un vector
+			//Static Mesh Set le frag
 		}
 		catch (const exception& _error)
 		{
@@ -541,7 +503,8 @@ void StaticMeshComponent::InitTextures()
 void StaticMeshComponent::Update()
 {
 	//UpdateColors();
-	UpdateTextures(); // TODO update
+	//UpdateTextures(); // TODO update
+	material->Update();
 	Draw();
 
 	//glActiveTexture(GL_TEXTURE0);
@@ -712,7 +675,7 @@ void StaticMeshComponent::Draw()
 	// === Drawing shapes as Elements ===
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
-	//glBindVertexArray(0);
+	glBindVertexArray(0);
 
 	// === Drawing shapes as Vertices ===
 	//glBindVertexArray(VAO);

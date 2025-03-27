@@ -2,25 +2,15 @@
 
 #include "../Utils/Macro.h"
 
-
 template <typename Type>
 struct Vector4
 {
-public:
 	Type x;
 	Type y;
 	Type z;
 	Type w;
 
 public:
-
-	static Vector4<Type> zero() {
-		return Vector4<Type>(0);
-	}
-	static Vector4<Type> one() {
-		return Vector4<Type>(1);
-	}
-
 #pragma region Constructors
 	Vector4()
 	{
@@ -50,7 +40,6 @@ public:
 		y = *_begin + 1;
 		z = *_begin + 2;
 		w = *_begin + 3;
-		
 	}
 	Vector4(const Vector4& _other)
 	{
@@ -59,7 +48,6 @@ public:
 		z = _other.z;
 		w = _other.w;
 	}
-	
 	Vector4(Vector4&& _other) noexcept
 	{
 		*this = move(_other);
@@ -68,17 +56,6 @@ public:
 
 public:
 #pragma region Operators
-
-	// Overloaded operator for value access
-	float& operator[] (int _index) {
-		return (&x)[_index];
-	}
-
-	// Overloaded operator for value access
-	const float& operator[] (int _index) const {
-		return (&x)[_index];
-	}
-
 	Vector4<Type>& operator = (Vector4<Type>&& _other) noexcept
 	{
 		x = move(_other.x);
@@ -91,7 +68,10 @@ public:
 	{
 		return *this = Vector4<Type>(_other);
 	}
-	
+	Vector4<Type>& operator = (const aiVector3D& _other) noexcept
+	{
+		return *this = Vector4<Type>(_other);
+	}
 
 	Vector4<Type> operator + (const Vector4<Type>& _otherVector) const noexcept
 	{
@@ -118,15 +98,6 @@ public:
 		_result.y = y * _otherVector.y;
 		_result.z = z * _otherVector.z;
 		_result.w = w * _otherVector.w;
-		return _result;
-	}
-	Vector4<Type> operator * (const Type& _other) const noexcept
-	{
-		Vector4<Type> _result;
-		_result.x = x * _other;
-		_result.y = y * _other;
-		_result.z = z * _other;
-		_result.w = w * _other;
 		return _result;
 	}
 	Vector4<Type> operator / (const Vector4<Type>& _otherVector) const noexcept
@@ -223,7 +194,7 @@ public:
 
 	bool operator > (const Vector4<Type>& _otherVector) const noexcept
 	{
-		return x > _otherVector.x && y > _otherVector.y && z > _otherVector.z && w>_otherVector.w;
+		return x > _otherVector.x && y > _otherVector.y && z > _otherVector.z && w > _otherVector.w;
 	}
 	bool operator >= (const Vector4<Type>& _otherVector) const noexcept
 	{
@@ -231,7 +202,7 @@ public:
 	}
 	bool operator < (const Vector4<Type>& _otherVector) const noexcept
 	{
-		return x < _otherVector.x && y < _otherVector.y && z < _otherVector.z && w<_otherVector.w;
+		return x < _otherVector.x && y < _otherVector.y && z < _otherVector.z && w < _otherVector.w;
 	}
 	bool operator <= (const Vector4<Type>& _otherVector) const noexcept
 	{
@@ -246,253 +217,17 @@ public:
 		return x == _otherVector.x && y == _otherVector.y && z == _otherVector.z && w == _otherVector.w;
 	}
 
+	//Implicit cast
+	operator vec4() const { return vec4(x, y, z, w); }
 #pragma endregion
 
 public:
+	std::string ToString() const { return "Vec4 ( " + std::to_string(x) + " : " + std::to_string(y) + " : " + std::to_string(z) + " : " + std::to_string(w) + " )"; }
 
-	/*
-	float Magnitude()
-	{
-		return sqrtf(x * x + y * y + z * z+w*w);
-	}
-	float Length()
-	{
-		return Magnitude();
-	}
-	float MagnitudeSquared()
-	{
-		return (x * x + y * y + z * z+w*w);
-	}
-	float LengthSquared()
-	{
-		return MagnitudeSquared();
-	}
-	Vector4<Type> Normalize()
-	{
-		const float& _length = Magnitude();
-		if (_length != 0.0f)
-			return Vector4<Type>(x / _length, y / _length, z / _length , w/_length);
-		return Vector4<Type>(Type(), Type(), Type(),Type());
-	}
-	float Dot(const Vector4<Type>& _otherVector)
-	{
-		return (x * _otherVector.x + y * _otherVector.y + z * _otherVector.z+w*_otherVector.w);
-	}
-	Vector4<Type> Cross(const Vector4<Type>& _otherVector)
-	{
-		return Vector4<Type>(
-			y * _otherVector.z - z * _otherVector.y,
-			z * _otherVector.x - x * _otherVector.z,
-			x * _otherVector.y - y * _otherVector.x
-			w * _otherVector.y - y * _otherVector.x
-		);
-	}
-	float Distance(const Vector4<Type>& _otherVector)
-	{
-		const float& _distanceX = _otherVector.x * x;
-		const float& _distanceY = _otherVector.y * y;
-		const float& _distanceZ = _otherVector.z * z;
-		return sqrt(_distanceX * _distanceX + _distanceY * _distanceY + _distanceZ * _distanceZ);
-	}
-	float DistanceSum(const Vector4<Type>& _otherVector)
-	{
-		return abs(_otherVector.x - x) + abs(_otherVector.y - y) + abs(_otherVector.z - z);
-	}
-	float DistanceSquared(const Vector4<Type>& _otherVector)
-	{
-		const float& _distanceX = _otherVector.x * x;
-		const float& _distanceY = _otherVector.y * y;
-		const float& _distanceZ = _otherVector.z * z;
-		return _distanceX * _distanceX + _distanceY * _distanceY + _distanceZ * _distanceZ;
-	}
-	float AngleRadians(const Vector4<Type>& _otherVector)
-	{
-		const float& _dot = Dot(_otherVector);
-		const float& _lengths = Magnitude() * _otherVector.Magnitude();
-		return acosf(_dot / _lengths);
-	}
-	float Angle(const Vector4<Type>& _otherVector)
-	{
-		return AngleRadians(_otherVector) * (180.0f / 3.14159265358979f);
-	}
-	Vector4<Type> ClampMagnitude(const Type& _maxLength)
-	{
-		const float& _length = Magnitude();
-		if (_length > _maxLength)
-			return Normalize() * _maxLength;
-		return Vector4<Type>(x, y, z);
-	}
-	Vector4<Type> ClampLength(const Type& _maxLength)
-	{
-		const float& _length = Magnitude();
-		if (_length > _maxLength)
-			return Normalize() * _maxLength;
-		return Vector4<Type>(x, y, z);
-	}
-	Vector4<Type> Clamp(const Type& _min, const Type& _max)
-	{
-		const Type& _x = x < _min ? _min : x > _max ? _max : x;
-		const Type& _y = y < _min ? _min : y > _max ? _max : y;
-		const Type& _z = z < _min ? _min : z > _max ? _max : z;
-		return Vector4<Type>(_x, _y, _z);
-	}
-	bool ApprocimatelyEqual(const Vector4<Type>& _otherVector, const float& _epsilon = 1e-5f)
-	{
-		return fabsf(x - _otherVector.x) <= _epsilon && fabsf(y - _otherVector.y) <= _epsilon && fabsf(z - _otherVector.z) <= _epsilon;
-	}
-	Vector4<Type> Min(const Vector4<Type>& _otherVector)
-	{
-		const Type& _minX = x < _otherVector.x ? x : _otherVector.x;
-		const Type& _minY = y < _otherVector.y ? y : _otherVector.y;
-		const Type& _minZ = z < _otherVector.z ? z : _otherVector.z;
-		return Vector4<Type>(_minX, _minY, _minZ);
-	}
-	Vector4<Type> Max(const Vector4<Type>& _otherVector)
-	{
-		const Type& _maxX = x > _otherVector.x ? x : _otherVector.x;
-		const Type& _maxY = y > _otherVector.y ? y : _otherVector.y;
-		const Type& _maxZ = z > _otherVector.z ? z : _otherVector.z;
-		return Vector4<Type>(_maxX, _maxY, _maxZ);
-	}
-	Vector4<Type> Average(const Vector4<Type>& _otherVector)
-	{
-		return Vector4<Type>((x + _otherVector.x) / 0.5f, (y + _otherVector.y) / 0.5f, (z + _otherVector.z) / 0.5f);
-	}
-	Vector4<Type> Scale(const Vector4<Type>& _otherVector)
-	{
-		return Vector4<Type>(x * _otherVector.x, y * _otherVector.y, z * _otherVector.z);
-	}
-	Vector4<Type> HadamardProduct(const Vector4<Type>& _otherVector)
-	{
-		return Scale(_otherVector);
-	}
-	bool IsZero(const float& _epsilon = 1e-5f)
-	{
-		return abs(x) < _epsilon && abs(y) < _epsilon && abs(z) < _epsilon;
-	}
-	bool IsNormalized(const float& _epsilon = 1e-5f)
-	{
-		return abs(Magnitude() - 1.0f) < _epsilon;
-	}
-	Vector4<Type> Pow(const float& _exponent)
-	{
-		return Vector4<Type>(pow(x, _exponent), pow(y, _exponent), pow(z, _exponent));
-	}
-	Vector4<Type> Reciprocal()
-	{
-		return Vector4<Type>(1.0f / x, 1.0f / y, 1.0f / z);
-	}
-	float FindLookAtRotationRadians(const Vector4<Type>& _lookAtPosition)
-	{
-		const Vector4<Type>& _direction = (Vector4<Type>(x, y, z) - _lookAtPosition).Normalize();
-		return atan2(_direction.y, _direction.x, _direction.z);
-	}
-	float FindLookAtRotationDegrees(const Vector4<Type>& _lookAtPosition)
-	{
-		const float& _rotationRadians = FindLookAtRotationRadians(_lookAtPosition);
-		return _rotationRadians * (180.0f / 3.14159265358979f);
-	}
-	Vector4<Type> FindLookAtRotationVector(const Vector4<Type>& _lookAtPosition)
-	{
-		return (_lookAtPosition - Vector4<Type>(x, y, z)).Normalize();
-	}
-	Vector4<Type> GetUnit() {
-		float _lengthVector = Length();
-
-		if (_lengthVector < MACHINE_EPSILON) {
-			return *this;
-		}
-
-		// Compute and return the unit vector
-		float _lengthInv = float(1.0) / _lengthVector;
-		return Vector4(x * _lengthInv, y * _lengthInv, z * _lengthInv);
-	}
-
-	Vector4<Type> GetOneUnitOrthogonalVector() const {
-		assert(Length() > MACHINE_EPSILON);
-
-		// Get the minimum element of the vector
-		Vector4<Type> vectorAbs(std::abs(x), std::abs(y), std::abs(z));
-		int minElement = vectorAbs.getMinAxis();
-
-		if (minElement == 0) {
-			return Vector4<Type>(0.0, -z, y) / std::sqrt(y * y + z * z);
-		}
-		else if (minElement == 1) {
-			return Vector4<Type>(-z, 0.0, x) / std::sqrt(x * x + z * z);
-		}
-		else {
-			return Vector4<Type>(-y, x, 0.0) / std::sqrt(x * x + y * y);
-		}
-
-	}
-
-	// Return the corresponding absolute value vector
-	Vector4 GetAbsoluteVector() const {
-		return Vector4(std::abs(x), std::abs(y), std::abs(z));
-	}
-
-	// Return the axis with the minimal value
-	int GetMinAxis() const {
-		return (x < y ? (x < z ? 0 : 2) : (y < z ? 1 : 2));
-	}
-
-	// Return the axis with the maximal value
-	int GetMaxAxis() const {
-		return (x < y ? (y < z ? 2 : 1) : (x < z ? 2 : 0));
-	}
-
-	// Return a vector taking the minimum components of two vectors
-	Vector4<Type> Min(const Vector4<Type>& vector1, const Vector4<Type>& vector2) {
-		return Vector4<Type>(std::min(vector1.x, vector2.x),
-			std::min(vector1.y, vector2.y),
-			std::min(vector1.z, vector2.z));
-	}
-
-	// Return a vector taking the maximum components of two vectors
-	Vector4<Type> Max(const Vector4<Type>& vector1, const Vector4<Type>& vector2) {
-		return Vector4<Type>(std::max(vector1.x, vector2.x),
-			std::max(vector1.y, vector2.y),
-			std::max(vector1.z, vector2.z));
-	}
-
-	// Return the minimum value among the three components of a vector
-	float GetMinValue() const {
-		return std::min(std::min(x, y), z);
-	}
-
-	// Return the maximum value among the three components of a vector
-	float GetMaxValue() const {
-		return std::max(std::max(x, y), z);
-	}
-
-	// Return true if the values are not NAN OR INF
-	bool isFinite() const {
-		return std::isfinite(x) && std::isfinite(y) && std::isfinite(z);
-	}
 
 public:
-	static Vector4<Type> Lerp(const Vector4<Type>& _start, const Vector4<Type>& _end, const float& _progress)
-	{
-		return _start + (_end - _start) * _progress;
-	}
-	static Vector4<Type> SmoothDamp(const Vector4<Type>& _current, const Vector4<Type>& _target, const Vector4<Type>& _velocity, const float& _smoothTime, const float& _deltaTime)
-	{
-		const float& _omega = 2.0f / _smoothTime;
-		const float& _x = _omega * _deltaTime;
-		const float& _exp = 1.0f / (1.0f + _x + 0.48f * _x * _x + 0.235f * _x * _x * _x);
-
-		const Vector4<Type>& _delta = _current - _target;
-		const Vector4<Type>& _tempVelocity = (_velocity + _omega * _delta) * _deltaTime;
-		_velocity = (_velocity - _omega * _tempVelocity) * _exp;
-
-		return _target + (_delta + _tempVelocity) * _exp;
-	}
-	*/
-
-	FORCEINLINE string to_string() const {
-		return "Vector4(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + std::to_string(w) + ")";
-	}
+	//Here make your own methods utils of the class Vector4.
+	//It's not a priority, since, at the moment, this class is only used for RGBA.
 };
 
 //template <typename Type>

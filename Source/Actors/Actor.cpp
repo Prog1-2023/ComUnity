@@ -1,85 +1,3 @@
-/*
-#include "Actor.h"
-#include "../Editor/World.h"
-#include"../Components/StaticMeshComponent.h"
-
-Actor::Actor(World* _world)
-{
-	allComponents = vector<Component*>();
-
-	transform = new  TransformComponent(this);
-	allComponents.push_back(transform);
-	world = _world;
-}
-
-Actor::~Actor()
-{
-	for (Component* _component : allComponents)
-	{
-		delete _component;
-	}
-}
-
-void Actor::BeginPlay()
-{
-	for (Component* _component : allComponents)
-	{
-		_component->BeginPlay() ;
-	}
-}
-
-void Actor::Tick(const float _deltaTime)
-{
-	for (Component* _component : allComponents)
-	{
-		_component->Tick(_deltaTime);
-	}
-}
-
-void Actor::BeginDestroy()
-{
-	for (Component* _component : allComponents)
-	{
-		_component->BeginDestroy();
-	}
-}
-
-void Actor::LoadModel(const string& _path)
-{
-	Importer _importer = Importer();
-	const string& _fullPath = GetPath(CONTENT) + _path;
-	const aiScene* _scene = _importer.ReadFile(_fullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
-	const string& _errorMessage = "Error => " + string(_importer.GetErrorString());
-	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorMessage.c_str());
-
-	//const string& _directory = _path.substr(0, _path.find_last_of('/'));
-
-	//StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
-	//ComputeMesh(_meshComponent, _scene, _scene->mRootNode);
-	//allComponents.push_back(_meshComponent);
-
-	ComputeMesh(_scene, _scene->mRootNode);
-
-}
-
-void Actor::ComputeMesh(const aiScene* _scene, const aiNode* _node)
-{
-	for (GLuint _index = 0; _index < _node->mNumMeshes; _index++)
-	{
-		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
-
-		StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
-		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
-		allComponents.push_back(_meshComponent);
-	}
-
-	for (GLuint i = 0; i < _node->mNumChildren; i++)
-	{
-		ComputeMesh(_scene, _node->mChildren[i]);
-	}
-
-}
-*/
 #include "Actor.h"
 #include "../Manager/ActorManager.h"
 #include"../Manager/Level.h"
@@ -231,4 +149,26 @@ void Actor::AddComponent(Component* _component)
 void Actor::RemoveComponent(Component* _component)
 {
 	components.erase(components.find(_component));
+
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
+	{
+		ComputeMeshes(_scene, _node->mChildren[_index]);
+	}
+}
+
+void Actor::ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node)
+{
+	const unsigned int& _amount = _node->mNumMeshes;
+	for (GLuint _index = 0; _index < _amount; _index++)
+	{
+		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
+		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
+	}
+
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
+	{
+		ComputeMesh(_meshComponent, _scene, _node->mChildren[_index]);
+	}
 }
