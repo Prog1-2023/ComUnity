@@ -11,14 +11,14 @@ SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn
 	SpawnActorTab _meshTab = SpawnActorTab();
 	SpawnActorTab _lightTab = SpawnActorTab();
 
-	_meshTab.actorList["Cube"].Add([&]() { LOG("Cube"); });
-	_meshTab.actorList["Sphere"].Add([&]() { LOG("Sphere"); });
-	_meshTab.actorList["Cylinder"].Add([&]() { LOG("Cylinder");});
-	_meshTab.actorList["Cone"].Add([&]() { LOG("Cone");});
+	_meshTab.actorList["Cube"] = SpawnActor([&]() { LOG("Cube"); }, "Cube.png");
+	_meshTab.actorList["Sphere"] = SpawnActor([&]() { LOG("Sphere"); }, "Sphere.png");
+	_meshTab.actorList["Cylinder"] = SpawnActor([&]() { LOG("Cylinder"); }, "Cylinder.png");
+	_meshTab.actorList["Cone"] = SpawnActor([&]() { LOG("Cone"); }, "Cone.png");
 
-	_lightTab.actorList["Point Light"].Add([&]() { LOG("Point Light"); });
-	_lightTab.actorList["Spot Light"].Add([&]() { LOG("Spot Light");});
-	_lightTab.actorList["Directional Light"].Add([&]() { LOG("Directional Light");});
+	_lightTab.actorList["Point Light"] = SpawnActor([&]() { LOG("Point Light"); }, "PointLight.png");
+	_lightTab.actorList["Spot Light"] = SpawnActor([&]() { LOG("Spot Light"); }, "SpotLight.png");
+	_lightTab.actorList["Directional Light"] = SpawnActor([&]() { LOG("Directional Light"); }, "DirectionalLight.png");
 
 	tabList["Meshes"] = _meshTab;
 	tabList["Lights"] = _lightTab;
