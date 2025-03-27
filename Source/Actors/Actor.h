@@ -21,7 +21,7 @@ public:
 
 	FORCEINLINE void SetActorLocalLocation(const Vector3f& _location) { transform->SetLocalLocation(_location); }
 
-
+	FORCEINLINE vector<Component*> GetComponents() const { return allComponents; }
 public:
 	Actor(World* _world);
 	virtual ~Actor();

@@ -1,4 +1,5 @@
 #include "TransformComponent.h"
+#include "../Serialization/SerializationValue.h"
 
 TransformComponent::TransformComponent(Actor* _owner) : Component(_owner)
 {
@@ -6,6 +7,10 @@ TransformComponent::TransformComponent(Actor* _owner) : Component(_owner)
 	location = Vector3f();
 	rotation = Vector3f();
 	scale = Vector3f();
+
+	SERIALIZE(this,TransformComponent,READ,bool,physics);
+	SERIALIZE(this,TransformComponent,READ,int, moveSpeed);
+	SERIALIZE(this,TransformComponent,READ,float, rotateSpeed);
 }
 
 TransformComponent::~TransformComponent()

@@ -4,30 +4,27 @@
 #include <direct.h> 
 using namespace filesystem;
 
-
-
 Serialization::Serialization()
 {
-	storedValues = map<string, vector<SerializedValue*>>();
+	storedValues = vector<ValueAttachedToObject*>();
 }
 
 Serialization::~Serialization()
 {
-	for (pair<string,vector<SerializedValue*>> _pair : storedValues)
+	for (ValueAttachedToObject* _valAttached : storedValues)
 	{
-		for (SerializedValue* _value : _pair.second)
+		for (pair<string, vector<SerializedValue*>> _secondPair : _firstPair.second)
 		{
-			delete _value;
+			for (SerializedValue* _value : _secondPair.second)
+			{
+				delete _value;
+			}
 		}
 	}
 }
 
 void Serialization::StartSerialization()
 {
-
-
-
-	return ;
 	const size_t size = 1024;
 	char buffer[size];
 	Assert(getcwd(buffer, size),"Can't Read Directory for Serialization");
@@ -65,7 +62,7 @@ void Serialization::ReadFile(const vector<string> _allFiles)
 				{
 					const path& _filePath = _file;
 					string _fileName = GetFileName(_filePath);
-					storedValues[_fileName].push_back(_value);
+					//storedValues[_fileName].push_back(_value);
 				}
 			}
 		}
@@ -114,7 +111,8 @@ SerializedValue* Serialization::RetreiveValue(string _line)
 	const string& _type = GetNextWord(_line);
 	const string& _name = GetNextWord(_line);
 	const string& _value = GetValue(_line);
-	return new SerializedValue(_status, _type, _name, _value);
+	return nullptr;
+	//return new SerializedValue(_status, _type, _name, _value);
 }
 
 unsigned int Serialization::GetSerializeStatus(const string& _line)
