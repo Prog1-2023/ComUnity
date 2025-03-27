@@ -6,14 +6,14 @@ using namespace filesystem;
 
 Serialization::Serialization()
 {
-	storedValues = vector<ValueAttachedToObject*>();
+	storedValues = Array<ValueAttachedToObject*>();
 }
 
 Serialization::~Serialization()
 {
 	for (ValueAttachedToObject* _valAttached : storedValues)
 	{
-		for (pair<string, vector<SerializedValue*>> _secondPair : _valAttached->values)
+		for (pair<string, Array<SerializedValue*>> _secondPair : _valAttached->values)
 		{
 			for (SerializedValue* _value : _secondPair.second)
 			{

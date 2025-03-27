@@ -24,6 +24,7 @@ class TransformComponent : public Component
 	bool physics;
 	int moveSpeed = 10;
 	float rotateSpeed = 50.25f;
+	Vector3f vectorTest;
 
 public:
 	FORCEINLINE Vector3f GetLocalLocation() { return localLocation; }

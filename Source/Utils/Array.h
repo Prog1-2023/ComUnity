@@ -40,7 +40,7 @@ public:
 	void Add(const Type& _toAdd)
 	{
 		list.push_back(_toAdd);
-		onItemAdded(_toAdd);
+		onItemAdded.Invoke(_toAdd);
 	}
 	// Adds the list of elements from another Array
 	void Add(const Array<Type>& _otherArray)
@@ -50,7 +50,7 @@ public:
 		{
 			const Type& _element = _otherArray[_index];
 			Add(_element);
-			onItemAdded(_element);
+			onItemAdded.Invoke(_element);
 		}
 	}
 	// Adds the list of elements from a vector
@@ -61,7 +61,7 @@ public:
 		{
 			const Type& _element = _vector[_index];
 			Add(_element);
-			onItemAdded(_element);
+			onItemAdded.Invoke(_element);
 		}
 	}
 	// Removes an item from the Array
@@ -75,7 +75,7 @@ public:
 			const Type& _element = list[_index];
 			if (_element == _toRemove)
 			{
-				onItemRemoved(_element);
+				onItemRemoved.Invoke(_element);
 				list.erase(list.begin() + _index);
 				break;
 			}
@@ -96,7 +96,7 @@ public:
 	{
 		if (_indexToRemove < 0 || _indexToRemove >= Size())
 			return false;
-		onItemRemoved(list[_indexToRemove]);
+		onItemRemoved.Invoke(list[_indexToRemove]);
 		list.erase(list.begin() + _indexToRemove);
 		return true;
 	}
@@ -159,7 +159,7 @@ public:
 	{
 		const int& _size = Size();
 		for (int _index = 0; _index < _size; _index++)
-			CDelete(list[_index]);
+			Remove(list[_index]);
 		Clear();
 	}
 	// Returns the first element of the Array

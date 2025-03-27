@@ -5,9 +5,9 @@ Actor::Actor(World* _world)
 {
 	world = _world;
 
-	allComponents = vector<Component*>();
+	allComponents = Array<Component*>();
 	transform = new TransformComponent(this);
-	allComponents.push_back(transform);
+	allComponents.Add(transform);
 }
 
 Actor::~Actor()
@@ -51,7 +51,7 @@ void Actor::LoadModel(const string& _path)
 
 	StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
 	ComputeMeshes(_scene, _scene->mRootNode, _meshComponent);
-	allComponents.push_back(_meshComponent);
+	allComponents.Add(_meshComponent);
 	//ComputeMeshes(_scene,_node);
 }
 
@@ -104,7 +104,7 @@ void Actor::ComputeMeshes(const aiScene* _scene, const aiNode* _node)
 		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_i]];
 		StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
 		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
-		allComponents.push_back(_meshComponent);
+		allComponents.Add(_meshComponent);
 	}
 
 	GLuint _childrenSize = _node->mNumChildren;

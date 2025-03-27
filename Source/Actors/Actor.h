@@ -9,7 +9,7 @@ class Actor
 {
 	class World* world;
 protected:
-	vector<Component*> allComponents;
+	Array<Component*> allComponents;
 	TransformComponent* transform;
 
 public:
@@ -21,7 +21,7 @@ public:
 
 	FORCEINLINE void SetActorLocalLocation(const Vector3f& _location) { transform->SetLocalLocation(_location); }
 
-	FORCEINLINE vector<Component*> GetComponents() const { return allComponents; }
+	FORCEINLINE Array<Component*> GetComponents() const { return allComponents; }
 public:
 	Actor(World* _world);
 	virtual ~Actor();
@@ -50,7 +50,7 @@ public:
 	void AddComponent()
 	{
 		Type* _newComponent = new Type(this);
-		allComponents.push_back(_newComponent);
+		allComponents.Add(_newComponent);
 	}
 
 	void SetActorLocation(const Vector3f& _location);

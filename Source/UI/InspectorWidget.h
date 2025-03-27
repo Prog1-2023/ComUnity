@@ -3,6 +3,8 @@
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
 #include "../Actors/Actor.h"
+#include "../Serialization/Serialization.h"
+
 
 struct SerializedValue;
 
@@ -26,9 +28,10 @@ public:
 
 private:
 	bool DrawFromType(SerializedValue* _value);
-	void DrawFromComplexeClass(vector<std::any> _vector);
-	void DrawIntOutput(SerializedValue* _value);;
-	void DrawFloatOutput(SerializedValue* _value);
-	void DrawBoolOutput(SerializedValue* _value);
+	void DrawFromComplexeClass(Array<ValueAttachedToObject*> _serializedValues, SerializedValue* _value);
+	void DrawIntOutput(SerializedValue* _intValue);;
+	void DrawFloatOutput(SerializedValue* _floatValue);
+	void DrawBoolOutput(SerializedValue* _boolValue);
+	void DrawDoubleOutput(SerializedValue* _doubleValue);
 
 };
