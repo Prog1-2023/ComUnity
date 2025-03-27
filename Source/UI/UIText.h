@@ -8,7 +8,6 @@ class World;
 
 class UIText : public UIElement
 {
-    FontManager* fontManager;
     string text;
     string fontName;
     float x;
@@ -17,7 +16,12 @@ class UIText : public UIElement
     ImVec4 color;
 
 public:
-    UIText(FontManager* _fontManager, World* _world, const string& _name = "UIText");
+    UIText(); 
+    UIText(const string& _text);
+    UIText(const string& _text, const string& _fontName);
+    UIText(const string& _text, const string& _fontName, float _x, float _y);
+    UIText(const string& _text, const string& _fontName, float _x, float _y, float _scale);
+    UIText(const string& _text, const string& _fontName, float _x, float _y, float _scale, const ImVec4& _color);
     ~UIText();
 
     void SetText(const string& _text);
@@ -25,6 +29,7 @@ public:
     void SetPosition(float _x, float _y);
     void SetScale(float _scale);
     void SetColor(const ImVec4& _color);
+    void Construct();
 
-    void Draw(); 
+    virtual void Draw() override; 
 };

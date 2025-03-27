@@ -3,6 +3,7 @@
 #include "Singleton.h"
 #include "../IMGUI/imgui.h"
 #include "../Utils/CoreMinimal.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -15,7 +16,6 @@ private:
 
 public:
     FontManager();
-    ~FontManager();
 
 public:
     bool LoadFont(const string& _fontPath, float _fontSize);

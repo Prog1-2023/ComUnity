@@ -1,5 +1,6 @@
 #pragma once
 #include "../Utils/CoreMinimal.h"
+#include "../Serialization/SerializationValue.h"
 
 #define KEY(GLFW_KEY) glfwGetKeyScancode(GLFW_KEY)
 
