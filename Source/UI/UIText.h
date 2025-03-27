@@ -4,6 +4,8 @@
 #include "../Utils/CoreMinimal.h"
 #include "UIElement.h"
 
+class World;
+
 class UIText : public UIElement
 {
     FontManager* fontManager;

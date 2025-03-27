@@ -9,6 +9,7 @@ enum Mobility
 	MOVABLE
 };
 
+
 class TransformComponent : public Component
 {
 	Vector3f localLocation;
@@ -18,6 +19,10 @@ class TransformComponent : public Component
 	Vector3f scale;
 
 	Mobility mobility;
+
+	bool physics = false;
+	int moveSpeed = 10;
+	float rotateSpeed = 50.25f;
 
 public:
 	FORCEINLINE Vector3f GetLocalLocation() { return localLocation; }
@@ -38,5 +43,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(const float _deltatime) override;
 	virtual void BeginDestroy() override;
+
 };
 

@@ -10,6 +10,7 @@
 #include "..\UI\Widget.h"
 #include "..\UI\ConsoleWidget.h"
 #include "../UI/UIText.h"
+#include "../Serialization/Serialization.h"
 
 void Shutdown(GLFWwindow* _window);
 
@@ -17,17 +18,20 @@ int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+    Serialization::GetInstance().StartSerialization();
+
     World* _world = new World();
     Window _window = Window(800, 600, "Engine");
     _world->SetWindow(&_window);
 
     Actor* _actor = _world->SpawnActor();
+    _actor->AddComponent<StaticMeshComponent>();
     _actor->BeginPlay();
 
     StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
     CameraActor* _camera = _world->SpawnActor<CameraActor>();
-    _world->SetCurrentCamera(_camera);
-    _world->Initialize();
+    //_world->SetCurrentCamera(_camera);
+    //_world->Initialize();
 
     int _width, _height;
     double _time = glfwGetTime();
@@ -36,19 +40,7 @@ int main()
     vec3 _targetPos = vec3(0.0f);
 
     UIManager& _uiManager = UIManager::GetInstance();
-    _uiManager.Init(_window.GetWindow());
-
-    //Test text
-    FontManager* fontManager = new FontManager();
-    fontManager->LoadFont(GetAbsolutePath() + "/Content/Fonts/RubikGlitch-Regular.ttf", 24.0f);
-
-    UIText* uiText = new UIText(fontManager, _world);
-    uiText->SetText("Hello World");
-    uiText->SetFont("RubikGlitch-Regular.ttf");
-    uiText->SetPosition(100, 100);
-    uiText->SetScale(1.0f);
-    uiText->SetColor(ImVec4(1, 1, 0, 1)); 
-
+    _uiManager.Init(_window.GetWindow(), _world);
 
     while (!glfwWindowShouldClose(_window.GetWindow()))
     {
@@ -59,9 +51,8 @@ int main()
         glfwGetFramebufferSize(_window.GetWindow(), &_width, &_height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         _window.GetController()->PollEvents();
-
-        //Test text
-        uiText->Draw();
+        
+        //_mesh->Tick(_deltatime);
 
         _uiManager.DrawAll();
 
@@ -71,6 +62,7 @@ int main()
 
     Shutdown(_window.GetWindow());
     _actor->BeginDestroy();
+    _camera->BeginDestroy();
     delete _world;
 
     return EXIT_SUCCESS;
