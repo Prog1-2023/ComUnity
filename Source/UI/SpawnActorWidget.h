@@ -3,10 +3,29 @@
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
 #include "Event.h"
+#include "FileManager.h"
+#include "TextureManager.h"
+
+struct SpawnActor
+{
+	Event<> callback;
+	TextureData texture;
+
+public:
+	SpawnActor()
+	{
+
+	}
+	SpawnActor(const Event<>& _callback, const string& _textureName)
+	{
+		callback = _callback;
+		TextureManager::GetInstance().LoadTexture(FileManager::GetContentPath() + "/EditorIcons/" + _textureName, texture);
+	}
+};
 
 struct SpawnActorTab
 {
-	unordered_map<string, Event<>> actorList;
+	unordered_map<string, SpawnActor> actorList;
 };
 
 class SpawnActorWidget : public Widget

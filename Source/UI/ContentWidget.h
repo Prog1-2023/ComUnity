@@ -2,6 +2,7 @@
 
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
+#include "TextureManager.h"
 
 class ContentWidget : public Widget
 {
@@ -14,6 +15,8 @@ class ContentWidget : public Widget
 	bool openCreateClass;
 	bool openImportFile;
 	int maxNameLength;
+	TextureData folderTexture;
+	TextureData fileTexture;
 
 public:
 	ContentWidget(const bool& _openedByDefault);
