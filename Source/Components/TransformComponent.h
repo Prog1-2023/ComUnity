@@ -1,5 +1,6 @@
 #pragma once
 #include "../Utils/CoreMinimal.h"
+#include "../Serialization/SerializationValue.h"
 #include "Component.h"
 
 enum Mobility

@@ -1,5 +1,4 @@
 #include "TransformComponent.h"
-#include "../Serialization/SerializationValue.h"
 
 TransformComponent::TransformComponent(Actor* _owner) : Component(_owner)
 {

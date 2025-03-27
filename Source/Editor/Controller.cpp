@@ -23,41 +23,6 @@ void Controller::PollEvents()
 
 		ComputeKey(_input.scancode);
 
-		/*if (IsValidKey(_input.scancode, { GLFW_KEY_ESCAPE }))
-		{
-			glfwSetWindowShouldClose(window, true);
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_UP, GLFW_KEY_W }))
-		{
-			phi += speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_DOWN, GLFW_KEY_S }))
-		{
-			phi -= speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_LEFT, GLFW_KEY_A }))
-		{
-			theta -= speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_RIGHT, GLFW_KEY_D }))
-		{
-			theta += speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_Q }))
-		{
-			viewRadius += zoomSpeed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_E }))
-		{
-			viewRadius -= zoomSpeed;
-		}*/
-
 		if (_input.action == GLFW_RELEASE)
 			_tempToDestroy.push_back(_it->first);
 	}
