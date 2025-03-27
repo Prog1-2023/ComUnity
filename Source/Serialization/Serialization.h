@@ -18,10 +18,6 @@ public:
 		type = _type;
 		variable = _variable;
 	}
-	~SerializedValue()
-	{
-		delete variable;
-	}
 };
 
 struct ValueAttachedToObject
