@@ -1,8 +1,9 @@
 #include "UIText.h"
 #include "FileManager.h"
 
-UIText::UIText() : UIElement(),
-text(""), fontName(""), x(0), y(0), scale(1.0f), color(ImVec4(1, 1, 1, 1))
+UIText::UIText() 
+	: UIElement(),
+	text(""), fontName(""), x(0), y(0), scale(1.0f), color(ImVec4(1, 1, 1, 1))
 {
 	Construct();
 }
