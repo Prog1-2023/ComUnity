@@ -33,6 +33,11 @@ public:
 	{
 		return lightComponentActive;
 	}
+	FORCEINLINE void SetColor(vec3 _color)
+	{
+		if (!lightComponentActive) return;
+		lightComponentActive->SetColor(_color);
+	}
 	void SetType(LightType _type);
 
 public:

@@ -62,8 +62,10 @@ int main()
 	Actor* _actor = _world->SpawnActor<CameraActor>();
 	_actor->LoadModel("backpack/Model/backpack.obj");
 
-	LightActor* _light = _world->SpawnLight(NONE);
-	LightActor* _light2 = _world->SpawnLight(DIRECTIONAL);
+	LightActor* _light = _world->SpawnLight(SPOT);
+
+	
+	//LightActor* _light2 = _world->SpawnLight(DIRECTIONAL);
 
 	Skybox* _skybox = _world->SpawnActor<Skybox>();
 

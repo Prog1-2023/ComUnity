@@ -4,6 +4,9 @@
 class PointLightComponent : public LightComponent
 {
 	float radius;
+	float constant;
+	float linear;
+	float quadratic;
 
 public:
 	FORCEINLINE float GetRadius() const
@@ -13,6 +16,18 @@ public:
 	FORCEINLINE void SetRadius(const float& _radius)
 	{
 		radius = _radius;
+	}
+	FORCEINLINE float GetConstant() const
+	{
+		return constant;
+	}
+	FORCEINLINE float GetLinear() const
+	{
+		return linear;
+	}
+	FORCEINLINE float GetQuadratic() const
+	{
+		return quadratic;
 	}
 
 public:

@@ -7,6 +7,8 @@ LightComponent::LightComponent(Actor* _owner) : Component(_owner)
 	ambientStrength = 1.0f;
 	intensity = 1.0f;
 	color = vec3(0.0f, 1.0f, 0.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specularStrenght = vec3(1.0f, 1.0f, 1.0f);
 	LightManager::GetInstance().AddLight(this);
 }
 

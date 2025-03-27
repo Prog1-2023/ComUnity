@@ -3,13 +3,11 @@
 
 void LightActor::SetType(LightType _type)
 {
-	lightComponentActive = new LightComponent(this);
 	type = _type;
 	if (type == DIRECTIONAL)
 	{
-		/*if (!directionalRef) directionalRef = new DirectionalLightComponent(this);
-		lightComponentActive = directionalRef;*/
-		lightComponentActive->SetColor(vec3(1.0f, 0.0f, 0.0f));
+		if (!directionalRef) directionalRef = new DirectionalLightComponent(this);
+		lightComponentActive = directionalRef;
 	}
 	else if (type == SPOT)
 	{
@@ -23,7 +21,7 @@ void LightActor::SetType(LightType _type)
 	}
 	else if (type == NONE)
 	{
-		lightComponentActive = new LightComponent(this);
+		lightComponentActive = nullptr;
 	}
 }
 
