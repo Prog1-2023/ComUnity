@@ -20,16 +20,26 @@ void HierarchyWidget::Draw()
 	}
 	vector<Actor*> _allActors = _world->GetAllActors();
 	const unsigned int& _amount = static_cast<const unsigned int>(_allActors.size());
+
 	for (unsigned int _index = 0; _index < _amount; _index++)
 	{
 		BeginDisabled(selectedActorIndex == _index);
-		const string& _text = to_string(_index) + " -> " + typeid(_allActors[_index]).name(); // TODO change to name
+		const string& _actorName = typeid(_allActors[_index]).name(); // TODO change to name
+		const string & _text = to_string(_index) + " -> " + _actorName;
+
 		if (Button(_text.c_str()))
 		{
 			selectedActorIndex = _index;
 			onActorSelected.Invoke(_allActors[_index]);
 		}
 		EndDisabled();
+
+		if (BeginPopupContextItem((to_string(_index) + _actorName + "RCC").c_str()))
+		{
+			if (MenuItem("Delete"))
+				onActorDeleteAction.Invoke(_allActors[_index]);
+			EndPopup();
+		}
 	}
 }
 

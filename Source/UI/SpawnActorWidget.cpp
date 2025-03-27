@@ -34,11 +34,11 @@ void SpawnActorWidget::ExecuteEvent(const int& _id)
 	const unsigned int& _meshesAmount = tabList["Meshes"].actorList.size();
 	const string& _actorType = (_id < _meshesAmount ? "Meshes" : "Lights");
 	unsigned int _currentIndex = _actorType == "Lights" ? _meshesAmount : 0;
-	for (const pair<string, Event<>>& _pair : tabList[_actorType].actorList)
+	for (const pair<string, SpawnActor>& _pair : tabList[_actorType].actorList)
 	{
 		if (_currentIndex == _id)
 		{
-			_pair.second.Invoke();
+			_pair.second.callback.Invoke();
 			break;
 		}
 		_currentIndex++;
@@ -59,9 +59,9 @@ void SpawnActorWidget::Draw()
 
 	Separator();
 	int _index = currentOpenedTab == "Lights" ? tabList["Meshes"].actorList.size() : 0;
-	for (const pair<string, Event<>>& _pair : tabList[currentOpenedTab].actorList)
+	for (const pair<string, SpawnActor>& _pair : tabList[currentOpenedTab].actorList)
 	{
-		Image(0, ImVec2(50.0f, 50.0f));
+		Image(_pair.second.texture.textureID, ImVec2(50.0f, 50.0f));
 		SameLine(0.0f, 0.0f);
 		Selectable(_pair.first.c_str());
 		if (BeginDragDropSource())

@@ -15,6 +15,10 @@ ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _
     maxNameLength = 30;
     popupEnterName = new char[30] { "" };
     UpdateElements();
+
+	const string& _contentPath = FileManager::GetContentPath();
+	TextureManager::GetInstance().LoadTexture(_contentPath + "/EditorIcons/Folder.png", folderTexture);
+	TextureManager::GetInstance().LoadTexture(_contentPath + "/EditorIcons/File.png", fileTexture);
 }
 
 ContentWidget::~ContentWidget()
@@ -312,4 +316,29 @@ void ContentWidget::Draw()
 
         }
     }
+	const string& _basePath = FileManager::GetContentPath() + currentPath + "/";
+	for (unsigned int _index = 0; _index < elements.size(); _index++)
+	{
+		const string& _path = _basePath + elements[_index];
+		Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f));
+		SameLine(0.0f, 0.0f);
+		if (Button(elements[_index].c_str()))
+			Open(elements[_index]);
+		if (_index >= elements.size())
+			return;
+		if (BeginPopupContextItem((elements[_index] + "RCC").c_str()))
+		{
+			if (MenuItem("Open"))
+				Open(elements[_index]);
+			if (MenuItem("Rename"))
+			{
+				fileToRename = elements[_index];
+				ResetInput(fileToRename);
+				openRename = true;
+			}
+			if (MenuItem("Delete"))
+				DeleteFile(elements[_index]);
+			EndPopup();
+		}
+	}
 }
