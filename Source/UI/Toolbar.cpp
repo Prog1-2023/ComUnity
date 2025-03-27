@@ -10,8 +10,9 @@ Toolbar::Toolbar()
 	allToggleablePanels.push_back("Content");
 	allToggleablePanels.push_back("Hierarchy");
 	allToggleablePanels.push_back("Scene");
+	allToggleablePanels.push_back("Game");
 	allToggleablePanels.push_back("Inspector");
-	allToggleablePanels.push_back("Project settings");
+	allToggleablePanels.push_back("Project Settings");
 	allToggleablePanels.push_back("Editor Preferences");
 	allToggleablePanels.push_back("Spawn Actors");
 
