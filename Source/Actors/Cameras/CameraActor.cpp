@@ -1,7 +1,15 @@
 #include "CameraActor.h"
+#include "../../Editor/World.h"
 
-CameraActor::CameraActor(World* _world) : Actor(_world)
+CameraActor::CameraActor(Level* _level) : Actor(_level)
 {
-	camera = new CameraComponent(this);
-	allComponents.push_back(camera);
+	camera = nullptr;
+	//allComponents.push_back(camera);
+}
+
+void CameraActor::Construct()
+{
+	SUPER::Construct();
+	camera = CreateComponent<CameraComponent>();
+
 }

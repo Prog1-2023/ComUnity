@@ -6,7 +6,6 @@
 class TransformComponent : public Component
 { 
 	Transform transform;
-
 public:
 
 	FORCEINLINE Transform GetTransform()

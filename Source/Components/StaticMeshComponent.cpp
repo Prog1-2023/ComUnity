@@ -102,7 +102,7 @@ void StaticMeshComponent::Deconstruct()
 
 }
 
-void StaticMeshComponent::Tick(const float& _deltaTime)
+void StaticMeshComponent::Tick(const float _deltaTime)
 {
 	SUPER::Tick(_deltaTime);
 	Update();
@@ -125,40 +125,6 @@ void StaticMeshComponent::Init()
 
 	InitBuffers();
 	InitTextures();
-}
-
-void StaticMeshComponent::InitShaders()
-{
-	//glEnable(GL_DEPTH_TEST);
-
-	//// VertexShader
-	//unsigned int _vertexShader = CreateShader(vertexShaderPath, true);
-	//Assert(CheckShaderForErrors(_vertexShader, "VertexShader"), "Init of VertexShader failed!");
-
-	//// FragmentShader
-	//unsigned int _fragmentShader = CreateShader(fragmentShaderPath, false);
-	//Assert(CheckShaderForErrors(_fragmentShader, "FragmentLightShader"), "Init of FragmentShader failed!");
-
-	//// Link shaders
-	//shaderProgram = glCreateProgram();
-	//glAttachShader(shaderProgram, _vertexShader);
-	//glAttachShader(shaderProgram, _fragmentShader);
-	//glLinkProgram(shaderProgram);
-	//Assert(CheckShaderForErrors(shaderProgram, "ShaderProgram"), "Init of ShaderProgram failed!");
-
-	//modelID = glGetUniformLocation(shaderProgram, "uniformModel");
-	//viewID = glGetUniformLocation(shaderProgram, "uniformView");
-	//projectionID = glGetUniformLocation(shaderProgram, "uniformProjection");
-
-	//// Clear shaders
-	//glDeleteShader(_vertexShader);
-	//glDeleteShader(_fragmentShader);
-}
-
-void StaticMeshComponent::InitShape()
-{
-	if (dimension == 2) Generate2DShape({ 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }); // ===== DOESN'T WORK ANYMORE
-	else Generate3DShape({ 1.0f, 1.0f, 1.0f });
 }
 
 void StaticMeshComponent::GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _scene)
@@ -265,55 +231,6 @@ vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const a
 		}
 	}
 	return _textures;
-}
-
-bool StaticMeshComponent::Generate3DShape(const vector<float> _color)
-{
-	//float _vertices[] = {
-	//	// positions          // normals           // texture coords
-	//	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-	//	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-	//	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-	//	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-	//	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-	//	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-	//	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-	//	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-	//	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-	//	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-	//	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-	//	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-	//	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-	//	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-	//	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	//	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	//	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-	//	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-	//	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-	//	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-	//	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	//	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-	//	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-	//	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-	//	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-	//	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-	//	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-	//	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-	//	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-	//	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-	//	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	//	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-	//	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	//	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	//	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-	//	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-	//};
-
-	return true;
 }
 
 float StaticMeshComponent::RoundFloat(const float& _value)
@@ -452,166 +369,6 @@ void StaticMeshComponent::Update()
 {
 	material->Update();
 	Draw();
-}
-
-void StaticMeshComponent::UpdateColors()
-{
-	if (vertices.size() == 0)
-		return;
-	const double _elapsedTime = glfwGetTime();
-	if (rainbowColor)
-	{
-		const unsigned int& _amount = vertices.size() / vertexDataSize;
-		for (unsigned int _index = 0; _index < _amount; _index++)
-		{
-			/*vertices[_index * vertexDataSize + dimension] = (sin(_elapsedTime + _index) + 1.0f) / 2.0f;
-			vertices[_index * vertexDataSize + dimension + 1] = (cos(_elapsedTime + _index * 0.5f) + 1.0f) / 2.0f;
-			vertices[_index * vertexDataSize + dimension + 2] = (sin(_elapsedTime * 0.5f + _index) + 1.0f) / 2.0f;*/
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, SizeOf<GLsizei>(vertices.size()), vertices.data(), GL_STATIC_DRAW);
-	}
-
-	const GLuint& _viewPositionLocation = glGetUniformLocation(shaderProgram, "uniformViewPosition");
-	glUniform3f(_viewPositionLocation, cameraLocation.x, cameraLocation.y, cameraLocation.z);
-
-	const GLuint& _lightPositionLocation = glGetUniformLocation(shaderProgram, "uniformLight.position");
-	glUniform3f(_lightPositionLocation, sinf(_elapsedTime), 0.0f, cosf(_elapsedTime));
-	//glUniform3f(_lightPositionLocation, 0.0f, 0.0f, 1.0f);
-
-	const GLuint& _lightColorLocation = glGetUniformLocation(shaderProgram, "uniformLight.ambient");
-	if (rainbowLight)
-	{
-		lightColor[0] = (sin(_elapsedTime) + 1.0f) / 2.0f;
-		lightColor[1] = (cos(_elapsedTime * 0.5f) + 1.0f) / 2.0f;
-		lightColor[2] = (sin(_elapsedTime * 1.5f) + 1.0f) / 2.0f;
-	}
-	glUniform3f(_lightColorLocation, lightColor[0], lightColor[1], lightColor[2]);
-
-	const GLuint& _lightDiffuseLocation = glGetUniformLocation(shaderProgram, "uniformLight.diffuse");
-	glUniform3f(_lightDiffuseLocation, 0.5f, 0.5f, 0.5f);
-
-	const GLuint& _lightSpecularLocation = glGetUniformLocation(shaderProgram, "uniformLight.specular");
-	glUniform3f(_lightSpecularLocation, 1.0f, 1.0f, 1.0f);
-}
-
-void StaticMeshComponent::UpdateTextures()
-{
-	/*if (useTextures)
-	{
-		int _textureIndex = 0;
-		for (const pair<string, GLuint>& _pair : allTextures)
-		{
-			glActiveTexture(GL_TEXTURE0 + _textureIndex);
-			glBindTexture(GL_TEXTURE_2D, _pair.second);
-			_textureIndex++;
-		}
-	}*/
-
-	GLuint _diffuseNr = 1;
-	GLuint _specularNr = 1;
-	GLuint _normalNr = 1;
-	GLuint _heightNr = 1;
-
-	const unsigned int& _texturesAmount = static_cast<const unsigned int>(textures.size());
-	for (GLuint _index = 0; _index < _texturesAmount; _index++)
-	{
-		glActiveTexture(GL_TEXTURE0 + _index);
-
-		string _numberText;
-		aiTextureType _type = textures[_index].type;
-
-		if (_type == aiTextureType_AMBIENT)
-		{
-			_numberText = to_string(_normalNr++);
-		}
-		else if (_type == aiTextureType_DIFFUSE)
-		{
-			_numberText = to_string(_diffuseNr++);
-		}
-		else if (_type == aiTextureType_SPECULAR)
-		{
-			_numberText = to_string(_specularNr++);
-		}
-		else if (_type == aiTextureType_HEIGHT)
-		{
-			_numberText = to_string(_heightNr++);
-		}
-
-		string _textureName = "uniform";
-
-		switch (_type)
-		{
-		case aiTextureType_NONE:
-			_textureName += "Unknown";
-			break;
-		case aiTextureType_DIFFUSE:
-			_textureName += "Diffuse";
-			break;
-		case aiTextureType_SPECULAR:
-			_textureName += "Specular";
-			break;
-		case aiTextureType_AMBIENT:
-			_textureName += "Ambient";
-			break;
-		case aiTextureType_EMISSIVE:
-			_textureName += "Emissive";
-			break;
-		case aiTextureType_HEIGHT:
-			_textureName += "Height";
-			break;
-		case aiTextureType_NORMALS:
-			break;
-		case aiTextureType_SHININESS:
-			break;
-		case aiTextureType_OPACITY:
-			break;
-		case aiTextureType_DISPLACEMENT:
-			break;
-		case aiTextureType_LIGHTMAP:
-			break;
-		case aiTextureType_REFLECTION:
-			break;
-		case aiTextureType_BASE_COLOR:
-			break;
-		case aiTextureType_NORMAL_CAMERA:
-			break;
-		case aiTextureType_EMISSION_COLOR:
-			break;
-		case aiTextureType_METALNESS:
-			break;
-		case aiTextureType_DIFFUSE_ROUGHNESS:
-			break;
-		case aiTextureType_AMBIENT_OCCLUSION:
-			break;
-		case aiTextureType_UNKNOWN:
-			break;
-		case aiTextureType_SHEEN:
-			break;
-		case aiTextureType_CLEARCOAT:
-			break;
-		case aiTextureType_TRANSMISSION:
-			break;
-		case aiTextureType_MAYA_BASE:
-			break;
-		case aiTextureType_MAYA_SPECULAR:
-			break;
-		case aiTextureType_MAYA_SPECULAR_COLOR:
-			break;
-		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
-			break;
-		case _aiTextureType_Force32Bit:
-			break;
-		default:
-			break;
-		}
-
-		_textureName += "Texture";
-		const GLuint& _uniformTextureID = glGetUniformLocation(shaderProgram, (_textureName + _numberText).c_str());
-		glUniform1i(_uniformTextureID, _index);
-		glBindTexture(GL_TEXTURE_2D, textures[_index].id);
-	}
 }
 
 void StaticMeshComponent::Draw()

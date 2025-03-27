@@ -33,9 +33,11 @@ public:
 	{
 		return lightComponentActive;
 	}
+
+private:
 	void SetType(LightType _type);
 
 public:
-	LightActor(World* _world);
+	LightActor(Level* _world, const LightType& _type);
 	~LightActor();
 };

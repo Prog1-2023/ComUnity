@@ -1,8 +1,8 @@
 #include "Controller.h"
 #include "map"
 //InputController currentInput;
-vector<Input> currentInput;
-map<int,Input> allInputs;
+vector<InputController> currentInput;
+map<int, InputController> allInputs;
 
 Controller::Controller(GLFWwindow* _window)
 {

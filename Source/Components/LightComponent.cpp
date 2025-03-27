@@ -21,3 +21,8 @@ LightComponent::~LightComponent()
 {
 	LightManager::GetInstance().RemoveLight(this);
 }
+
+Component* LightComponent::Clone(Actor* _owner) const
+{
+	return new LightComponent(_owner);
+}

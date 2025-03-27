@@ -21,12 +21,11 @@ World::~World()
 	}
 }
 
-LightActor* World::SpawnLight(LightType _type)
-{
-	LightActor* _light = SpawnActor<LightActor>();
-	_light->SetType(_type);
-	return _light;
-}
+//LightActor* World::SpawnLight(LightType _type)
+//{
+//	//LightActor* _light = LevelManager::SpawnActor<LightActor>(_type);
+//	//return _light;
+//}
 
 void World::Start()
 {

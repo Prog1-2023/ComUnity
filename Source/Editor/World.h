@@ -37,5 +37,5 @@ public:
 		return _actor;
 	}
 
-	LightActor* SpawnLight(LightType _type);
+	//LightActor* SpawnLight(LightType _type);
 };

@@ -133,6 +133,49 @@ void Actor::Destroy()
 	SetToDelete();
 }
 
+void Actor::ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node)
+{
+	const unsigned int& _amount = _node->mNumMeshes;
+	for (GLuint _index = 0; _index < _amount; _index++)
+	{
+		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
+		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
+	}
+
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
+	{
+		ComputeMesh(_meshComponent, _scene, _node->mChildren[_index]);
+	}
+}
+
+void Actor::LoadModel(const string& _path)
+{
+	Importer _importer = Importer();
+	const string& _fullPath = GetPath(CONTENT) + _path;
+	const aiScene* _scene = _importer.ReadFile(_fullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const string& _errorMessage = "Error => " + string(_importer.GetErrorString());
+	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorMessage.c_str());
+	ComputeMeshes(_scene, _scene->mRootNode);
+}
+
+void Actor::ComputeMeshes(const aiScene* _scene, const aiNode* _node)
+{
+	const unsigned int& _amount = _node->mNumMeshes;
+	for (GLuint _index = 0; _index < _amount; _index++)
+	{
+		StaticMeshComponent* _meshComponent = CreateComponent<StaticMeshComponent>();
+		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
+		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
+	}
+
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
+	{
+		ComputeMeshes(_scene, _node->mChildren[_index]);
+	}
+}
+
 void Actor::AddComponent(Component* _component)
 {
 	components.insert(_component);

@@ -246,6 +246,10 @@ public:
 		return x == _otherVector.x && y == _otherVector.y && z == _otherVector.z && w == _otherVector.w;
 	}
 
+	operator glm::vec4() const 
+	{
+		return glm::vec4(this->x, this->y, this->z, this->w);
+	}
 #pragma endregion
 
 public:

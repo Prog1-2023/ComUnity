@@ -25,10 +25,6 @@ struct InputController
 
 class Controller
 {
-	bool operator ==(const InputController& _other)
-	{
-		return scancode == _other.scancode;
-	}
 	//TODO MOVE into camera class
 public:
 	float viewRadius;

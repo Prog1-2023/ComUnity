@@ -9,7 +9,6 @@ class CameraComponent : public Component
 	float fov;
 	float nearDistance;
 	float farDistance;
-	Window* window;
 
 public:
 	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
@@ -22,9 +21,9 @@ public:
 	~CameraComponent() = default;
 
 public:
-	FORCEINLINE mat4 ComputeView()
+	FORCEINLINE mat4 ComputeView(Window* _window)
 	{
-		Controller* _controller = window->GetController();
+		Controller* _controller = _window->GetController();
 		const float& _theta = _controller->theta;
 		const float& _phi = _controller->phi;
 		const float& _viewRadius = _controller->viewRadius;
@@ -36,9 +35,9 @@ public:
 		return lookAt(_cameraPosition, targetPos, _up);
 	}
 
-	FORCEINLINE mat4 ComputeProjection()
+	FORCEINLINE mat4 ComputeProjection(Window* _window)
 	{
-		const Vector2i& _windowSize = window->GetSize();
+		const Vector2i& _windowSize = _window->GetSize();
 		return perspective(radians(fov), (float)_windowSize.x / (float)_windowSize.y, nearDistance, farDistance);
 	}
 	

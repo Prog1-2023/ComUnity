@@ -46,7 +46,7 @@ typedef long long l_long;
 #define SUPER __super
 #define CAST(_type, _expr) static_cast<_type>(_expr) 
 #define DEBUG_INFO "(File: " + CAST(string, PATH) + " | Line: " + to_string(__LINE__) + ")"
-#define IS_BASE_OF(_base, _type) typename = enable_if_t<is_base_of_v<_base, _type>>
+#define IS_BASE_OF(_base, _type) typename = std::enable_if_t<std::is_base_of_v<_base, _type>>
 #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define NO_DISCARD _NODISCARD
 

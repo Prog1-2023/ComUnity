@@ -1,5 +1,5 @@
 #include "TransformComponent.h"
-
+#include "../Actors/Actor.h"
 TransformComponent::TransformComponent(Actor* _owner):Component(_owner)
 {
 

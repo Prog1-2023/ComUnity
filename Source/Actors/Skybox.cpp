@@ -1,7 +1,7 @@
 #include "Skybox.h"
 #include "../NewLightRelated/Shader.h"
 
-Skybox::Skybox(World* _world) : Actor(_world)
+Skybox::Skybox(Level* _level) : Actor(_level)
 {
     texturesName = vector<string>();
     vertices = vector<float>();
@@ -152,7 +152,7 @@ void Skybox::Draw()
     glDepthFunc(GL_LESS);
 }
 
-void Skybox::Tick(const float& _deltaTime)
+void Skybox::Tick(const float _deltaTime)
 {
     SUPER::Tick(_deltaTime);
     Draw();

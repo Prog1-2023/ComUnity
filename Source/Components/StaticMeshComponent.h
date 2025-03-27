@@ -37,25 +37,8 @@ struct Vertex
 	}
 };
 
-//struct Texture
-//{
-//	GLuint id;
-//	string path;
-//	aiTextureType type;
-//
-//	Texture(const GLuint& _id, const string& _path, const aiTextureType& _type)
-//	{
-//		id = _id;
-//		path = _path;
-//		type = _type;
-//	}
-//};
-
-
 class StaticMeshComponent : public Component
 {
-	//GLuint vertexArrayID;
-
 	GLuint shaderProgram;
 	string vertexShaderPath;
 	string fragmentShaderPath;
@@ -127,12 +110,11 @@ public:
 	virtual void Deconstruct() override;
 
 protected:
-	virtual void BeginPlay();
-	virtual void Tick(const float& _deltaTime);
-	virtual void BeginDestroy();
+	virtual void BeginPlay() override;
+	virtual void Tick(const float _deltaTime) override;
+	virtual void BeginDestroy() override;
 
 private:
-	void InitShaders();
 	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
 	float RoundFloat(const float& _value);
 	bool IsNearlyEqual(const float& _a, const float& _b, const float& _tolerance = numeric_limits<float>::epsilon());

@@ -4,6 +4,7 @@
 #include "../Components/TransformComponent.h"
 #include"../Components/ITransformableModifier.h"
 #include"../Components/ITransformableViewer.h"
+#include "../Components/StaticMeshComponent.h"
 
 //#include "TransformableModifier.h"
 //#include "TransformableViewer.h"
@@ -386,6 +387,18 @@ public:
 	void SetName(const string& _name);
 	void CreateSocket(const string& _name, const Transform& _transform = Transform(), const AttachmentType& _type = AT_SNAP_TO_TARGET);
 	void Destroy();
+
+
+
+#pragma region TODO MOVE INTO STATICMESH OR OTHER CLASS IDK
+private:
+	void ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node);
+public:
+	void LoadModel(const string& _path);
+	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
+#pragma endregion
+
+
 
 #pragma region Components
 
