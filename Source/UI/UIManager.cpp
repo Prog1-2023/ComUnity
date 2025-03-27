@@ -9,6 +9,7 @@
 #include "EditorPreferencesWidget.h"
 #include "SpawnActorWidget.h"
 #include "FileManager.h"
+#include "GameWidget.H"
 
 UIManager::UIManager()
 {
@@ -28,6 +29,7 @@ void UIManager::InitPanels()
 	new ConsoleWidget(true);
 	new ContentWidget(true);
 	new HierarchyWidget(true);
+	new GameWidget(true);
 	new SceneWidget(true);
 	new InspectorWidget(true);
 	new ProjectSettingsWidget(false);
