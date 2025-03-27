@@ -1,6 +1,7 @@
 #include "Toolbar.h"
 
 #include "UIManager.h"
+#include "Log.h"
 
 Toolbar::Toolbar()
 {
@@ -26,11 +27,11 @@ void Toolbar::Draw()
 		if (BeginMenu("File"))
 		{
 			if (MenuItem("Open Project"))
-				cout << "Open Project" << endl;
+				LOG("Open Project");
 			if (MenuItem("New Project"))
-				cout << "New Project" << endl;
+				LOG("New Project");
 			if (MenuItem("Save all"))
-				cout << "Save all" << endl;
+				LOG("Save all");
 			if (MenuItem("Close"))
 				glfwSetWindowShouldClose(UIManager::GetInstance().GetWindow(), true);
 			EndMenu();

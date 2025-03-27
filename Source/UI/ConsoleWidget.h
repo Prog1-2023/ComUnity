@@ -28,7 +28,7 @@ class ConsoleWidget : public Widget
 
 public:
     ConsoleWidget(const bool& _openedByDefault);
-    virtual ~ConsoleWidget();
+    virtual ~ConsoleWidget() = default;
 
     void Draw() override;
 

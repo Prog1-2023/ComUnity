@@ -2,6 +2,7 @@
 
 #include "UIManager.h"
 #include "SceneWidget.h"
+#include "Log.h"
 
 SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn Actors", _openedByDefault)
 {
@@ -10,14 +11,14 @@ SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn
 	SpawnActorTab _meshTab = SpawnActorTab();
 	SpawnActorTab _lightTab = SpawnActorTab();
 
-	_meshTab.actorList["Cube"].Add([&]() { cout << "Cube" << endl;});
-	_meshTab.actorList["Sphere"].Add([&]() { cout << "Sphere" << endl;});
-	_meshTab.actorList["Cylinder"].Add([&]() { cout << "Cylinder" << endl;});
-	_meshTab.actorList["Cone"].Add([&]() { cout << "Cone" << endl;});
+	_meshTab.actorList["Cube"].Add([&]() { LOG("Cube"); });
+	_meshTab.actorList["Sphere"].Add([&]() { LOG("Sphere"); });
+	_meshTab.actorList["Cylinder"].Add([&]() { LOG("Cylinder");});
+	_meshTab.actorList["Cone"].Add([&]() { LOG("Cone");});
 
-	_lightTab.actorList["Point Light"].Add([&]() { cout << "Point Light" << endl;});
-	_lightTab.actorList["Spot Light"].Add([&]() { cout << "Spot Light" << endl;});
-	_lightTab.actorList["Directional Light"].Add([&]() { cout << "Directional Light" << endl;});
+	_lightTab.actorList["Point Light"].Add([&]() { LOG("Point Light"); });
+	_lightTab.actorList["Spot Light"].Add([&]() { LOG("Spot Light");});
+	_lightTab.actorList["Directional Light"].Add([&]() { LOG("Directional Light");});
 
 	tabList["Meshes"] = _meshTab;
 	tabList["Lights"] = _lightTab;

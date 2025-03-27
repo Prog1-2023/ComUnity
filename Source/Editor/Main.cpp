@@ -18,8 +18,6 @@ int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    Serialization::GetInstance().StartSerialization();
-
     World* _world = new World();
     Window _window = Window(800, 600, "Engine");
     _world->SetWindow(&_window);

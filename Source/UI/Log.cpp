@@ -43,6 +43,8 @@ string Log::GetSeverityString(Log_Severity _severity) const
 
 void Logger::LogMessage(const string& _message, Log_Severity _type, const char* _file, int _line)
 {
+    string filename = filesystem::path(_file).filename().string(); 
+
     string _typeStr;
     ImVec4 _color;
 
@@ -62,7 +64,7 @@ void Logger::LogMessage(const string& _message, Log_Severity _type, const char* 
         break;
     }
 
-    string _fullMessage = "[" + _typeStr + "] (" + _file + ":" + std::to_string(_line) + ") " + _message;
+    string _fullMessage = "[" + _typeStr + "] (" + filename + " : " + to_string(_line) + ") " + _message;
     Log _log(_type, _fullMessage);
     logs.push_back(_log);
     onNewLog.Invoke();

@@ -1,6 +1,7 @@
 #include "ContentWidget.h"
 
 #include "FileManager.h"
+#include "Log.h"
 
 ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault)
 {
@@ -27,7 +28,7 @@ void ContentWidget::UpdateElements()
 	const string& _path = FileManager::GetContentPath() + "/" + currentPath;
 	for (const directory_entry& _iterator : directory_iterator(_path))
 		elements.push_back(_iterator.path().filename().string());
-	cout << "Refresh content panel!" << endl;
+	LOG("Refresh content panel!");
 }
 
 void ContentWidget::Open(const string& _fileName)

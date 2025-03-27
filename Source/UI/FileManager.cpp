@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include "Log.h"
 
 void FileManager::Delete(const string& _path)
 {
@@ -50,7 +51,7 @@ string FileManager::GetProjectPath()
 		return _fixedPath.string();
 	}
 
-	cerr << "The 'ComUnity' folder was not found in the current path." << endl;
+	LOG_WARNING("The 'ComUnity' folder was not found in the current path.");
 	return "";
 }
 

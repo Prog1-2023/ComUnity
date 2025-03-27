@@ -2,6 +2,7 @@
 #include "UIManager.h"
 #include "HierarchyWidget.h"
 #include "../Serialization/Serialization.h"
+#include "Log.h"
 
 InspectorWidget::InspectorWidget(const bool& _openedByDefault) : Widget("Inspector", _openedByDefault)
 {
@@ -79,7 +80,7 @@ void InspectorWidget::DrawComponents()
 					}
 					else
 					{
-						cout << "No Serializable Type" << endl;
+						LOG_WARNING("No Serializable Type");
 					}
 				}
 			}

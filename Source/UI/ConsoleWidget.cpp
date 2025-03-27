@@ -13,16 +13,12 @@ ConsoleWidget::ConsoleWidget(const bool& _openedByDefault)
     Logger::GetInstance().OnNewLog().Add(this, &ConsoleWidget::UpdateLogs);
 }
 
-ConsoleWidget::~ConsoleWidget() = default;
 void ConsoleWidget::Draw()
 {
-
     for (size_t i = 0; i < elements.size(); ++i)
     {
         DrawButton(elements[i]);
         SameLine();
-        if (i >= elements.size() - 1)
-            Separator();
     }
 
     SameLine();
@@ -30,17 +26,34 @@ void ConsoleWidget::Draw()
     {
         ClearLogs();
     }
+    Separator();
 
-    for (const Log _log : logs)
+    for (const Log& _log : logs)
     {
         if ((_log.GetSeverity() == WARNING && toggleWarning) ||
-            (_log.GetSeverity() == ERROR  && toggleError) ||
-            (_log.GetSeverity() == LOG  && toggleLog))
+            (_log.GetSeverity() == ERROR && toggleError) ||
+            (_log.GetSeverity() == LOG && toggleLog))
         {
+            ImVec4 color;
+            switch (_log.GetSeverity())
+            {
+            case WARNING:
+                color = ImVec4(1.0f, 1.0f, 0.2f, 0.8f); // Yellow
+                break;
+            case ERROR:
+                color = ImVec4(1.0f, 0.8f, 0.8f, 1.0f); // Red
+                break;
+            case LOG:
+            default:
+                color = ImVec4(0.8f, 1.0f, 0.8f, 1.0f); // Green
+                break;
+            }
+
+            PushStyleColor(ImGuiCol_Text, color);
             Text("%s", _log.GetText().c_str());
+            PopStyleColor();
         }
     }
-
 }
 
 void ConsoleWidget::DrawButton(const ButtonConsoleElement& _button)
@@ -70,14 +83,11 @@ bool ConsoleWidget::IsSeverityFiltered(Log_Severity _severity)
     {
     case LOG:
         return !showMessages;
-
     case WARNING:
         return !showWarnings;
-
     case ERROR:
         return !showErrors;
     }
-
     return false;
 }
 
