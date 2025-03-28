@@ -5,6 +5,7 @@
 
 #include "../Manager/ActorManager.h"
 #include "../Utils/Utility.h"
+#include "../Actors/SkyBox.h"
 
 //#include "CameraManager.h"
 //#include "CollisionManager.h"
@@ -19,6 +20,7 @@ class Level
 	bool isLoaded;
 	string name;
 	ActorManager actorManager;
+	SkyBox* skyBox;
 	/*
 	Camera::CameraManager cameraManager;
 	CollisionManager collisionManager;
@@ -39,6 +41,7 @@ public:
 	{
 		return actorManager;
 	}
+	FORCEINLINE SkyBox* GetSkyBox() const { return skyBox; }
 	/*
 	FORCEINLINE Camera::CameraManager& GetCameraManager()
 	{
@@ -188,4 +191,6 @@ public:
 	void Update(const float _deltaTime);
 	virtual void Load();
 	virtual void Unload();
+	void InitDefaultSkyBox();
+	void InitSkyBox(const vector<string>& _textures,const float& _scale =1.0f);
 };
