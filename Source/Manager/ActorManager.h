@@ -1,11 +1,14 @@
 #pragma once
 
 #include "../Actors/Actor.h"
+#include "../Actors/SoundActor.h"
 
 class ActorManager
 {
 	set<Actor*> allActors;
 	multimap<string, Actor*> actorsName;
+public:
+	SoundActor* sound = nullptr;
 
 public:
 	FORCEINLINE void AddActor(Actor* _actor)

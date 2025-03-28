@@ -24,6 +24,10 @@
 
 #include <set>
 
+#include <irrKlang.h>
+
+using namespace irrklang;
+
 using namespace std;
 using namespace filesystem;
 using namespace glm;

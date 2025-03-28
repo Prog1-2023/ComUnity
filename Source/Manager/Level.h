@@ -95,11 +95,12 @@ public:
 	FORCEINLINE Type* SpawnActor(Args&&... _args)
 	{
 		Type* _actor = new Type(this, forward<Args>(_args)...);
-		const SubclassOf<Type>& _actorRef = *_actor;
-		_actor = Spawn<Type>(_actorRef);
+		//const SubclassOf<Type>& _actorRef = *_actor;
+		//Type* _toReturn = Spawn<Type>(_actorRef);
 		_actor->Construct();
 		_actor->Register();
-
+		/*delete _actor;
+		_actor = nullptr;*/
 		return _actor;
 	}
 

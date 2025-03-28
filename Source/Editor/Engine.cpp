@@ -2,6 +2,9 @@
 #include "../Actors/Cameras/CameraActor.h"
 #include "../Components/StaticMeshComponent.h"
 #include "../Actors/Skybox.h"
+#include "../Actors/SoundActor.h"
+
+#include "../Manager/SoundManager.h"
 
 Engine::Engine()
 {
@@ -30,12 +33,15 @@ void Engine::Start()
     /*world = new World(window); // => change to level
     world->Start();*/
 
+
     Level* _currentLevel = new Level("DefaultLevel");
     levelManager.SetLevel(_currentLevel);
+
 }
 
 void Engine::Update()
 {
+
     #pragma region INITIALIZATION_OF_LIFETIME_TYPES
     // Create the controller
     Controller* _controller = window->GetController();
@@ -43,13 +49,19 @@ void Engine::Update()
 
     #pragma region LIGHT_DEMO_INITIALISATION
 
-    Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
+    Level* _currentLevel = levelManager.GetCurrentLevel();
+
+    Actor* _actor = _currentLevel->SpawnActor<CameraActor>();
+    //Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
     _actor->LoadModel("backpack/Model/backpack.obj");
 
-    LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
-    LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
+    //LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
+    LightActor* _light = _currentLevel->SpawnActor<LightActor>(NONE);
+    LightActor* _light2 = _currentLevel->SpawnActor<LightActor>(DIRECTIONAL);
+    //LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
 
-    Skybox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<Skybox>();
+    //Skybox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<Skybox>();
+    Skybox* _skybox = _currentLevel->SpawnActor<Skybox>();
 
     _skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
             "cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
@@ -57,12 +69,29 @@ void Engine::Update()
     StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
     CameraComponent* _camera = _actor->GetComponent<CameraComponent>();
 
+    //TODO remove
+    SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
+    SoundActor* _sound = _currentLevel->SpawnActor<SoundActor>("../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+
+    //SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
+    //SoundActor* _sound = new SoundActor(_currentLevel,"../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+    ////SoundActor* _sound = new SoundActor(levelManager.GetCurrentLevel(),"../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+    //_sound->Construct();
+    //_sound->Register();
+    ////levelManager.GetInstance().GetCurrentLevel()->GetActorManager().sound = _sound;
+    //_currentLevel->GetActorManager().sound = _sound;
+    ////_sound->BeginPlay();
+
+
 #pragma endregion
     
     //Begin play on all Actors
-    std::set<Actor*> _allActor = levelManager.GetCurrentLevel()->GetActorManager().GetAllActors();
-    for (Actor* _actor : _allActor)
-        _actor->BeginPlay();
+    std::set<Actor*> _allActor = _currentLevel->GetActorManager().GetAllActors();
+    //std::set<Actor*> _allActor = levelManager.GetCurrentLevel()->GetActorManager().GetAllActors();
+    for (Actor* _actorToBeginPlay : _allActor)
+        _actorToBeginPlay->BeginPlay();
+    //_currentLevel->GetActorManager().sound->BeginPlay();
+    //levelManager.GetCurrentLevel()->GetActorManager().sound->BeginPlay();
 
     //Init time and size of window variables
     int _width, _height;
