@@ -34,7 +34,7 @@ void ContentWidget::UpdateElements()
 	const string& _path = FileManager::GetContentPath() + "/" + currentPath;
 	for (const directory_entry& _iterator : directory_iterator(_path))
 		elements.push_back(_iterator.path().filename().string());
-	LOG("Refresh content panel!");
+	LOG("Refreshed content panel!");
 }
 
 void ContentWidget::Open(const string& _fileName)
@@ -306,10 +306,11 @@ void ContentWidget::Draw()
 
 	BeginChild("ContentScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
-	const string& _basePath = FileManager::GetContentPath() + currentPath + "/";
+	const string& _basePath = FileManager::GetContentPath() + "/" + currentPath + "/";
 	for (unsigned int _index = 0; _index < elements.size(); _index++)
 	{
 		const string& _path = _basePath + elements[_index];
+		cout << _path << endl;
 		Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f));
 		SameLine(0.0f, 0.0f);
 		if (Button(elements[_index].c_str()))
