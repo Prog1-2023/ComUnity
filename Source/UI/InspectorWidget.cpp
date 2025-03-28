@@ -82,9 +82,6 @@ void InspectorWidget::DrawComponents()
 					}
 					else
 					{
-						LOG_WARNING("No Serializable Type");
-						vector<std::any> _values = _component->GenerateSerialization();
-						DrawFromComplexeClass(_values);
 						DrawFromComplexeClass(_serializedValues,_value);
 					}
 				}
