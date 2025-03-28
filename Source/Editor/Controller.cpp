@@ -10,8 +10,8 @@ Controller::Controller(GLFWwindow* _window)
 	viewRadius = 5.0f;
 	theta = 0.0f;
 	phi = 0.0f;
-	speed = 0.05f;
-	zoomSpeed = 0.1f;
+	speed = 0.001f;
+	zoomSpeed = 0.001f;
 
 	window = _window;
 	glfwSetKeyCallback(window, InputCallback);

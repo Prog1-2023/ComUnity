@@ -68,6 +68,16 @@ enum FolderType
     CONTENT,
     TEXTURES,
 };
+
+enum SHAPES
+{
+    CUBE,
+    SHPERE,
+    CAPSULE,
+    CONE,
+    CYLINDER,
+};
+
 void AssertDebug(const char* _exprStr, const bool _expr, const char* _msg, const char* _file, const int _line);
 void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg);
 string GetPath(const FolderType& _folderType);

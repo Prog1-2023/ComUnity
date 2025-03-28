@@ -3,6 +3,8 @@
 #include "../Components/StaticMeshComponent.h"
 #include "../Actors/Skybox.h"
 
+
+
 Engine::Engine()
 {
     window = new Window("Engine Render window", 600, 600);
@@ -43,8 +45,11 @@ void Engine::Update()
 
     #pragma region LIGHT_DEMO_INITIALISATION
 
-    Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
-    _actor->LoadModel("backpack/Model/backpack.obj");
+    Actor* _cameraActor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
+    //Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<Actor>();
+    Actor* _actor = levelManager.GetCurrentLevel()->SpawnBasicShape<Actor>(CUBE);
+    //_actor->LoadModel("backpack/Model/backpack.obj");
+
 
     LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
     LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
@@ -54,8 +59,11 @@ void Engine::Update()
     _skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
             "cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
 
+    //StaticMeshComponent* _mesh = _actor->CreateComponent<StaticMeshComponent>();
+    //_mesh->LoadModel("backpack/Model/backpack.obj");
     StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
-    CameraComponent* _camera = _actor->GetComponent<CameraComponent>();
+
+    CameraComponent* _camera = _cameraActor->GetComponent<CameraComponent>();
 
 #pragma endregion
     
@@ -125,7 +133,14 @@ void Engine::Update()
         mat4 _model = mat4(1.0f);
         _skyboxModel = translate(_skyboxModel, _cameraPosition);
         _skybox->SetMVP(_skyboxModel, _skyboxView, _projection);
+        //_mesh->GetTransform()->rotation += 1 * _deltaTime;
+        //_model = rotate(_model, _mesh->GetTransform()->rotation.x, vec3(1, 0, 0));
+        //_model = rotate(_model, _mesh->GetTransform()->rotation.y, vec3(0, 1, 0));
+        //_model = rotate(_model, _mesh->GetTransform()->rotation.z, vec3(0, 0, 1));
+        //translate
+        //scale
         _mesh->SetMVP(_model, _view, _projection);
+        //_mesh->SetUniformModelMatrix();
         #pragma endregion	
         //world->Update();
 

@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "../NewLightRelated/Texture.h"
 #include "../NewLightRelated/Material.h"
+#include "../Actors/Transform.h"
 
 class Actor;
 
@@ -69,6 +70,8 @@ class StaticMeshComponent : public Component
 	Material* material;
 	map<string, GLuint> allTextures;
 
+	Transform offsetTransform;
+
 	// TODO get from cameraManager
 	vec3 cameraLocation;
 
@@ -94,6 +97,8 @@ public:
 
 	FORCEINLINE void SetCameraLocation(const vec3& _cameraLocation) { cameraLocation = _cameraLocation; }
 
+	FORCEINLINE Transform* GetTransform() { return &offsetTransform; }
+
 public:
 	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
 	{
@@ -103,7 +108,9 @@ public:
 
 public:
 	StaticMeshComponent(Actor* _owner);
-	StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other);
+	StaticMeshComponent(Actor* _owner, StaticMeshComponent _other);
+	void LoadModel(const string& _path);
+	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
 	~StaticMeshComponent() = default;
 
 	virtual void Construct() override;

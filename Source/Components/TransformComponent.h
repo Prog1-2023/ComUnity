@@ -46,6 +46,7 @@ public:
 	FORCEINLINE void Rotate(const Vector3f& _offset)
 	{
 		transform.rotation += _offset;
+
 	}
 	
 	FORCEINLINE void Scale(const Vector3f& _offset)
