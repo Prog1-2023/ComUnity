@@ -37,6 +37,7 @@ void Engine::Start()
 void Engine::Update()
 {
 
+
 #pragma region LIGHT_DEMO_INITIALISATION
 
 	Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
@@ -52,6 +53,11 @@ void Engine::Update()
 
 	//_skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
 	//		"cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
+
+	Skybox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<Skybox>();
+
+	_skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
+			"cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
 
 	StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
 	CameraComponent* _camera = _actor->GetComponent<CameraComponent>();
@@ -172,9 +178,32 @@ void Engine::Update()
 		const float _viewRadius = _camera->GetViewRadius();
 
 
-		const float& _pitch = cos(_phi) * cos(_theta) * _viewRadius;
-		const float& _yaw = sin(_phi) * _viewRadius;
-		const float& _roll = cos(_phi) * sin(_theta) * _viewRadius;
+
+		// Processing inputs
+		_controller->PollEvents();
+
+
+#pragma endregion
+
+#pragma region Clear
+		glfwGetFramebufferSize(window->GetWindow(), &_width, &_height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+#pragma endregion
+
+#pragma region TICK_ACTORS
+		levelManager.UpdateCurrentLevel(_deltaTime);
+#pragma endregion
+
+#pragma region COMPUTE_MVP
+		mat4 _view = mat4(1.0f);
+		mat4 _skyboxView = mat4(1.0f);
+		_view = _camera->ComputeView(window);
+
+		const float _phi = _camera->GetPhi();
+		const float _theta = _camera->GetTheta();
+		const float _viewRadius = _camera->GetViewRadius();
+
+
 		const vec3& _cameraPosition = vec3(_pitch, _yaw, _roll) + _targetPosition;
 
 		_mesh->SetCameraLocation(_cameraPosition);
