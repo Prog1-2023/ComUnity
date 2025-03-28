@@ -13,7 +13,7 @@ Actor::Actor(Level* _world, const string& _name, const Transform& _transform):Co
 	name = _name;
 	
 	displayName = "Unknown";
-	components = set<Component*>();
+	components = Array<Component*>();
 	root = CreateComponent<TransformComponent>(_transform);
 	parent = nullptr;
 	attachment = AT_NONE;
@@ -179,12 +179,12 @@ void Actor::ComputeMeshes(const aiScene* _scene, const aiNode* _node)
 
 void Actor::AddComponent(Component* _component)
 {
-	components.insert(_component);
+	components.Add(_component);
 	_component->Construct();
 }
 
 void Actor::RemoveComponent(Component* _component)
 {
-	components.erase(components.find(_component));
+	components.Remove(_component);
 
 }

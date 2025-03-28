@@ -67,7 +67,6 @@ void Level::Load()
 
 void Level::Unload()
 {
-
 	actorManager.BeginDestroy();
 }
 

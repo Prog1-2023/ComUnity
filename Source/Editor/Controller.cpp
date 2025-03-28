@@ -65,7 +65,7 @@ void Controller::ProcessInputs()
 
 		if (IsValidKey(_input.scancode, { GLFW_KEY_E }))
 		{
-			cout << "DE-ZOOM" << endl;
+			cout << "DAIZOUME MARTINEZ" << endl;
 			viewRadius += zoomSpeed;
 		}
 

@@ -47,7 +47,7 @@ protected:
 private:
 	string name;
 	string displayName;
-	set<Component*> components;
+	Array<Component*> components;
 	TransformComponent* root;
 	Actor* parent;
 	AttachmentType attachment;
@@ -416,6 +416,10 @@ public:
 		return nullptr;
 	}
 
+	Array<Component*> GetComponents() const
+	{
+		return components;
+	}
 #pragma endregion
 
 #pragma region Collision

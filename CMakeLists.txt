@@ -80,8 +80,8 @@ find_package(assimp CONFIG REQUIRED)
 target_link_libraries(ComUnity PRIVATE assimp::assimp)
 
 # ImGUI
-find_package(imgui CONFIG REQUIRED)
-target_link_libraries(ComUnity PRIVATE imgui::imgui)
+#find_package(imgui CONFIG REQUIRED)
+#target_link_libraries(ComUnity PRIVATE imgui::imgui)
 
 # GLM
 find_package(glm CONFIG REQUIRED)
