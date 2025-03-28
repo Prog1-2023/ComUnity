@@ -33,3 +33,4 @@
 /Binaries
 /vcpkg_installed
 /Dependencies
+CMakeLists.txt

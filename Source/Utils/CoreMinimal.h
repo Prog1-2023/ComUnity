@@ -1,4 +1,3 @@
-
 #pragma once
 #include "Macro.h"
 #include "../Editor/Logger.h"
@@ -8,6 +7,7 @@
 #include "../Math/Vector4.h"
 #include "../Math/Angle.h"
 #include "SubclassOf.h"
+#include "Array.h"
 
 //#include "../Manager/LevelManager.h"
 //

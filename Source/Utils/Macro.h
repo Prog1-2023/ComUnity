@@ -1,33 +1,40 @@
 #pragma once
-
 #include <iostream>
-#include <functional>
 #include <filesystem>
 #include <map>
+#include <set>
 #include <queue>
+#include <functional>
+#include <algorithm>
 
-
-#define _USE_MATH_DEFINES // for C++
+#define _USE_MATH_DEFINES
 #include <math.h>
+
+#include <chrono>  
+#include <ctime>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#define GLM_ENABLE_EXPERIMENTAL //check to remove
-#include <glm/glm.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include<assimp/Importer.hpp>
-#include<assimp/scene.h>
-#include<assimp/postprocess.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 
-#include <set>
+#include "../IMGUI/imgui.h"
+#include "../IMGUI/imgui_impl_glfw.h"
+#include "../IMGUI/imgui_impl_opengl3.h"
+
+enum Log_Severity { LOG, WARNING, ERROR };
 
 using namespace std;
 using namespace filesystem;
 using namespace glm;
 using namespace Assimp;
+using namespace ImGui;
 
 typedef unsigned short u_short;
 typedef unsigned int u_int;
@@ -71,23 +78,13 @@ enum FolderType
 void AssertDebug(const char* _exprStr, const bool _expr, const char* _msg, const char* _file, const int _line);
 void AssertNoDebug(const char* _exprStr, const bool _expr, const char* _msg);
 string GetPath(const FolderType& _folderType);
-//u_int GetUniqueID()
-//{
-//    static u_int _id = 0;
-//    return ++_id;
-//}
-
-//template <typename Type, typename ...Args>
-//Type* Spawn(Args&&... _args)
-//{
-//    return new Type(forward<Args>(_args)...);
-//}
-
-//template <typename Type>
-//Type* Spawn(const SubclassOf<Type>& _ref)
-//{
-//    return new Type(_ref.GetObject());
-//}
-
 
 const float MACHINE_EPSILON = std::numeric_limits<float>::epsilon();
+
+#pragma region Log
+
+#define LOG(_msg) Logger::GetInstance().LogMessage(_msg, LOG, __FILE__, __LINE__)
+#define LOG_WARNING(_msg) Logger::GetInstance().LogMessage(_msg, WARNING, __FILE__, __LINE__)
+#define LOG_ERROR(_msg) Logger::GetInstance().LogMessage(_msg, ERROR, __FILE__, __LINE__)
+
+#pragma endregion
