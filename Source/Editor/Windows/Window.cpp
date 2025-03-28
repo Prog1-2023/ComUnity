@@ -2,29 +2,30 @@
 
 Window::Window(const string& _name)
 {
-	Construct(Vector2i(0, 0), _name);
+	Construct(_name, Vector2i());
 }
 
-Window::Window(const int _width, const int _height, const string& _name)
+Window::Window(const string& _name, const int _width, const int _height)
 {
-	Construct(Vector2i(_width, _height), _name);
+	Construct(_name, Vector2i(_width, _height));
 }
 
-Window::Window(const Vector2i& _windowSize, const string& _name)
+Window::Window(const string& _name, const Vector2i& _windowSize)
 {
-	Construct(_windowSize, _name);
+	Construct(_name, _windowSize);	
 }
 
 Window::~Window()
 {
 	delete controller;
+	//delete renderWindow;
 }
 
-void Window::Construct(const Vector2i& _size, const string& _name)
+void Window::Construct(const string& _name, const Vector2i& _windowSize)
 {
 	name = _name;
-	size = _size;
-	window = nullptr;
+	size = _windowSize;
+	renderWindow = nullptr;
 	controller = nullptr;
 
 	Init();
@@ -44,10 +45,10 @@ void Window::InitWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 
-	window = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);
-	Assert(window, "Window creation failed !");
+	renderWindow = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);
+	Assert(renderWindow, "Window creation failed !");
 
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(renderWindow);
 }
 
 void Window::InitGLEW()
@@ -56,12 +57,18 @@ void Window::InitGLEW()
 	GLenum _initStatus = glewInit();
 
 	const char* _errorText = (const char*)glewGetErrorString(_initStatus);
-	const string& _errorName = !_errorText ? "Unknown error" : _errorText;
-	const string& _error = "Asserted Error => glewInit failed : " + _errorName;
+	const string& _errorName = !_errorText ? "/!\\ Unknown error /!\\" : _errorText;
+	const string& _error = "Error => Initialization of GLEW failed: " + _errorName;
 	Assert(_initStatus == GLEW_OK, _error.c_str());
 }
 
 void Window::InitController()
 {
-	controller = new Controller(window);
+	controller = new Controller(renderWindow);
+}
+
+void Window::Update()
+{
+	if (!controller) return;
+	controller->ProcessInputs();
 }

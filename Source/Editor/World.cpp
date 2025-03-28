@@ -1,13 +1,15 @@
 #include "World.h"
-#include "Controller.h"
-#include "../Actors/Cameras/CameraActor.h"
 
 World::World()
 {
 	allActors = vector<Actor*>();
 	window = nullptr;
+}
 
-	currentCamera = nullptr;
+World::World(Window* _window)
+{
+	allActors = vector<Actor*>();
+	window = _window;
 }
 
 World::~World()
@@ -15,40 +17,51 @@ World::~World()
 	for (Actor* _actor : allActors)
 	{
 		delete _actor;
+		_actor = nullptr;
 	}
 }
 
-void World::Initialize()
+//LightActor* World::SpawnLight(LightType _type)
+//{
+//	//LightActor* _light = LevelManager::SpawnActor<LightActor>(_type);
+//	//return _light;
+//}
+
+void World::Start()
 {
-	window->GetController()->AddInputAction("CloseWindow", {GLFW_KEY_ESCAPE}, [&]() { glfwSetWindowShouldClose(window->GetWindow(), true); });
+	// TODO Manager to INIT
 
-	const function<void()>& _moveCameraLeft = bind(&CameraActor::MoveViewLeft, currentCamera);
-	window->GetController()->AddInputAction("CameraMoveLeft", {GLFW_KEY_A}, _moveCameraLeft);
+	//SpawnActor();
 
-	const function<void()>& _moveCameraRight = bind(&CameraActor::MoveViewRight, currentCamera);
-	window->GetController()->AddInputAction("CameraMoveRight", { GLFW_KEY_D }, _moveCameraRight);
-
-	const function<void()>& _moveCameraUp = bind(&CameraActor::MoveViewUp, currentCamera);
-	window->GetController()->AddInputAction("CameraMoveUp", { GLFW_KEY_W }, _moveCameraUp);
-
-	const function<void()>& _moveCameraDown = bind(&CameraActor::MoveViewDown, currentCamera);
-	window->GetController()->AddInputAction("CameraMoveDown", { GLFW_KEY_S }, _moveCameraDown);
-
-	const function<void()>& _zoomInCamera = bind(&CameraActor::ZoomIn, currentCamera);
-	window->GetController()->AddInputAction("CameraZoomIn", { GLFW_KEY_Q }, _zoomInCamera);
-
-	const function<void()>& _zoomOutCamera = bind(&CameraActor::ZoomOut, currentCamera);
-	window->GetController()->AddInputAction("CameraZoomOut", { GLFW_KEY_E }, _zoomOutCamera);
-}
-
-void World::SetVM()
-{
 	for (Actor* _actor : allActors)
 	{
-		StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
-		if (!_mesh) continue;
+		if (!_actor) return;
+		_actor->BeginPlay();
+	}
+}
 
-		_mesh->SetView(currentCamera->ComputeView());
-		_mesh->SetProjection(currentCamera->GetCamera()->ComputeProjection());
+void World::Update()
+{
+	// TODO Manager To UPDATE
+
+	window->Update(); // => ProcessInputs TODO remove
+
+	float _deltaTime = 0.5f;
+
+	for (Actor* _actor : allActors)
+	{
+		if (!_actor) return;
+		_actor->Tick(_deltaTime);
+	}
+}
+
+void World::Stop()
+{
+	// TODO Manager to STOP
+
+	for (Actor* _actor : allActors)
+	{
+		if (!_actor) return;
+		_actor->BeginDestroy();
 	}
 }

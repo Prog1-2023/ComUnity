@@ -1,26 +1,32 @@
 #include "CameraComponent.h"
 #include "../Actors/Actor.h"
 #include "../Editor/World.h"
+#include "../Manager/LevelManager.h"
 
 CameraComponent::CameraComponent(Actor* _owner) : Component(_owner)
 {
 	fov = 90.0f;
 	nearDistance = 0.1f;
-	farDistance = 100.0f;
-	window = _owner->GetWorld()->GetWindow();
+	farDistance = 100.f;
+	targetPos = vec3(0, 0, 0);
 }
 
-void CameraComponent::BeginPlay()
+CameraComponent::CameraComponent(Actor* _owner, const CameraComponent& _other) : Component(_owner)
 {
-	Super::BeginPlay();
+	fov = _other.fov;
+	nearDistance = _other.nearDistance;
+	farDistance = _other.farDistance;
+	targetPos = _other.targetPos;
 }
 
-void CameraComponent::Tick(const float _deltatime)
+void CameraComponent::Construct()
 {
-	Super::Tick(_deltatime);
+	SUPER::Construct();
 }
 
-void CameraComponent::BeginDestroy()
+void CameraComponent::Deconstruct()
 {
-	Super::BeginDestroy();
+	SUPER::Deconstruct();
 }
+
+

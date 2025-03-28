@@ -1,116 +1,190 @@
 #include "Actor.h"
+#include "../Manager/ActorManager.h"
+#include"../Manager/Level.h"
 #include "../Components/StaticMeshComponent.h"
+//#include "TimerManager.h"
 
-Actor::Actor(World* _world)
+
+Actor::Actor(Level* _world, const string& _name, const Transform& _transform):Core(_world)
 {
-	world = _world;
+	isToDelete = false;
+	id = 0;
+	lifeSpan = 0.0f;
+	name = _name;
+	
+	displayName = "Unknown";
+	components = Array<Component*>();
+	root = CreateComponent<TransformComponent>(_transform);
+	parent = nullptr;
+	attachment = AT_NONE;
+	children = set<Actor*>();
+}
 
-	allComponents = Array<Component*>();
-	transform = new TransformComponent(this);
-	allComponents.Add(transform);
+Actor::Actor(const Actor& _other):Core(_other.world)
+{
+	isToDelete = _other.isToDelete;
+	id = _other.id;
+	lifeSpan = _other.lifeSpan;
+	name = _other.name;
+	displayName = _other.displayName;
+	
+	for (Component* _component : _other.components)
+	{
+		//AddComponent(_component->Clone(this));
+	}
+
+	root = CreateComponent<TransformComponent>(_other.GetTransform());
+	parent = _other.parent;
+	attachment = _other.attachment;
+	for (Actor* _child : _other.children)
+	{
+		children.insert(new Actor(*_child));
+	}
+	
 }
 
 Actor::~Actor()
 {
-	for (Component* _component : allComponents)
+	for (Component* _component : components)
 	{
 		delete _component;
 	}
 }
 
+void Actor::Construct()
+{
+	Assert(world, "ERROR Construct => Level of Actor is nullptr");
+
+	//id = GetUniqueID();
+	displayName = world->GetActorManager().GetAvailableName(name);
+	SetActive(true);
+
+	for (Component* _component : components)
+	{
+		_component->Construct();
+	}
+}
+
+void Actor::Deconstruct()
+{
+	for (Component* _component : components)
+	{
+		//_component->Deconstruct();
+	}
+
+	SetActive(false);
+	Unregister();
+}
+
 void Actor::BeginPlay()
 {
-	for (Component* _component : allComponents)
+	if (lifeSpan > 0.0f)
+	{
+		//new Timer(bind(&Actor::Destroy, this), seconds(lifeSpan), true);
+	}
+
+	for (Component* _component : components)
 	{
 		_component->BeginPlay();
 	}
 }
 
-void Actor::Tick(const float _deltatime)
+void Actor::Tick(const float _deltaTime)
 {
-	for (Component* _component : allComponents)
+	for (Component* _component : components)
 	{
-		_component->Tick(_deltatime);
+		_component->Tick(_deltaTime);
 	}
 }
 
 void Actor::BeginDestroy()
 {
-	for (Component* _component : allComponents)
+	for (Component* _component : components)
 	{
 		_component->BeginDestroy();
+	}
+}
+
+void Actor::Register()
+{
+	world->GetActorManager().AddActor(this);
+}
+
+void Actor::Unregister()
+{
+	world->GetActorManager().RemoveActor(this);
+}
+
+void Actor::SetName(const string& _name)
+{
+	if (name == _name) return;
+
+	name = _name;
+	displayName = world->GetActorManager().GetDisplayName(this);
+}
+
+void Actor::CreateSocket(const string& _name, const Transform& _transform, const AttachmentType& _type)
+{
+	Actor* _socket = world->SpawnActor<Actor>(_name, _transform);
+	AddChild(_socket, _type);
+}
+
+void Actor::Destroy()
+{
+	SetToDelete();
+}
+
+void Actor::ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node)
+{
+	const unsigned int& _amount = _node->mNumMeshes;
+	for (GLuint _index = 0; _index < _amount; _index++)
+	{
+		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
+		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
+	}
+
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
+	{
+		ComputeMesh(_meshComponent, _scene, _node->mChildren[_index]);
 	}
 }
 
 void Actor::LoadModel(const string& _path)
 {
 	Importer _importer = Importer();
-	const aiScene* _scene = _importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs);
-	const string& _errorString = string("Error => ") + string(_importer.GetErrorString());
-	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorString.c_str());
-
-	StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
-	ComputeMeshes(_scene, _scene->mRootNode, _meshComponent);
-	allComponents.Add(_meshComponent);
-	//ComputeMeshes(_scene,_node);
-}
-
-void Actor::SetActorLocation(const Vector3f& _location)
-{
-	transform->SetLocation(_location);
-
-	StaticMeshComponent* _mesh = GetComponent<StaticMeshComponent>();
-	if (!_mesh) return;
-
-	mat4 _matrix = mat4(1.0f);
-	vec3 _newLocation = Vector3f::CreateVecFromVector(_location);
-	_matrix = translate(_matrix, _newLocation);
-	_mesh->SetModel(_matrix);
-}
-
-void Actor::SetActorRotation(const Vector3f& _rotation)
-{
-	transform->SetRotation(_rotation);
-}
-
-void Actor::SetActorScale(const Vector3f& _scale)
-{
-	transform->SetScale(_scale);
-}
-
-void Actor::ComputeMeshes(const aiScene* _scene, const aiNode* _node, StaticMeshComponent* _meshComponent)
-{
-	GLuint _meshesSize = _node->mNumMeshes;
-	for (GLuint _i = 0; _i < _meshesSize; _i++)
-	{
-		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_i]];
-		_meshComponent->GenerateShapeFromModel(_mesh,_scene);
-	}
-
-	GLuint _childrenSize = _node->mNumChildren;
-	for (GLuint _i = 0; _i < _childrenSize; _i++)
-	{
-		// Recursive
-		ComputeMeshes(_scene,_node->mChildren[_i], _meshComponent);
-	}
-
+	const string& _fullPath = GetPath(CONTENT) + _path;
+	const aiScene* _scene = _importer.ReadFile(_fullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const string& _errorMessage = "Error => " + string(_importer.GetErrorString());
+	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorMessage.c_str());
+	ComputeMeshes(_scene, _scene->mRootNode);
 }
 
 void Actor::ComputeMeshes(const aiScene* _scene, const aiNode* _node)
 {
-	GLuint _meshesSize = _node->mNumMeshes;
-	for (GLuint _i = 0; _i < _meshesSize; _i++)
+	const unsigned int& _amount = _node->mNumMeshes;
+	for (GLuint _index = 0; _index < _amount; _index++)
 	{
-		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_i]];
-		StaticMeshComponent* _meshComponent = new StaticMeshComponent(this);
+		StaticMeshComponent* _meshComponent = CreateComponent<StaticMeshComponent>();
+		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
 		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
-		allComponents.Add(_meshComponent);
 	}
 
-	GLuint _childrenSize = _node->mNumChildren;
-	for (GLuint _i = 0; _i < _childrenSize; _i++)
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
 	{
-		// Recursive
-		ComputeMeshes(_scene, _node->mChildren[_i]);
+		ComputeMeshes(_scene, _node->mChildren[_index]);
 	}
+}
+
+void Actor::AddComponent(Component* _component)
+{
+	components.Add(_component);
+	_component->Construct();
+}
+
+void Actor::RemoveComponent(Component* _component)
+{
+	components.Remove(_component);
+
 }

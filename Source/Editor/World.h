@@ -1,33 +1,35 @@
 #pragma once
 #include "../Utils/CoreMinimal.h"
 #include "../Actors/Actor.h"
-#include "../Actors/Cameras/CameraActor.h"
 #include "Windows/Window.h"
+#include "../Actors/Lights/LightActor.h"
+
+using namespace std;
 
 class World
 {
 	vector<Actor*> allActors;
 	Window* window;
 
-	CameraActor* currentCamera;
-
-public:
-	FORCEINLINE vector<Actor*> GetAllActors() const { return allActors; }
-	FORCEINLINE Window* GetWindow() const { return window; }
-	FORCEINLINE void SetWindow(Window* _window) { window = _window; }
 	
-	FORCEINLINE void SetCurrentCamera(CameraActor* _camera) { currentCamera = _camera; }
-	FORCEINLINE CameraActor* GetCurrentCamera() const { return currentCamera; }
 
 public:
 	World();
+	World(Window* _window);
 	~World();
 
-private:
-	
 public:
-	void Initialize();
-	template <typename Type = Actor>
+	FORCEINLINE vector<Actor*> GetAllActors() const
+	{
+		return allActors;
+	}
+public:
+	void Start();
+	void Update();
+	void Stop();
+
+public:
+	template<typename Type = Actor>
 	Type* SpawnActor()
 	{
 		Type* _actor = new Type(this);
@@ -35,6 +37,5 @@ public:
 		return _actor;
 	}
 
-	void SetVM();
+	//LightActor* SpawnLight(LightType _type);
 };
-

@@ -1,175 +1,138 @@
 #pragma once
-#include "../Components/Component.h"
 #include "../Utils/CoreMinimal.h"
+#include "Component.h"
+#include "../NewLightRelated/Texture.h"
+#include "../NewLightRelated/Material.h"
 
+class Actor;
 
-#define MAX_BONES_INFLUENCE 4
+#define MAX_BONE_INFLUENCE 4
 
 struct Vertex
 {
 	Vector3f position;
 	Vector3f normal;
 	Vector2f textureCoords;
-	Vector3f tangents;
-	Vector3f biTangents;
-	int bonesIDs[MAX_BONES_INFLUENCE];
-	float weights[MAX_BONES_INFLUENCE];
+	Vector3f tangent;
+	Vector3f bitangent;
+	int boneIDs[MAX_BONE_INFLUENCE];
+	float weights[MAX_BONE_INFLUENCE];
 
 	Vertex() = delete;
-	Vertex(const Vector3f& _position,const Vector3f& _normal, const Vector2f& _textureCoords, const Vector3f& _tangents, const Vector3f& _biTangents)
+	Vertex(const Vector3f& _position, const Vector3f& _normal, const Vector2f& _textureCoords, const Vector3f& _tangent, const Vector3f& _bitangent)
 	{
 		position = _position;
 		normal = _normal;
 		textureCoords = _textureCoords;
-		tangents = _tangents;
-		biTangents = _biTangents;
+		tangent = _tangent;
+		bitangent = _bitangent;
 	}
 	Vertex(const Vertex& _other)
 	{
 		position = _other.position;
 		normal = _other.normal;
 		textureCoords = _other.textureCoords;
-		tangents = _other.tangents;
-		biTangents = _other.biTangents;
+		tangent = _other.tangent;
+		bitangent = _other.bitangent;
 	}
-};
-
-struct Texture
-{
-	GLuint id;
-	string path;
-	aiTextureType type;
-
-	Texture(const GLuint& _id, const string& _path, const aiTextureType& _type)
-	{
-		id = _id;
-		path = _path;
-		type = _type;
-	}
-
 };
 
 class StaticMeshComponent : public Component
 {
-	//Vertex
-	GLuint vertexArrayID;
-
-	//Shader
 	GLuint shaderProgram;
 	string vertexShaderPath;
 	string fragmentShaderPath;
 
-	//Shape
-	bool useColor;
+	vector<GLfloat> lightColor;
+	bool rainbowColor;
+	bool rainbowLight;
+	bool useTextures;
 	int verticesCount;
 	int dimension;
-	int coordsCount;
-	//vector<Vertex> vertices;
-	vector<GLfloat> vertices;
+	int vertexDataSize;
+	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
 
-	//Buffers
 	GLuint VBO;
 	GLuint VAO;
 	GLuint EBO;
 
-	//Matrix
-	GLuint modelID;
-	GLuint viewID;
-	GLuint projectionID;
-
-	//TODO move into Actor
 	mat4 model;
 	mat4 view;
 	mat4 projection;
 
-	//Textures
+	GLuint modelID;
+	GLuint viewID;
+	GLuint projectionID;
+
+	Material* material;
 	map<string, GLuint> allTextures;
 
-	//TODO move into TimerManager
-	float elapsedTime;
-
-	//TODO move into CameraManager
-	vec3 camPos;
+	// TODO get from cameraManager
+	vec3 cameraLocation;
 
 public:
-	//TODO move into TimerManager
-	FORCEINLINE void SetTime(const float _time) { elapsedTime = _time; }
-
 	FORCEINLINE void SetMVP(const mat4& _model, const mat4& _view, const mat4& _projection)
 	{
 		glUseProgram(shaderProgram);
-		SetUniformModel(_model);
-		SetUniformView(_view);
-		SetUniformProjection(_projection);
+		material->SetMVP(_model, _view, _projection);
 	}
-
-	//TODO move into CameraManager
-	FORCEINLINE void SetCamPos(const vec3& _pos) { camPos = _pos; }
-
-	FORCEINLINE void SetUniformModel(const mat4& _model)
+	FORCEINLINE void SetUniformModelMatrix(const mat4& _model)
 	{
 		glUniformMatrix4fv(modelID, 1, GL_FALSE, value_ptr(_model));
 	}
-	FORCEINLINE void SetUniformView(const mat4& _view)
+	FORCEINLINE void SetUniformViewMatrix(const mat4& _view)
 	{
 		glUniformMatrix4fv(viewID, 1, GL_FALSE, value_ptr(_view));
 	}
-	FORCEINLINE void SetUniformProjection(const mat4& _projection)
+	FORCEINLINE void SetUniformProjectionMatrix(const mat4& _projection)
 	{
 		glUniformMatrix4fv(projectionID, 1, GL_FALSE, value_ptr(_projection));
 	}
-	FORCEINLINE GLuint GetShaderProgram() const { return shaderProgram; }
+	FORCEINLINE GLuint GetShaderProgram() { return shaderProgram; }
 
+	FORCEINLINE void SetCameraLocation(const vec3& _cameraLocation) { cameraLocation = _cameraLocation; }
+
+public:
+	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
+	{
+		return new StaticMeshComponent(_owner, *this);
+	}
 
 
 public:
 	StaticMeshComponent(Actor* _owner);
-	~StaticMeshComponent();
+	StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other);
+	~StaticMeshComponent() = default;
 
-	void Init();
-	virtual void Tick(const float _deltatime) override;
+	virtual void Construct() override;
+	virtual void Deconstruct() override;
+
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(const float _deltaTime) override;
 	virtual void BeginDestroy() override;
 
 private:
-
-	void InitShaders();
-	bool CheckShaderForErrors(const GLuint& _shader, const string& _shaderName);
-
-	void InitShape();
-	bool IsNearlyEqual(float _a, float _b, float _tolerance = numeric_limits<float>::epsilon());
-	float RoundFloat(const float _value);
-	bool Generate2DShape();
-	void AddEdge(std::set<std::pair<GLuint, GLuint>>& indices, GLuint vertex1, GLuint vertex2);
-	bool Generate3DShape();
 	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
-
+	float RoundFloat(const float& _value);
+	bool IsNearlyEqual(const float& _a, const float& _b, const float& _tolerance = numeric_limits<float>::epsilon());
 	void InitBuffers();
-
 	void InitTextures();
 	GLuint LoadTexture(const string& _filePath);
-
-	void InitLighting();
-
-	void UpdateColors();
-	void UpdateTextures();
-
-
-	void Clear();
+	bool CheckShaderForErrors(const GLuint& _shader, const string& _shaderName);
+	void Draw();
 
 public:
+	void Init();
 	void GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _scene);
-	void Draw();
-	void SetModel(const mat4& _model);
-	void SetView(const mat4& _view);
-	void SetProjection(const mat4& _projection);
+	void Update();
+	void Clear();
 };
 
-template <typename RetType = void*, typename Type = GLfloat>
-RetType SizeOf(const int _count = 1)
+template <typename ReturnType = void*, typename Type = GLfloat>
+ReturnType SizeOf(const int& _value = 1)
 {
-	return (RetType)(_count * sizeof(Type));
+	return (ReturnType)(_value * sizeof(Type));
 }
