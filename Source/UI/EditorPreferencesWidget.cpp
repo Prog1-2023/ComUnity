@@ -1,5 +1,7 @@
 #include "EditorPreferencesWidget.h"
 
+#include "../Utils/String.h"
+
 EditorPreferencesWidget::EditorPreferencesWidget(const bool& _openedByDefault) : Widget("Editor Preferences", _openedByDefault),
 themes{ "Dark" , "Light" , "Darker-Purple", "Custom" }
 {

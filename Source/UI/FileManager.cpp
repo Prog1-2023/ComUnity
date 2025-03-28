@@ -192,7 +192,7 @@ bool SaveData::GetBool(const string& _key)
 	if (!DoesKeyExist(_key))
 	{
 		LOG_ERROR("Error: Save key not found! " + _key);
-		return -1.0f;
+		return false;
 	}
 	return (bool)stoi(data[_key]);
 }
