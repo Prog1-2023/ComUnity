@@ -188,19 +188,3 @@ void Actor::RemoveComponent(Component* _component)
 	components.erase(components.find(_component));
 
 }
-
-void Actor::ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node)
-{
-	const unsigned int& _amount = _node->mNumMeshes;
-	for (GLuint _index = 0; _index < _amount; _index++)
-	{
-		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
-		_meshComponent->GenerateShapeFromModel(_mesh, _scene);
-	}
-
-	const unsigned int& _childrenAmount = _node->mNumChildren;
-	for (GLuint _index = 0; _index < _childrenAmount; _index++)
-	{
-		ComputeMesh(_meshComponent, _scene, _node->mChildren[_index]);
-	}
-}

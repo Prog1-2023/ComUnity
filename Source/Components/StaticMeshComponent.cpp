@@ -1,5 +1,6 @@
 #include "StaticMeshComponent.h"
 #include "../Managers/LightManager.h"
+#include "../NewLightRelated/Managers/TextureManager.h"
 
 static vector<Texture> texturesLoaded;
 
