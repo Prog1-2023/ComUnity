@@ -26,7 +26,7 @@ void LightActor::SetType(LightType _type)
 	}
 	else if (type == NONE)
 	{
-		lightComponentActive = new LightComponent(this);
+		lightComponentActive = CreateComponent<SpotLightComponent>();
 	}
 }
 

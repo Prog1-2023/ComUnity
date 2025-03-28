@@ -5,6 +5,7 @@
 
 #include "../Manager/ActorManager.h"
 #include "../Utils/Utility.h"
+#include "../Actors/SkyBox.h"
 
 //#include "CameraManager.h"
 //#include "CollisionManager.h"
@@ -19,6 +20,7 @@ class Level
 	bool isLoaded;
 	string name;
 	ActorManager actorManager;
+	SkyBox* skyBox;
 	/*
 	Camera::CameraManager cameraManager;
 	CollisionManager collisionManager;
@@ -39,6 +41,7 @@ public:
 	{
 		return actorManager;
 	}
+	FORCEINLINE SkyBox* GetSkyBox() const { return skyBox; }
 	/*
 	FORCEINLINE Camera::CameraManager& GetCameraManager()
 	{
@@ -99,9 +102,45 @@ public:
 		//Type* _toReturn = Spawn<Type>(_actorRef);
 		_actor->Construct();
 		_actor->Register();
-		/*delete _actor;
-		_actor = nullptr;*/
+		//delete _actor;
+		//_actor = nullptr;
 		return _actor;
+	}
+
+
+	template <typename Type, typename ...Args, IS_BASE_OF(Actor, Type)>
+	FORCEINLINE Type* SpawnBasicShape(SHAPES _shape, Args&&... _args)
+	{
+
+		Type* _toReturn = SpawnActor<Type>(forward<Args>(_args)...);
+
+		string _path = "";
+		switch (_shape)
+		{
+		case CUBE:
+			_path = "BasicShapes/cube.obj";
+			break;
+		case SHPERE:
+			_path = "BasicShapes/sphere.obj";
+			break;
+		case CAPSULE:
+			_path = "BasicShapes/capsule.obj";
+			break;
+		case CONE:
+			_path = "BasicShapes/cone.obj";
+			break;
+		case CYLINDER:
+			_path = "BasicShapes/cylinder.obj";
+			break;
+		default:
+			break;
+		}
+
+		StaticMeshComponent* _mesh = _toReturn->CreateComponent<StaticMeshComponent>();
+		_mesh->LoadModel(_path);
+		//_actor->LoadModel(_path);
+
+		return _toReturn;
 	}
 
 
@@ -152,4 +191,6 @@ public:
 	void Update(const float _deltaTime);
 	virtual void Load();
 	virtual void Unload();
+	void InitDefaultSkyBox();
+	void InitSkyBox(const vector<string>& _textures,const float& _scale =1.0f);
 };

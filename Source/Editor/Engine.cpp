@@ -2,9 +2,8 @@
 #include "../Actors/Cameras/CameraActor.h"
 #include "../Components/StaticMeshComponent.h"
 #include "../Actors/Skybox.h"
-#include "../Actors/SoundActor.h"
 
-#include "../Manager/SoundManager.h"
+
 
 Engine::Engine()
 {
@@ -33,65 +32,49 @@ void Engine::Start()
     /*world = new World(window); // => change to level
     world->Start();*/
 
-
     Level* _currentLevel = new Level("DefaultLevel");
     levelManager.SetLevel(_currentLevel);
-
 }
 
 void Engine::Update()
 {
-
     #pragma region INITIALIZATION_OF_LIFETIME_TYPES
     // Create the controller
-    Controller* _controller = window->GetController();
+    //Controller* _controller = window->GetController();
     #pragma endregion
 
     #pragma region LIGHT_DEMO_INITIALISATION
 
-    Level* _currentLevel = levelManager.GetCurrentLevel();
+    Actor* _cameraActor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
+    //Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<Actor>();
+    Actor* _actor = levelManager.GetCurrentLevel()->SpawnBasicShape<Actor>(CUBE,"test");
+    //_actor->LoadModel("backpack/Model/backpack.obj");
 
-    Actor* _actor = _currentLevel->SpawnActor<CameraActor>();
-    //Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
-    _actor->LoadModel("backpack/Model/backpack.obj");
 
-    //LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
-    LightActor* _light = _currentLevel->SpawnActor<LightActor>(NONE);
-    LightActor* _light2 = _currentLevel->SpawnActor<LightActor>(DIRECTIONAL);
-    //LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
+    LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
+    LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
 
-    //Skybox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<Skybox>();
-    Skybox* _skybox = _currentLevel->SpawnActor<Skybox>();
+    SkyBox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<SkyBox>();
 
     _skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
             "cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
 
+    //StaticMeshComponent* _mesh = _actor->CreateComponent<StaticMeshComponent>();
+    //_mesh->LoadModel("backpack/Model/backpack.obj");
     StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
-    CameraComponent* _camera = _actor->GetComponent<CameraComponent>();
 
-    //TODO remove
-    SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
-    SoundActor* _sound = _currentLevel->SpawnActor<SoundActor>("../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
-
-    //SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
-    //SoundActor* _sound = new SoundActor(_currentLevel,"../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
-    ////SoundActor* _sound = new SoundActor(levelManager.GetCurrentLevel(),"../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
-    //_sound->Construct();
-    //_sound->Register();
-    ////levelManager.GetInstance().GetCurrentLevel()->GetActorManager().sound = _sound;
-    //_currentLevel->GetActorManager().sound = _sound;
-    ////_sound->BeginPlay();
-
+    CameraComponent* _camera = _cameraActor->GetComponent<CameraComponent>();
+    // Create the controller
+   
+    InitInput(_camera);
+    
 
 #pragma endregion
     
     //Begin play on all Actors
-    std::set<Actor*> _allActor = _currentLevel->GetActorManager().GetAllActors();
-    //std::set<Actor*> _allActor = levelManager.GetCurrentLevel()->GetActorManager().GetAllActors();
-    for (Actor* _actorToBeginPlay : _allActor)
-        _actorToBeginPlay->BeginPlay();
-    //_currentLevel->GetActorManager().sound->BeginPlay();
-    //levelManager.GetCurrentLevel()->GetActorManager().sound->BeginPlay();
+    std::set<Actor*> _allActor = levelManager.GetCurrentLevel()->GetActorManager().GetAllActors();
+    for (Actor* _actor : _allActor)
+        _actor->BeginPlay();
 
     //Init time and size of window variables
     int _width, _height;
@@ -114,7 +97,8 @@ void Engine::Update()
         _time = glfwGetTime();
         // Processing inputs
         
-        _controller->ProcessInputs();
+       /* _controller->ProcessInputs();*/
+       
         #pragma endregion
 
         #pragma region Clear
@@ -131,14 +115,18 @@ void Engine::Update()
         mat4 _skyboxView = mat4(1.0f);
         _view = _camera->ComputeView(window);
 
-        const float& _pitch = cos(_controller->phi) * cos(_controller->theta) * _controller->viewRadius;
-        const float& _yaw = sin(_controller->phi) * _controller->viewRadius;
-        const float& _roll = cos(_controller->phi) * sin(_controller->theta) * _controller->viewRadius;
+    const float _phi = _camera->GetPhi();
+    const float _theta = _camera->GetTheta();
+    const float _viewRadius = _camera->GetViewRadius();
+
+        const float& _pitch = cos(_phi) * cos(_theta) * _viewRadius;
+        const float& _yaw = sin(_phi) * _viewRadius;
+        const float& _roll = cos(_phi) * sin(_theta) * _viewRadius;
         const vec3& _cameraPosition = vec3(_pitch, _yaw, _roll) + _targetPosition;
 
         _mesh->SetCameraLocation(_cameraPosition);
 
-        vec3 _up = normalize(vec3(0.0f, cosf(_controller->phi), 0.0f));
+        vec3 _up = normalize(vec3(0.0f, cosf(_phi), 0.0f));
         _view = lookAt(_cameraPosition, _targetPosition, _up);
         _skyboxView = _view;
 
@@ -154,7 +142,14 @@ void Engine::Update()
         mat4 _model = mat4(1.0f);
         _skyboxModel = translate(_skyboxModel, _cameraPosition);
         _skybox->SetMVP(_skyboxModel, _skyboxView, _projection);
+        //_mesh->GetTransform()->rotation += 1 * _deltaTime;
+        //_model = rotate(_model, _mesh->GetTransform()->rotation.x, vec3(1, 0, 0));
+        //_model = rotate(_model, _mesh->GetTransform()->rotation.y, vec3(0, 1, 0));
+        //_model = rotate(_model, _mesh->GetTransform()->rotation.z, vec3(0, 0, 1));
+        //translate
+        //scale
         _mesh->SetMVP(_model, _view, _projection);
+        //_mesh->SetUniformModelMatrix();
         #pragma endregion	
         //world->Update();
 
@@ -174,4 +169,22 @@ void Engine::Stop()
     levelManager.Destroy();
     //world->Stop();
     // destroy level
+}
+
+void Engine::InitInput(CameraComponent* _camera)
+{
+    Controller* _controller = window->GetController();
+
+    const function<void()> _moveCameraUp = bind(&CameraComponent::MoveViewUp, _camera);
+    _controller->AddInputAction("CameraMoveUp", { GLFW_KEY_W }, _moveCameraUp);
+    const function<void()> _moveCameraDown = bind(&CameraComponent::MoveViewDown, _camera);
+    _controller->AddInputAction("CameraMoveDown", { GLFW_KEY_S }, _moveCameraDown);
+    const function<void()> _moveCameraLeft = bind(&CameraComponent::MoveViewLeft, _camera);
+    _controller->AddInputAction("CameraMoveLeft", { GLFW_KEY_A }, _moveCameraLeft);
+    const function<void()> _moveCameraRight = bind(&CameraComponent::MoveViewRight, _camera);
+    _controller->AddInputAction("CameraMoveRight", { GLFW_KEY_D }, _moveCameraRight);
+    const function<void()> _zoomInCamera = bind(&CameraComponent::ZoomIn, _camera);
+    _controller->AddInputAction("CameraZoomIn", { GLFW_KEY_E }, _zoomInCamera);
+    const function<void()> _zoomOutCamera = bind(&CameraComponent::ZoomOut, _camera);
+    _controller->AddInputAction("CameraZoomOut", { GLFW_KEY_Q }, _zoomOutCamera);
 }

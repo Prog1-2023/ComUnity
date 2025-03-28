@@ -1,58 +1,82 @@
 #pragma once
-
 #include "../Utils/CoreMinimal.h"
+
 #define KEY(GLFW_KEY) glfwGetKeyScancode(GLFW_KEY)
 
-struct InputController
+struct Input
 {
-	GLFWwindow* window;
-	int key;
-	int scancode;
-	int action;
-	int mods;
+    GLFWwindow* window;
+    int key;
+    int scancode;
+    int action;
+    int mods;
 
-	InputController() = default;
-	InputController(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
-	{
-		window = _window;
-		key = _key;
-		scancode = _scancode;
-		action = _action;
-		mods = _mods;
-	}
+    Input() = default;
+    Input(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
+    {
+        window = _window;
+        key = _key;
+        scancode = _scancode;
+        action = _action;
+        mods = _mods;
+    }
 };
 
+struct InputAction
+{
+    vector<GLuint> keys;
+    function<void()> callback;
+
+    InputAction() = default;
+
+    InputAction(const vector<GLuint>& _keys, const function<void()>& _callback)
+    {
+        keys = _keys;
+        callback = _callback;
+    }
+
+    bool IsRightKey(const GLuint& _scancode)
+    {
+        GLuint _size = keys.size();
+        for (GLuint _i = 0; _i < _size; _i++)
+        {
+            if (_scancode == KEY(keys[_i]))
+                return true;
+        }
+        return false;
+    }
+
+    void Invoke()
+    {
+        callback();
+    }
+};
 
 class Controller
 {
-	//TODO MOVE into camera class
-public:
-	float viewRadius;
-	float theta;
-	float phi;
-	float speed;
-	float zoomSpeed;
-private:
-	GLFWwindow* window;
+    map<string, InputAction> inputMappingContext;
 
-public:
-	Controller(GLFWwindow* _window);
-	~Controller() = default;
+    GLFWwindow* window;
+
+
 
 private:
 
-	FORCEINLINE bool IsValidKey(const unsigned int _scancode, const vector<unsigned int>& _allKeys) const
-	{
-		const unsigned int _keysCount = _allKeys.size();
-		for (unsigned int _index = 0; _index < _keysCount; _index++)
-		{
-			if (_scancode == KEY(_allKeys[_index])) return true;
-		}
-		return false;
-	}
+    FORCEINLINE void ComputeKey(const GLuint& _scancode)
+    {
+        for (pair <string, InputAction> _pair : inputMappingContext)
+        {
+            if (_pair.second.IsRightKey(_scancode))
+                _pair.second.Invoke();
+        }
+    }
 
 public:
-	void ProcessInputs();
+    Controller(GLFWwindow* _window);
+
+public:
+    void PollEvents();
+    void AddInputAction(const string& _name, const vector<GLuint>& _allKeys, const function<void()>& _callback);
 };
 
 void InputCallback(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods);

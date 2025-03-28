@@ -1,5 +1,7 @@
 #include "StaticMeshComponent.h"
 #include "../Managers/LightManager.h"
+#include "../NewLightRelated/Managers/TextureManager.h"
+#include "../Actors/Actor.h"
 
 static vector<Texture> texturesLoaded;
 
@@ -45,6 +47,10 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 	vertices = vector<Vertex>();
 	indices = vector<GLuint>();
 
+	model = mat4(1.f);
+	view = mat4(1.f);
+	projection = mat4(1.f);
+
 	VBO = 0;
 	VAO = 0;
 	EBO = 0;
@@ -53,14 +59,16 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 
 	allTextures =
 	{
-		/*{ "diffuse.jpg", 0 },
-		{ "diffuse.jpg", 0 },
-		{ "normal.png", 0 },
-		{ "roughness.jpg", 0 },
-		{ "specular.jpg", 0 },*/
+		//{ "diffuse.jpg", 0 },
+		//{ "diffuse.jpg", 0 },
+		//{ "normal.png", 0 },
+		//{ "roughness.jpg", 0 },
+		//{ "specular.jpg", 0 },
 	};
+
+	offsetTransform = _owner->GetTransform();
 }
-StaticMeshComponent::StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other) : Component(_owner)
+StaticMeshComponent::StaticMeshComponent(Actor* _owner, StaticMeshComponent _other) : Component(_owner)
 {
 	shaderProgram = _other.shaderProgram;
 	vertexShaderPath = _other.vertexShaderPath;
@@ -77,11 +85,45 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner, const StaticMeshComponen
 	vertices = _other.vertices;
 	indices = _other.indices;
 
+	model = mat4(1.f);
+	view = mat4(1.f);
+	projection = mat4(1.f);
+
 	VBO = _other.VBO;
 	VAO = _other.VAO;
 	EBO = _other.EBO;
 
 	allTextures = _other.allTextures;
+
+	offsetTransform = *(_other.GetTransform());
+}
+
+
+void StaticMeshComponent::LoadModel(const string& _path)
+{
+	Importer _importer = Importer();
+	const string& _fullPath = GetPath(CONTENT) + _path;
+	const aiScene* _scene = _importer.ReadFile(_fullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const string& _errorMessage = "Error => " + string(_importer.GetErrorString());
+	Assert(_scene && _scene->mRootNode && !(_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE), _errorMessage.c_str());
+	ComputeMeshes(_scene, _scene->mRootNode);
+}
+
+void StaticMeshComponent::ComputeMeshes(const aiScene* _scene, const aiNode* _node)
+{
+	const unsigned int& _amount = _node->mNumMeshes;
+	for (GLuint _index = 0; _index < _amount; _index++)
+	{
+		//StaticMeshComponent* _meshComponent = CreateComponent<StaticMeshComponent>();
+		aiMesh* _mesh = _scene->mMeshes[_node->mMeshes[_index]];
+		GenerateShapeFromModel(_mesh, _scene);
+	}
+
+	const unsigned int& _childrenAmount = _node->mNumChildren;
+	for (GLuint _index = 0; _index < _childrenAmount; _index++)
+	{
+		ComputeMeshes(_scene, _node->mChildren[_index]);
+	}
 }
 
 void StaticMeshComponent::BeginPlay()
@@ -106,6 +148,7 @@ void StaticMeshComponent::Deconstruct()
 void StaticMeshComponent::Tick(const float _deltaTime)
 {
 	SUPER::Tick(_deltaTime);
+	model = mat4(1.0f);
 	Update();
 }
 
@@ -352,7 +395,6 @@ void StaticMeshComponent::InitTextures()
 			for (const pair<string, GLuint>& _pair : allTextures)
 				allTextures[_pair.first] = LoadTexture(_pair.first);
 
-			LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
 
 			//Manager donne un vector
 			//Static Mesh Set le frag
@@ -369,6 +411,8 @@ void StaticMeshComponent::InitTextures()
 void StaticMeshComponent::Update()
 {
 	material->Update();
+	LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
+
 	Draw();
 }
 
@@ -390,4 +434,62 @@ void StaticMeshComponent::Clear()
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shaderProgram);
+}
+
+
+void StaticMeshComponent::SetPosition(const Vector3f& _position)
+{
+	offsetTransform.location = _position;
+	model = translate(model, vec3(offsetTransform.location));
+	GetMaterial()->SetUniformModel(model);
+
+}
+
+void StaticMeshComponent::SetRotation(const Vector3f& _rotation)
+{
+	model = rotate(model, offsetTransform.rotation.x, vec3(1, 0, 0));
+	model = rotate(model, offsetTransform.rotation.y, vec3(0, 1, 0));
+	model = rotate(model, offsetTransform.rotation.z, vec3(0, 0, 1));
+	offsetTransform.rotation = _rotation;
+	GetMaterial()->SetUniformModel(model);
+
+}
+
+void StaticMeshComponent::SetScale(const Vector3f& _scale)
+{
+	offsetTransform.scale = _scale;
+	model = scale(model, vec3(offsetTransform.scale));
+	GetMaterial()->SetUniformModel(model);
+}
+
+void StaticMeshComponent::Move(const Vector3f& _offset)
+{
+}
+
+void StaticMeshComponent::Rotate(const Vector3f& _angle)
+{
+}
+
+void StaticMeshComponent::Scale(const Vector3f& _factor)
+{
+}
+
+Vector3f StaticMeshComponent::GetPosition() const
+{
+	return offsetTransform.location;
+}
+
+Vector3f StaticMeshComponent::GetRotation() const
+{
+	return offsetTransform.rotation;
+}
+
+Vector3f StaticMeshComponent::GetScale() const
+{
+	return offsetTransform.scale;
+}
+
+Transform StaticMeshComponent::GetTransform() const
+{
+	return offsetTransform;
 }

@@ -3,6 +3,9 @@
 #include "Component.h"
 #include "../NewLightRelated/Texture.h"
 #include "../NewLightRelated/Material.h"
+#include "../Actors/Transform.h"
+#include"../Components/ITransformableModifier.h"
+#include"../Components/ITransformableViewer.h"
 
 class Actor;
 
@@ -37,7 +40,7 @@ struct Vertex
 	}
 };
 
-class StaticMeshComponent : public Component
+class StaticMeshComponent : public Component, public ITransformableModifier, public ITransformableViewer
 {
 	GLuint shaderProgram;
 	string vertexShaderPath;
@@ -69,13 +72,14 @@ class StaticMeshComponent : public Component
 	Material* material;
 	map<string, GLuint> allTextures;
 
+	Transform offsetTransform;
+
 	// TODO get from cameraManager
 	vec3 cameraLocation;
 
 public:
 	FORCEINLINE void SetMVP(const mat4& _model, const mat4& _view, const mat4& _projection)
 	{
-		glUseProgram(shaderProgram);
 		material->SetMVP(_model, _view, _projection);
 	}
 	FORCEINLINE void SetUniformModelMatrix(const mat4& _model)
@@ -94,6 +98,13 @@ public:
 
 	FORCEINLINE void SetCameraLocation(const vec3& _cameraLocation) { cameraLocation = _cameraLocation; }
 
+	FORCEINLINE Transform* GetTransform() { return &offsetTransform; }
+
+	FORCEINLINE Material* GetMaterial() const { 
+
+		return material; 
+	}
+
 public:
 	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
 	{
@@ -103,7 +114,9 @@ public:
 
 public:
 	StaticMeshComponent(Actor* _owner);
-	StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other);
+	StaticMeshComponent(Actor* _owner, StaticMeshComponent _other);
+	void LoadModel(const string& _path);
+	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
 	~StaticMeshComponent() = default;
 
 	virtual void Construct() override;
@@ -129,6 +142,33 @@ public:
 	void GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _scene);
 	void Update();
 	void Clear();
+
+
+
+	// Hérité via ITransformableModifier
+	void SetPosition(const Vector3f& _position) override;
+
+	void SetRotation(const Vector3f& _rotation) override;
+
+	void SetScale(const Vector3f& _scale) override;
+
+	void Move(const Vector3f& _offset) override;
+
+	void Rotate(const Vector3f& _angle) override;
+
+	void Scale(const Vector3f& _factor) override;
+
+
+	// Hérité via ITransformableViewer
+	Vector3f GetPosition() const override;
+
+	Vector3f GetRotation() const override;
+
+	Vector3f GetScale() const override;
+
+	Transform GetTransform() const override;
+
+
 };
 
 template <typename ReturnType = void*, typename Type = GLfloat>
