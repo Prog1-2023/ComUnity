@@ -22,4 +22,5 @@ public:
     LightComponent(Actor* _owner, float _intensity, vec3 _color);
 
     virtual ~LightComponent();
+    virtual Component* Clone(Actor* _owner) const override;
 };

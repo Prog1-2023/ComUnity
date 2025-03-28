@@ -2,15 +2,25 @@
 
 #include "../Utils/Macro.h"
 
+
 template <typename Type>
 struct Vector4
 {
+public:
 	Type x;
 	Type y;
 	Type z;
 	Type w;
 
 public:
+
+	static Vector4<Type> zero() {
+		return Vector4<Type>(0);
+	}
+	static Vector4<Type> one() {
+		return Vector4<Type>(1);
+	}
+
 #pragma region Constructors
 	Vector4()
 	{
@@ -40,6 +50,7 @@ public:
 		y = *_begin + 1;
 		z = *_begin + 2;
 		w = *_begin + 3;
+
 	}
 	Vector4(const Vector4& _other)
 	{
@@ -48,6 +59,7 @@ public:
 		z = _other.z;
 		w = _other.w;
 	}
+
 	Vector4(Vector4&& _other) noexcept
 	{
 		*this = move(_other);
@@ -56,6 +68,17 @@ public:
 
 public:
 #pragma region Operators
+
+	// Overloaded operator for value access
+	float& operator[] (int _index) {
+		return (&x)[_index];
+	}
+
+	// Overloaded operator for value access
+	const float& operator[] (int _index) const {
+		return (&x)[_index];
+	}
+
 	Vector4<Type>& operator = (Vector4<Type>&& _other) noexcept
 	{
 		x = move(_other.x);
@@ -68,10 +91,7 @@ public:
 	{
 		return *this = Vector4<Type>(_other);
 	}
-	Vector4<Type>& operator = (const aiVector3D& _other) noexcept
-	{
-		return *this = Vector4<Type>(_other);
-	}
+
 
 	Vector4<Type> operator + (const Vector4<Type>& _otherVector) const noexcept
 	{
@@ -98,6 +118,15 @@ public:
 		_result.y = y * _otherVector.y;
 		_result.z = z * _otherVector.z;
 		_result.w = w * _otherVector.w;
+		return _result;
+	}
+	Vector4<Type> operator * (const Type& _other) const noexcept
+	{
+		Vector4<Type> _result;
+		_result.x = x * _other;
+		_result.y = y * _other;
+		_result.z = z * _other;
+		_result.w = w * _other;
 		return _result;
 	}
 	Vector4<Type> operator / (const Vector4<Type>& _otherVector) const noexcept
@@ -217,24 +246,18 @@ public:
 		return x == _otherVector.x && y == _otherVector.y && z == _otherVector.z && w == _otherVector.w;
 	}
 
-	//Implicit cast
-	operator vec4() const { return vec4(x, y, z, w); }
+	operator glm::vec4() const 
+	{
+		return glm::vec4(this->x, this->y, this->z, this->w);
+	}
 #pragma endregion
 
 public:
-	std::string ToString() const { return "Vec4 ( " + std::to_string(x) + " : " + std::to_string(y) + " : " + std::to_string(z) + " : " + std::to_string(w) + " )"; }
 
-
-public:
-	//Here make your own methods utils of the class Vector4.
-	//It's not a priority, since, at the moment, this class is only used for RGBA.
+	public:
+		std::string ToString() const { return "Vec4 ( " + std::to_string(x) + " : " + std::to_string(y) + " : " + std::to_string(z) + " : " + std::to_string(w) + " )"; }
 };
 
-//template <typename Type>
-//ostream& operator << (ostream& _stream, const Vector4<Type>& _otherVector)
-//{
-//	return _stream << "X: " << _otherVector.x << " Y: " << _otherVector.y;
-//}
 
 using Vector4c = Vector4<char>;
 using Vector4us = Vector4<unsigned short>;

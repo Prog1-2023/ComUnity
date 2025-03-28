@@ -1,5 +1,8 @@
 #include "StaticMeshComponent.h"
 #include "../Managers/LightManager.h"
+#include "../NewLightRelated/Managers/TextureManager.h"
+
+static vector<Texture> texturesLoaded;
 
 unsigned int CreateShader(const string& _shaderPath, const bool& _isVertex)
 {
@@ -51,20 +54,57 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner) : Component(_owner)
 
 	allTextures =
 	{
-		/*{ "Container.png", 0 },
-		{ "Container_specular.png", 0 },*/
-		//{ "Cthulhu.png", 0 },
-		//{ "Face.png", 0 },
+		/*{ "diffuse.jpg", 0 },
+		{ "diffuse.jpg", 0 },
+		{ "normal.png", 0 },
+		{ "roughness.jpg", 0 },
+		{ "specular.jpg", 0 },*/
 	};
+}
+StaticMeshComponent::StaticMeshComponent(Actor* _owner, const StaticMeshComponent& _other) : Component(_owner)
+{
+	shaderProgram = _other.shaderProgram;
+	vertexShaderPath = _other.vertexShaderPath;
+	fragmentShaderPath = _other.fragmentShaderPath;
+
+	lightColor = _other.lightColor;
+	rainbowColor = _other.rainbowColor;
+	rainbowLight = _other.rainbowLight;
+	useTextures = _other.useTextures;
+	verticesCount = _other.verticesCount;
+	dimension = _other.dimension;
+
+	vertexDataSize = _other.vertexDataSize;
+	vertices = _other.vertices;
+	indices = _other.indices;
+
+	VBO = _other.VBO;
+	VAO = _other.VAO;
+	EBO = _other.EBO;
+
+	allTextures = _other.allTextures;
 }
 
 void StaticMeshComponent::BeginPlay()
 {
 	SUPER::BeginPlay();
-	Init();
+	Init(); //TODO see if keep the one in construct or this one
 }
 
-void StaticMeshComponent::Tick(const float& _deltaTime)
+void StaticMeshComponent::Construct()
+{
+	SUPER::Construct();
+	std::cout << "I'm constructed" << std::endl;
+	//Init();
+}
+
+void StaticMeshComponent::Deconstruct()
+{
+	SUPER::Deconstruct();
+
+}
+
+void StaticMeshComponent::Tick(const float _deltaTime)
 {
 	SUPER::Tick(_deltaTime);
 	Update();
@@ -84,36 +124,9 @@ void StaticMeshComponent::Init()
 	
 	//material->InitAlbedo(Vector4f(1.0f,1.0f,1.0f,1.0f));
 	material->InitAlbedo("/backpack/diffuse.jpg");
+
 	InitBuffers();
 	InitTextures();
-}
-
-void StaticMeshComponent::InitShaders()
-{
-	glEnable(GL_DEPTH_TEST);
-
-	// VertexShader
-	unsigned int _vertexShader = CreateShader(vertexShaderPath, true);
-	Assert(CheckShaderForErrors(_vertexShader, "VertexShader"), "Init of VertexShader failed!");
-
-	// FragmentShader
-	unsigned int _fragmentShader = CreateShader(fragmentShaderPath, false);
-	Assert(CheckShaderForErrors(_fragmentShader, "FragmentLightShader"), "Init of FragmentShader failed!");
-
-	// Link shaders
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, _vertexShader);
-	glAttachShader(shaderProgram, _fragmentShader);
-	glLinkProgram(shaderProgram);
-	Assert(CheckShaderForErrors(shaderProgram, "ShaderProgram"), "Init of ShaderProgram failed!");
-
-	modelID = glGetUniformLocation(shaderProgram, "uniformModel");
-	viewID = glGetUniformLocation(shaderProgram, "uniformView");
-	projectionID = glGetUniformLocation(shaderProgram, "uniformProjection");
-
-	// Clear shaders
-	glDeleteShader(_vertexShader);
-	glDeleteShader(_fragmentShader);
 }
 
 void StaticMeshComponent::GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _scene)
@@ -168,6 +181,25 @@ void StaticMeshComponent::GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _
 
 		vector<Texture> _heightTextures = LoadTextures(_material, aiTextureType_HEIGHT);
 		textures.insert(textures.begin(), _heightTextures.begin(), _heightTextures.end());*/
+
+		/*const aiTextureType _textureTypes[] =
+		{
+			aiTextureType_AMBIENT,
+			aiTextureType_DIFFUSE,
+			aiTextureType_SPECULAR,
+			aiTextureType_HEIGHT,
+		};
+
+		vector<Texture> _loadedTextures;
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			_loadedTextures = LoadTextures(_material, _textureTypes[i]);
+
+			if (!_loadedTextures.empty())
+			{
+				textures.insert(textures.begin(), _loadedTextures.begin(), _loadedTextures.end());
+			}
+		}*/
 	}
 }
 
@@ -175,7 +207,8 @@ vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const a
 {
 	vector<Texture> _textures;
 
-	const unsigned int& _amount = _material->GetTextureCount(_type);
+	const  GLuint& _amount = _material->GetTextureCount(_type);
+
 	for (GLuint _textureIndex = 0; _textureIndex < _amount; _textureIndex++)
 	{
 		aiString _path;
@@ -199,7 +232,6 @@ vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const a
 
 		}
 	}
-
 	return _textures;
 }
 
@@ -268,7 +300,6 @@ void StaticMeshComponent::InitBuffers()
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindVertexArray(VAO);
 
-	
 }
 
 GLuint StaticMeshComponent::LoadTexture(const string& _textureName)
@@ -322,22 +353,12 @@ void StaticMeshComponent::InitTextures()
 			for (const pair<string, GLuint>& _pair : allTextures)
 				allTextures[_pair.first] = LoadTexture(_pair.first);
 
-			/*const GLuint& _uniformMaterialDiffuse = glGetUniformLocation(shaderProgram, "uniformMaterial.diffuse");
-			glUniform1i(_uniformMaterialDiffuse, 0);
-			const GLuint& _uniformMaterialSpecular = glGetUniformLocation(shaderProgram, "uniformMaterial.specular");
-			glUniform1i(_uniformMaterialSpecular, 1);
-			const GLuint& _uniformMaterialShininess = glGetUniformLocation(shaderProgram, "uniformMaterial.shininess");
-			glUniform1f(_uniformMaterialShininess, 64.0f);*/
-
-			/*const GLuint& _uniformLightColor = glGetUniformLocation(shaderProgram, "uniformLightColor");
-			glUniform3f(_uniformLightColor, 1.0f, 1.0f, 0.0f);*/
-
-			//ManagerLight
-			//ApplyLight
 			LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
 
 			//Manager donne un vector
 			//Static Mesh Set le frag
+			//glUniform1f(_uniformMaterialShininess, 64.0f);
+		
 		}
 		catch (const exception& _error)
 		{

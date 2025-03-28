@@ -1,50 +1,63 @@
-#pragma once
-#include "Component.h"
+#pragma once 
+#include "../Utils/CoreMinimal.h"
+#include"Component.h"
+#include "../Actors/Transform.h"
 
 class TransformComponent : public Component
-{
-	Vector3f position;
-	Vector3f LocalPosition;
-	Vector3f rotation;
-	Vector3f scale;
+{ 
+	Transform transform;
+public:
+
+	FORCEINLINE Transform GetTransform()
+	{
+		return  transform;
+	}
+	FORCEINLINE Vector3f GetLocation()
+	{
+		return transform.location;
+	}
+	FORCEINLINE void SetLocation(const Vector3f& _newPos)
+	{
+		transform.location=_newPos;
+	}
+
+	FORCEINLINE Vector3f GetRotation()
+	{
+		return transform.rotation;
+	}
+	FORCEINLINE void SetRotation(const Vector3f& _newRot)
+	{
+		transform.rotation = _newRot;
+	}
+	
+	FORCEINLINE Vector3f GetScale()
+	{
+		return transform.scale;
+	}
+	FORCEINLINE void SetScale(const Vector3f& _newScale)
+	{
+		transform.scale= _newScale;
+	}
+	FORCEINLINE void Move(const Vector3f& _offset)
+	{
+		transform.location += _offset;
+	}
+	
+	FORCEINLINE void Rotate(const Vector3f& _offset)
+	{
+		transform.rotation += _offset;
+	}
+	
+	FORCEINLINE void Scale(const Vector3f& _offset)
+	{
+		transform.scale += _offset;
+	}
 	
 public:
-	Vector3f GetPosition() const
-	{
-		return position;
-	}
-	Vector3f GetLocalPosition() const
-	{
-		return LocalPosition;
-	}
-	Vector3f GetRotation() const
-	{
-		return rotation;
-	}
-	Vector3f GetScale() const
-	{
-		return scale;
-	}
-	void SetPosition(Vector3f _position)
-	{
-		position = _position;
-	}
-	void SetLocalPosition(Vector3f _position)
-	{
-		LocalPosition = _position;
-	}
-	void SetRotation(Vector3f _rotation)
-	{
-		rotation = _rotation;
-	}
-	void SetScale(Vector3f _scale)
-	{
-		scale = _scale;
-	}
+	TransformComponent (Actor* _owner);
+	TransformComponent (Actor* _owner,Transform _transform);
+	~TransformComponent();
 
 public:
-	TransformComponent(Actor* _owner);
-
-
+	virtual Component* Clone(Actor* _owner) const override { return nullptr; }
 };
-

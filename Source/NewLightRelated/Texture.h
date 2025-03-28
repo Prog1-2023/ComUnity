@@ -1,10 +1,12 @@
 #pragma once
 #include "../Math/Vector3.h"
 #include "../Utils/CoreMinimal.h"
-#include "Managers/TextureManager.h"
+//#include "Managers/TextureManager.h"
 
 #include <string>
 #include "Shader.h"
+
+class TextureManager;
 
 class Texture
 {

@@ -2,7 +2,7 @@
 #include "../Utils/CoreMinimal.h"
 #include "Actor.h"
 
-class Skybox : public Actor
+class SkyBox : public Actor
 {
     vector<string> texturesName;
     vector<float> vertices;
@@ -67,10 +67,11 @@ public:
     /// <summary>
     /// Constructor to initialize a Skybox instance with a given world.
     /// </summary>
-    /// <param name="_world">The world that this Skybox belongs to.</param>
-    Skybox(World* _world);
+    SkyBox(Level* _level);
 
 private:
+    void Reset();
+
     /// <summary>
     /// Initializes the textures for the Skybox from the provided texture names.
     /// </summary>
@@ -119,9 +120,10 @@ private:
     /// <summary>
     /// Draws the Skybox using the current shader program and cubemap texture.
     /// </summary>
+public:
     void Draw();
 
-    virtual void Tick(const float& _deltaTime) override;
+    virtual void Tick(const float _deltaTime) override;
 
 public:
     /// <summary>

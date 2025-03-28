@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../Utils/CoreMinimal.h"
 #include "../Actor.h"
 #include "../../Components/CameraComponent.h"
@@ -12,6 +11,9 @@ public:
 	FORCEINLINE CameraComponent* GetCameraComponent() const { return camera; }
 
 public:
-	CameraActor(World* _world);
+	CameraActor(Level* _level);
+
+public:
+	virtual void Construct()override;
 };
 

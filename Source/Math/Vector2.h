@@ -11,7 +11,7 @@ struct Vector2
 	Type x;
 	Type y;
 
-	#pragma region Constructors
+#pragma region Constructors
 
 
 	Vector2()
@@ -49,13 +49,13 @@ struct Vector2
 		x = _other.x;
 		y = _other.y;
 	}
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Methods
+#pragma region Methods
 
 	float Length()
 	{
-		return sqrtf(pow(x, 2)+ pow(y, 2));
+		return sqrtf(pow(x, 2) + pow(y, 2));
 	}
 
 	static float Dot(Vector2<Type> _otherVec)
@@ -74,9 +74,9 @@ struct Vector2
 		return this * _length;
 	}
 
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Operators
+#pragma region Operators
 
 	// Compute
 	Vector2<Type> operator + (const Vector2<Type>& _otherVec)
@@ -204,7 +204,7 @@ struct Vector2
 	{
 		return  x == _otherVec.x && y == _otherVec.y;
 	}
-	
+
 	//Streams
 	friend ostream& operator << (ostream& _stream, const Vector2<Type>& _otherVec)
 	{
@@ -219,7 +219,7 @@ struct Vector2
 	{
 		return *this = Vector2<Type>(_otherVec);
 	}
-	#pragma endregion
+#pragma endregion
 };
 
 
