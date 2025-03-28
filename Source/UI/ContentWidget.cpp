@@ -15,6 +15,7 @@ ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _
 	maxNameLength = 30;
 	popupEnterName = new char[30] { "" };
 	UpdateElements();
+	time = glfwGetTime();
 
 	selectedClassType = 0;
 
@@ -34,7 +35,6 @@ void ContentWidget::UpdateElements()
 	const string& _path = FileManager::GetContentPath() + "/" + currentPath;
 	for (const directory_entry& _iterator : directory_iterator(_path))
 		elements.push_back(_iterator.path().filename().string());
-	LOG("Refreshed content panel!");
 }
 
 void ContentWidget::Open(const string& _fileName)
@@ -240,6 +240,12 @@ void ContentWidget::ResetInput(const string& _newInput)
 
 void ContentWidget::Draw()
 {
+	if (glfwGetTime() - time >= 3.0)
+	{
+		time = glfwGetTime();
+		UpdateElements();
+	}
+
 	BeginDisabled(currentPath.empty());
 	EndDisabled();
 	if (Button("Import##ImportFile"))
