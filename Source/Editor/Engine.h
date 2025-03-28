@@ -5,6 +5,7 @@
 
 #include "../Manager/LevelManager.h" // TODO Maybe need to remove
 
+class CameraComponent;
 class Engine
 {
 	Window* window;
@@ -22,5 +23,6 @@ private:
 	void Start();
 	void Update();
 	void Stop();
+	void InitInput(CameraComponent* _camera);
 };
 
