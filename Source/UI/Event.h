@@ -16,7 +16,7 @@ public:
 
 public:
 	Event() = default;
-	template <typename Callable, typename = enable_if_t<!is_same_v<Event, decay_t<Callable>>>>
+	template <typename Callable, typename = std::enable_if_t<!is_same_v<Event, decay_t<Callable>>>>
 	Event(Callable&& _callable)
 	{
 		Add(forward<Callable>(_callable));

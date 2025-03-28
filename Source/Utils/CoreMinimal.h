@@ -1,4 +1,3 @@
-
 #pragma once
 #include "Macro.h"
 #include "../Editor/Logger.h"

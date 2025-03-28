@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
 #include "FileManager.h"

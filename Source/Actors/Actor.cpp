@@ -4,8 +4,7 @@
 #include "../Components/StaticMeshComponent.h"
 //#include "TimerManager.h"
 
-
-Actor::Actor(Level* _world, const string& _name, const Transform& _transform):Core(_world)
+Actor::Actor(Level* _world, const string& _name, const Transform& _transform) : Core(_world)
 {
 	isToDelete = false;
 	id = 0;

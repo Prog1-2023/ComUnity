@@ -1,11 +1,7 @@
 #pragma once
-
 #include "Singleton.h"
-#include "../IMGUI/imgui.h"
 #include "../Utils/CoreMinimal.h"
 #include "Log.h"
-
-using namespace std;
 
 class FontManager : public Singleton<FontManager>
 {

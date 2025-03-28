@@ -1,30 +1,4 @@
-#include <iostream>
-#include <vector>
-
-// FMT
-#include <fmt/core.h>
-
-// ImGui
-#include <imgui.h>
-
-// Assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
-// ReactPhysics3D
-//#include <reactphysics3d/reactphysics3d.h>
-
-// IrrKlang
-#include <irrKlang.h>
-
-// OpenGL
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-// GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "../Source/Utils/CoreMinimal.h"
 
 //Light Related
 #include "Editor/Windows/Window.h"	
@@ -34,15 +8,8 @@
 #include "Actors/Skybox.h"
 #include "Components/StaticMeshComponent.h"
 
-using namespace std;
-using namespace Assimp;
-using namespace fmt;
-using namespace irrklang;
-//namespace rea = reactphysics3d;
-
 int InitMain();
 void Shutdown(GLFWwindow* _window);
-
 
 #include "Editor/Engine.h"
 
@@ -55,6 +22,88 @@ void InitConfig()
 
 int main()
 {
+	// Initialisation de GLFW
+	if (!glfwInit())
+	{
+		std::cerr << "Échec de l'initialisation de GLFW !" << std::endl;
+		return -1;
+	}
+
+	// Créer une fenêtre GLFW
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui Test", nullptr, nullptr);
+	if (window == nullptr)
+	{
+		std::cerr << "Échec de la création de la fenêtre GLFW !" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1); // Activer la synchronisation verticale
+
+	// Initialisation d'OpenGL (si vous ne l'avez pas déjà)
+	if (glewInit() != GLEW_OK)
+	{
+		std::cerr << "Échec de l'initialisation de GLEW !" << std::endl;
+		return -1;
+	}
+
+	// Initialisation d'ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+
+	// Initialisation d'ImGui avec GLFW et OpenGL
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
+
+	bool show_demo_window = true;
+
+	// Boucle principale
+	while (!glfwWindowShouldClose(window))
+	{
+		// Gérer les événements
+		glfwPollEvents();
+
+		// Démarrer une nouvelle frame d'ImGui
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		// Affichage de la fenêtre de démo d'ImGui
+		if (show_demo_window)
+			ImGui::ShowDemoWindow(&show_demo_window);
+
+		// Rendu des éléments ImGui
+		ImGui::Render();
+		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Dessiner avec OpenGL
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		// Échanger les buffers pour afficher à l'écran
+		glfwSwapBuffers(window);
+	}
+
+	// Nettoyage avant de quitter
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	return 0;
+}
+
+/*
+int main()
+{
+
+	return EXIT_SUCCESS;
+
 	if (InitMain())return -1;
 
 	InitConfig();
@@ -64,7 +113,7 @@ int main()
 
 	return EXIT_SUCCESS;
 }
-
+*/
 int InitMain()
 {
 	cout << "ComUnity : l'Engine des Communistes !" << endl;

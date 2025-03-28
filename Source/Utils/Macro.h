@@ -11,32 +11,49 @@
 #include <chrono>  
 #include <ctime>
 
+// FMT
+#include <fmt/core.h>
+
+// OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+// GLM
 #define GLM_ENABLE_EXPERIMENTAL //check to remove
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include<assimp/Importer.hpp>
-#include<assimp/scene.h>
-#include<assimp/postprocess.h>
+// ImGUI
+ #include "../IMGUI/imgui.h"
+ #include "../IMGUI/imgui_impl_glfw.h"
+ #include "../IMGUI/imgui_impl_opengl3.h"
+
+//#include "imgui.h"
+//#include "backends/imgui_impl_glfw.h"
+//#include "backends/imgui_impl_opengl3.h"
+
+// Assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+// IrrKlang
+#include <irrKlang.h>
 
 #include <map>
 #include <queue>
 #include <set>
-
-#include "../IMGUI/imgui.h"
-#include "../IMGUI/imgui_impl_glfw.h"
-#include "../IMGUI/imgui_impl_opengl3.h"
 
 enum Log_Severity { LOG, WARNING, ERROR };
 
 using namespace std;
 using namespace filesystem;
 using namespace glm;
+using namespace fmt;
 using namespace Assimp;
 using namespace ImGui;
+using namespace irrklang;
 
 typedef unsigned short u_short;
 typedef unsigned int u_int;

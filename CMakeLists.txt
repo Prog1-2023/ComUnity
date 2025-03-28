@@ -95,6 +95,10 @@ set(INCLUDES
 
     #IrrKlang
     "${DEPENDENCIES}/IrrKlang/include"
+
+    #ImGUI
+    #"${DEPENDENCIES}/imgui"
+    #"${DEPENDENCIES}/ImGUI/include"
 )
 target_include_directories(ComUnity PRIVATE ${INCLUDES})
 
