@@ -10,6 +10,9 @@ public:
 	GameWidget(const bool& _openedByDefault);
 	virtual ~GameWidget() = default;
 
+private:
+	void UpdateFocus(bool _gameStatus);
+
 public:
 	void Draw() override;
 };

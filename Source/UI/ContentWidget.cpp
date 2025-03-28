@@ -310,7 +310,6 @@ void ContentWidget::Draw()
 	for (unsigned int _index = 0; _index < elements.size(); _index++)
 	{
 		const string& _path = _basePath + elements[_index];
-		cout << _path << endl;
 		Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f));
 		SameLine(0.0f, 0.0f);
 		if (Button(elements[_index].c_str()))

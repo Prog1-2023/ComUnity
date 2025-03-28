@@ -1,8 +1,18 @@
 #include "SceneWidget.h"
 
+#include "UIManager.h"
+
 SceneWidget::SceneWidget(const bool& _openedByDefault) : Widget("Scene", _openedByDefault)
 {
 	onDroppedElement = Event<void, int>();
+	UIManager::GetInstance().GetToolbar().OnGameStatusChanged().Add(this, &SceneWidget::UpdateFocus);
+}
+
+void SceneWidget::UpdateFocus(bool _gameStatus)
+{
+	if (_gameStatus)
+		return;
+	SetWindowFocus("Scene");
 }
 
 void SceneWidget::Draw()

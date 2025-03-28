@@ -15,6 +15,8 @@ UIManager::UIManager()
 {
 	toolbar = Toolbar();
 	allWidgets = map<string, Widget*>();
+	world = nullptr;
+	window = nullptr;
 }
 
 UIManager::~UIManager()

@@ -18,6 +18,7 @@ public:
 	FORCEINLINE void SetWorld(World* _world) { world = _world; }
 	FORCEINLINE World* GetWorld() const { return world; }
 	FORCEINLINE GLFWwindow* GetWindow() const { return window; }
+	FORCEINLINE Toolbar& GetToolbar() { return toolbar; }
 
 public:
 	UIManager();
