@@ -58,6 +58,8 @@ void SpawnActorWidget::Draw()
 	}
 
 	Separator();
+
+	BeginChild("SpawnActorArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 	int _index = currentOpenedTab == "Lights" ? tabList["Meshes"].actorList.size() : 0;
 	for (const pair<string, SpawnActor>& _pair : tabList[currentOpenedTab].actorList)
 	{
@@ -72,4 +74,6 @@ void SpawnActorWidget::Draw()
 		}
 		_index++;
 	}
+
+	EndChild();
 }
