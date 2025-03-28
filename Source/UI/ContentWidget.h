@@ -19,6 +19,7 @@ class ContentWidget : public Widget
 	TextureData fileTexture;
 	const char* newClassTypes[3];
 	int selectedClassType;
+	double time;
 
 public:
 	ContentWidget(const bool& _openedByDefault);

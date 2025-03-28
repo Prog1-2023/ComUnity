@@ -1,7 +1,17 @@
 #include "GameWidget.h"
 
+#include "UIManager.h"
+
 GameWidget::GameWidget(const bool& _openedByDefault) : Widget("Game", _openedByDefault)
 {
+	UIManager::GetInstance().GetToolbar().OnGameStatusChanged().Add(this, &GameWidget::UpdateFocus);
+}
+
+void GameWidget::UpdateFocus(bool _gameStatus)
+{
+	if (!_gameStatus)
+		return;
+	SetWindowFocus("Game");
 }
 
 void GameWidget::Draw()

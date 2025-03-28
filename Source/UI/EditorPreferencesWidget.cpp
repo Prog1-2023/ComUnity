@@ -1,6 +1,7 @@
 #include "EditorPreferencesWidget.h"
 
 #include "../Utils/String.h"
+#include "UIMacros.h"
 
 EditorPreferencesWidget::EditorPreferencesWidget(const bool& _openedByDefault) : Widget("Editor Preferences", _openedByDefault),
 themes{ "Dark" , "Light" , "Darker-Purple", "Custom" }
@@ -78,7 +79,7 @@ themes{ "Dark" , "Light" , "Darker-Purple", "Custom" }
 void EditorPreferencesWidget::LoadCustomColors()
 {
 	const map<string, string>& _allData = editorSave.GetData();
-	const unsigned int& _customThemeColorAmount = static_cast<const unsigned int>(customTheme.size());
+	SIZE_CAST(_customThemeColorAmount, customTheme.size());
 	for (const pair<string, string>& _pair : _allData)
 	{
 		for (unsigned int _index = 0; _index < _customThemeColorAmount; _index++)
@@ -96,8 +97,7 @@ void EditorPreferencesWidget::LoadCustomColors()
 
 void EditorPreferencesWidget::DrawCustomStyleSettings()
 {
-	const unsigned int& _amount = static_cast<const unsigned int>(customTheme.size());
-	for (unsigned int _index = 0; _index < _amount; _index++)
+	FOREACH(_amount, customTheme.size())
 	{
 		CustomThemeData& _data = customTheme[_index];
 		CustomColor(_data.title, _data.color, _data.type);
@@ -121,8 +121,7 @@ void EditorPreferencesWidget::CustomColor(const string& _colorTitle, float* _col
 void EditorPreferencesWidget::LoadCustomStyle()
 {
 	ImGuiStyle& _style = GetStyle();
-	const unsigned int& _amount = static_cast<const unsigned int>(customTheme.size());
-	for (unsigned int _index = 0; _index < _amount; _index++)
+	FOREACH(_amount, customTheme.size())
 	{
 		const CustomThemeData& _data = customTheme[_index];
 		_style.Colors[_data.type] = _data.GetColor();
@@ -139,6 +138,7 @@ void EditorPreferencesWidget::UpdateTheme()
 
 void EditorPreferencesWidget::Draw()
 {
+	BeginChild("EditorPreferencesArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 	Text("Editor style");
 	SameLine();
 	SetNextItemWidth(150.0f);
@@ -151,5 +151,6 @@ void EditorPreferencesWidget::Draw()
 	BeginDisabled(selectedTheme != 3);
 	DrawCustomStyleSettings();
 	EndDisabled();
+	EndChild();
 }
 

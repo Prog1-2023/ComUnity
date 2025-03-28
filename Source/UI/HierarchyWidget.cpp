@@ -2,6 +2,7 @@
 
 #include "UIManager.h"
 #include "../Editor/World.h"
+#include "UIMacros.h"
 
 HierarchyWidget::HierarchyWidget(const bool& _openedByDefault) : Widget("Hierarchy", _openedByDefault)
 {
@@ -19,13 +20,12 @@ void HierarchyWidget::Draw()
 		return;
 	}
 	vector<Actor*> _allActors = _world->GetAllActors();
-	const unsigned int& _amount = static_cast<const unsigned int>(_allActors.size());
 
-	for (unsigned int _index = 0; _index < _amount; _index++)
+	FOREACH(_amount, _allActors.size())
 	{
 		BeginDisabled(selectedActorIndex == _index);
 		const string& _actorName = typeid(_allActors[_index]).name(); // TODO change to name
-		const string & _text = to_string(_index) + " -> " + _actorName;
+		const string& _text = to_string(_index) + " -> " + _actorName;
 
 		if (Button(_text.c_str()))
 		{

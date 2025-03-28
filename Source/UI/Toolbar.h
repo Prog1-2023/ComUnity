@@ -11,6 +11,7 @@ class Toolbar
 
 public:
 	FORCEINLINE void SetGameStatus(const bool& _isGameRunning) { isGameRunning = _isGameRunning; }
+	Event<void, bool>& OnGameStatusChanged() { return onGameStatusChanged; }
 
 public:
 	Toolbar();

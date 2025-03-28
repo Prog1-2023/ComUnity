@@ -18,6 +18,7 @@ public:
 	FORCEINLINE void SetWorld(World* _world) { world = _world; }
 	FORCEINLINE World* GetWorld() const { return world; }
 	FORCEINLINE GLFWwindow* GetWindow() const { return window; }
+	FORCEINLINE Toolbar& GetToolbar() { return toolbar; }
 
 public:
 	UIManager();
@@ -40,12 +41,9 @@ public:
 	template<typename Type>
 	Type* GetWidgetOfType()
 	{
-		// TODO a opti?
 		for (const pair<string, Widget*>& _pair : allWidgets)
-		{
 			if (Type* _widget = dynamic_cast<Type*>(_pair.second))
 				return _widget;
-		}
 		return nullptr;
 	}
 };

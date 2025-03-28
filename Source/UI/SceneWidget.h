@@ -13,6 +13,7 @@ public:
 
 public:
 	SceneWidget(const bool& _openedByDefault);
+	void UpdateFocus(bool _gameStatus);
 	virtual ~SceneWidget() = default;
 
 public:

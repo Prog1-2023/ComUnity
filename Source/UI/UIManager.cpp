@@ -15,11 +15,12 @@ UIManager::UIManager()
 {
 	toolbar = Toolbar();
 	allWidgets = map<string, Widget*>();
+	world = nullptr;
+	window = nullptr;
 }
 
 UIManager::~UIManager()
 {
-	// TODO a opti?
 	for (const pair<string, Widget*>& _pair : allWidgets)
 		delete _pair.second;
 }
@@ -93,7 +94,6 @@ void UIManager::DrawAll()
 {
 	toolbar.Draw();
 	DockSpaceOverViewport(GetMainViewport()->ID);
-	// TODO a opti?
 	for (const pair<string, Widget*>& _pair : allWidgets)
 	{
 		if (_pair.second->GetIsActiveRef())
