@@ -25,7 +25,7 @@ public:
 
 public:
 	Window(const string& _name = "Unknown");
-	Window(const string& _name, const int& _width, const int& _height);
+	Window(const string& _name, const int _width, const int _height);
 	Window(const string& _name, const Vector2i& _windowSize);
 	~Window();
 
@@ -39,3 +39,5 @@ private:
 public:
 	void Update();
 };
+
+

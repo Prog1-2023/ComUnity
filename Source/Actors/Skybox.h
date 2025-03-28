@@ -67,7 +67,6 @@ public:
     /// <summary>
     /// Constructor to initialize a Skybox instance with a given world.
     /// </summary>
-    /// <param name="_world">The world that this Skybox belongs to.</param>
     Skybox(Level* _level);
 
 private:

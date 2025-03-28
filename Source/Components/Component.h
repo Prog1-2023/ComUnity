@@ -1,5 +1,5 @@
 #pragma once
-//#include "../Core.h"
+#include "../Utils/CoreMinimal.h"
 #include "../Actors/Core.h"
 
 class Component : public Core
@@ -8,10 +8,7 @@ protected:
 	class Actor* owner;
 
 public:
-	FORCEINLINE Actor* GetOwner() const
-	{
-		return owner;
-	}
+	FORCEINLINE Actor* GetOwner() const { return owner; }
 
 public:
 	Component(Actor* _owner);

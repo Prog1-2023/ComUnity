@@ -1,10 +1,7 @@
 #pragma once
-
 #include "../../Utils/CoreMinimal.h"
 #include "../Actor.h"
 #include "../../Components/CameraComponent.h"
-
-class Level;
 
 class CameraActor : public Actor
 {
@@ -15,5 +12,8 @@ public:
 
 public:
 	CameraActor(Level* _level);
+
+public:
+	virtual void Construct()override;
 };
 

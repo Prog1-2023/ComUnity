@@ -1,7 +1,6 @@
 #pragma once
-#include"../Utils/CoreMinimal.h"
-#include "Component.h"
-//#include "../Editor/Window.h"
+#include "../Utils/CoreMinimal.h"
+#include "../Components/Component.h"
 #include "../Editor/Windows/Window.h"
 
 class CameraComponent : public Component
@@ -10,12 +9,21 @@ class CameraComponent : public Component
 	float fov;
 	float nearDistance;
 	float farDistance;
-	Window* window;
 
 public:
-	FORCEINLINE mat4 ComputeView()
+	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
 	{
-		Controller* _controller = window->GetController();
+		return new CameraComponent(_owner, *this);
+	}
+public:
+	CameraComponent(Actor* _owner);
+	CameraComponent(Actor* _owner, const CameraComponent& _other);
+	~CameraComponent() = default;
+
+public:
+	FORCEINLINE mat4 ComputeView(Window* _window)
+	{
+		Controller* _controller = _window->GetController();
 		const float& _theta = _controller->theta;
 		const float& _phi = _controller->phi;
 		const float& _viewRadius = _controller->viewRadius;
@@ -26,23 +34,15 @@ public:
 		vec3 _up = normalize(vec3(0.0f, cos(_phi), 0.0f));
 		return lookAt(_cameraPosition, targetPos, _up);
 	}
-	FORCEINLINE mat4 ComputeProjection()
+
+	FORCEINLINE mat4 ComputeProjection(Window* _window)
 	{
-		const Vector2i& _windowSize = window->GetSize();
-		return glm::perspective(radians(fov), (float)_windowSize.x / (float)_windowSize.y, nearDistance, farDistance);
+		const Vector2i& _windowSize = _window->GetSize();
+		return perspective(radians(fov), (float)_windowSize.x / (float)_windowSize.y, nearDistance, farDistance);
 	}
-	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
-	{
-		return new CameraComponent(_owner, *this);
-	}
-public:
-	CameraComponent(Actor* _owner);
-	CameraComponent(Actor* _owner, const CameraComponent& _other);
-	~CameraComponent() = default;
 	
 	virtual void Construct() override;
 	virtual void Deconstruct() override;
 
-public:
 };
 

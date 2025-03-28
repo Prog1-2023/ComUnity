@@ -19,14 +19,8 @@ public:
     FORCEINLINE float GetAmbientStrength() { return ambientStrength; }
 public:
     LightComponent(Actor* _owner);
-    LightComponent(Actor* _owner, const LightComponent& _component);
     LightComponent(Actor* _owner, float _intensity, vec3 _color);
 
     virtual ~LightComponent();
-
-public:
-    //virtual Component* Clone(Actor* _owner) override;
-
-    // Inherited via Component
-    Component* Clone(Actor* _owner) const override;
+    virtual Component* Clone(Actor* _owner) const override;
 };

@@ -1,10 +1,12 @@
 #include "Controller.h"
-
+#include "map"
+//InputController currentInput;
+vector<InputController> currentInput;
 map<int, InputController> allInputs;
 
 Controller::Controller(GLFWwindow* _window)
 {
-	//TODO move into Camera class
+	//TODO MOVE into camera class
 	viewRadius = 5.0f;
 	theta = 0.0f;
 	phi = 0.0f;

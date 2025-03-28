@@ -10,14 +10,6 @@ LightComponent::LightComponent(Actor* _owner) : Component(_owner)
 	LightManager::GetInstance().AddLight(this);
 }
 
-LightComponent::LightComponent(Actor* _owner, const LightComponent& _component) : Component(_owner)
-{
-	ambientStrength = _component.ambientStrength;
-	intensity = _component.intensity;
-	color = _component.color;
-	LightManager::GetInstance().AddLight(this);
-}
-
 LightComponent::LightComponent(Actor* _owner, float _intensity, vec3 _color) : Component(_owner)
 {
 	intensity = _intensity;
@@ -32,5 +24,5 @@ LightComponent::~LightComponent()
 
 Component* LightComponent::Clone(Actor* _owner) const
 {
-	return new LightComponent(_owner, *this);
+	return new LightComponent(_owner);
 }

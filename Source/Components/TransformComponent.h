@@ -6,7 +6,6 @@
 class TransformComponent : public Component
 { 
 	Transform transform;
-
 public:
 
 	FORCEINLINE Transform GetTransform()
@@ -57,7 +56,7 @@ public:
 public:
 	TransformComponent (Actor* _owner);
 	TransformComponent (Actor* _owner,Transform _transform);
-	~TransformComponent() = default;
+	~TransformComponent();
 
 public:
 	virtual Component* Clone(Actor* _owner) const override { return nullptr; }

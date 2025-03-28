@@ -1,81 +1,10 @@
-/*
-#pragma once
-#include "../Utils/CoreMinimal.h"
-#include "../Components/TransformComponent.h"
-
-
-class Actor
-{
-
-	unsigned int id;
-protected:
-	vector<Component*>allComponents;
-	TransformComponent* transform;
-	
-	class World* world;
-
-public :
-	FORCEINLINE World* GetWorld()
-	{
-		return world;
-	}
-	FORCEINLINE Vector3f GetActorLocation()
-	{
-		return transform->GetLocation();
-	}
-	FORCEINLINE void SetActorLocation(Vector3f _newPos)
-	{
-		 transform->SetLocation(_newPos);
-	}
-public:
-	Actor(World* _world);
-	~Actor();
-
-protected:
-
-public:
-	virtual void BeginPlay() ;
-	virtual void Tick(const float _deltaTime) ;
-	virtual void BeginDestroy() ;
-	void LoadModel(const string& _path);
-	void ComputeMesh(const aiScene* _scene, const aiNode* _node);
-
-	template<typename Type >
-	Type* GetComponent()
-	{
-		for (Component* _component : allComponents)
-		{
-			if (Type* _type = dynamic_cast<Type*>(_component))
-			{
-				return _type;
-			}
-		}
-
-		return nullptr;
-	} 
-	
-	template<typename Type = Component >
-	vector<Type*> GetComponents()
-	{
-		vector<Type*> _components = vector<Type*>();
-		for (Component* _component : allComponents)
-		{
-			if (Type* _type = dynamic_cast<Type*>(_component))
-			{
-				_components.push_back(_type);
-			}
-		}
-
-		return _components;
-	}
-};
-*/
 #pragma once
 #include"../Utils/CoreMinimal.h"
 #include "Core.h"
 #include "../Components/TransformComponent.h"
 #include"../Components/ITransformableModifier.h"
 #include"../Components/ITransformableViewer.h"
+#include "../Components/StaticMeshComponent.h"
 
 //#include "TransformableModifier.h"
 //#include "TransformableViewer.h"
@@ -83,7 +12,7 @@ public:
 //#include "RootComponent.h"
 //#include "Layer.h"
 
-class StaticMeshComponent;
+
 struct CollisionData;
 
 enum AttachmentType
@@ -102,7 +31,7 @@ enum LayerType
 	PROJECTILE,
 	BREAKABLE,
 	RETRIEVABLE,
-	LT_COUNT
+	COUNT
 };
 
 //using namespace Layer;
@@ -115,8 +44,7 @@ protected:
 	
 	float lifeSpan;
 	LayerType layer;
-
-protected:
+private:
 	string name;
 	string displayName;
 	set<Component*> components;
@@ -460,6 +388,18 @@ public:
 	void CreateSocket(const string& _name, const Transform& _transform = Transform(), const AttachmentType& _type = AT_SNAP_TO_TARGET);
 	void Destroy();
 
+
+
+#pragma region TODO MOVE INTO STATICMESH OR OTHER CLASS IDK
+private:
+	void ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node);
+public:
+	void LoadModel(const string& _path);
+	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
+#pragma endregion
+
+
+
 #pragma region Components
 
 	void AddComponent(Component* _component);
@@ -476,13 +416,6 @@ public:
 		return nullptr;
 	}
 
-private:
-	void ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node);
-
-public:
-	//void LoadModel(const string& _path);
-
-	//void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
 #pragma endregion
 
 #pragma region Collision
