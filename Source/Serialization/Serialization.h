@@ -23,23 +23,23 @@ public:
 struct ValueAttachedToObject
 {
 	void* object;
-	map<string, vector<SerializedValue*>> values;
+	map<string, Array<SerializedValue*>> values;
 
 	ValueAttachedToObject()
 	{
 		object = nullptr;
-		values = map<string, vector<SerializedValue*>>();
+		values = map<string, Array<SerializedValue*>>();
 	}
 };
 
 
 class Serialization : public Singleton<Serialization>
 {
-	vector<ValueAttachedToObject*> storedValues;
+	Array<ValueAttachedToObject*> storedValues;
 public:
 	Serialization();
 	~Serialization();
 
 public:
-	FORCEINLINE vector<ValueAttachedToObject*>& GetStoredValues() { return storedValues; }
+	FORCEINLINE Array<ValueAttachedToObject*>& GetStoredValues() { return storedValues; }
 };

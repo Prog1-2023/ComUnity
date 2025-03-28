@@ -7,8 +7,8 @@ CameraActor::CameraActor(World* _world) : Actor(_world)
 {
 	camera = new CameraComponent(this);
 	mesh = new StaticMeshComponent(this);
-	allComponents.push_back(camera);
-	allComponents.push_back(mesh);
+	allComponents.Add(camera);
+	allComponents.Add(mesh);
 
 	viewRadius = -3.0f;
 	theta = 0.0f;

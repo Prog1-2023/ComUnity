@@ -9,9 +9,12 @@ TransformComponent::TransformComponent(Actor* _owner) : Component(_owner)
 
 	physics = false;
 
-	SERIALIZE(owner,TransformComponent,READ,bool,physics);
-	SERIALIZE(owner,TransformComponent,READ,int, moveSpeed);
-	SERIALIZE(owner,TransformComponent,WRITE,float, rotateSpeed);
+	vectorTest = Vector3f(1.0f, 2.0f,3.0f);
+	vectorTest.SetSerializeValue();
+	SERIALIZE(owner, TransformComponent, READ, bool, physics);
+	SERIALIZE(owner, TransformComponent, READ, int, moveSpeed);
+	SERIALIZE(owner, TransformComponent, WRITE, float, rotateSpeed);
+	SERIALIZE(owner, TransformComponent, READ, Vector3f, vectorTest);
 }
 
 TransformComponent::~TransformComponent()

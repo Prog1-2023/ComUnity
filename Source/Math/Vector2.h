@@ -8,36 +8,36 @@
 
 using namespace std;
 
-template <typename T>
+template <typename Type>
 struct Vector2
 {
-	T x;
-	T y;
+	Type x;
+	Type y;
 
 #pragma region DefaultValues
 	//Vector (0,0)
-	inline static Vector2<T> Zero() { return Vector2<T>(); }
+	inline static Vector2<Type> Zero() { return Vector2<Type>(); }
 	//Vector (1,1)
-	inline static Vector2<T> One() { return Vector2<T>(T(1)); }
+	inline static Vector2<Type> One() { return Vector2<Type>(Type(1)); }
 	//Vector (1,0)
-	inline static Vector2<T> Up() { return Vector2<T>(T(1), T()); }
+	inline static Vector2<Type> Up() { return Vector2<Type>(Type(1), Type()); }
 	//Vector (0,1)
-	inline static Vector2<T> Right() { return Vector2<T>(T(),T(1)); }
+	inline static Vector2<Type> Right() { return Vector2<Type>(Type(),Type(1)); }
 #pragma endregion
 
 
 #pragma region Constructors
 	Vector2()
 	{
-		x = T();
-		y = T();
+		x = Type();
+		y = Type();
 	}
-	Vector2(const T& _value)
+	Vector2(const Type& _value)
 	{
 		x = _value;
 		y = _value;
 	}
-	Vector2(const T& _x, const T& _y)
+	Vector2(const Type& _x, const Type& _y)
 	{
 		x = _x;
 		y = _y;
@@ -52,9 +52,9 @@ struct Vector2
 		x = _other.x;
 		y = _other.y;
 	}
-	Vector2(const initializer_list<T>& _list)
+	Vector2(const initializer_list<Type>& _list)
 	{
-		const initializer_list<T>::value_type* _begin = _list.begin();
+		const initializer_list<Type>::value_type* _begin = _list.begin();
 		x = *_begin;
 		// write the first value if there's only one
 		// look for the second value if there's more than 1 value
@@ -75,26 +75,26 @@ struct Vector2
 	{
 		return sqrtf((x * x) + (y * y));
 	}
-	float Dot(const Vector2<T>& _other)
+	float Dot(const Vector2<Type>& _other)
 	{
 		return (x * _other.x) + (y * _other.y);
 	}
-	float Distance(const Vector2<T>& _other)
+	float Distance(const Vector2<Type>& _other)
 	{
 		return (x - _other.x) * (x - _other.x) + (y - _other.y) * (y - _other.y);
 	}
-	float AngleBetween(Vector2<T>& _other)
+	float AngleBetween(Vector2<Type>& _other)
 	{
-		T _angle = Dot(_other) / (Length() * _other.Length());
+		Type _angle = Dot(_other) / (Length() * _other.Length());
 		_angle = acos(_angle) * 180.0f / M_PI;
 		return _angle;
 	}
-	Vector2<T> Normalize()
+	Vector2<Type> Normalize()
 	{
-		T _length = Length();
-		T _x = round(x / _length);
-		T _y = round(y / _length);
-		return Vector2<T>(_x,_y);
+		Type _length = Length();
+		Type _x = round(x / _length);
+		Type _y = round(y / _length);
+		return Vector2<Type>(_x,_y);
 	}
 
 #pragma endregion
@@ -122,42 +122,42 @@ struct Vector2
 		y /= _other.y;
 	}
 
-	void operator += (const T& _value)
+	void operator += (const Type& _value)
 	{
 		x += _value;
 		y += _value;
 	}
-	void operator -= (const T& _value)
+	void operator -= (const Type& _value)
 	{
 		x -= _value;
 		y -= _value;
 	}
-	void operator *= (const T& _value)
+	void operator *= (const Type& _value)
 	{
 		x *= _value;
 		y *= _value;
 	}
-	void operator /= (const T& _value)
+	void operator /= (const Type& _value)
 	{
 		x /= _value;
 		y /= _value;
 	}
 
-	Vector2<T> operator + (const Vector2& _other)
+	Vector2<Type> operator + (const Vector2& _other)
 	{
-		return Vector2<T>(x + _other.x, y + _other.y);
+		return Vector2<Type>(x + _other.x, y + _other.y);
 	}
-	Vector2<T> operator - (const Vector2& _other)
+	Vector2<Type> operator - (const Vector2& _other)
 	{
-		return Vector2<T>(x - _other.x, y - _other.y);
+		return Vector2<Type>(x - _other.x, y - _other.y);
 	}
-	Vector2<T> operator * (const Vector2& _other)
+	Vector2<Type> operator * (const Vector2& _other)
 	{
-		return Vector2<T>(x * _other.x, y * _other.y);
+		return Vector2<Type>(x * _other.x, y * _other.y);
 	}
-	Vector2<T> operator / (const Vector2& _other)
+	Vector2<Type> operator / (const Vector2& _other)
 	{
-		return Vector2<T>(x / _other.x, y / _other.y);
+		return Vector2<Type>(x / _other.x, y / _other.y);
 	}
 
 	bool operator == (const Vector2& _other) const noexcept
@@ -196,12 +196,12 @@ struct Vector2
 		--y;
 	}
 
-	Vector2<T> operator -()
+	Vector2<Type> operator -()
 	{
 		return *this * -1.0f;
 	}
 
-	Vector2<T>& operator = (Vector2<T>&& _other) noexcept
+	Vector2<Type>& operator = (Vector2<Type>&& _other) noexcept
 	{
 		x = move(_other.x);
 		y = move(_other.y);
@@ -209,18 +209,18 @@ struct Vector2
 		return *this;
 	}
 
-	Vector2<T> operator = (const Vector2<T>& _other)
+	Vector2<Type> operator = (const Vector2<Type>& _other)
 	{
-		return *this = Vector2<T>(_other);
+		return *this = Vector2<Type>(_other);
 	}
 	
-	Vector2<T> operator = (const aiVector3D& _other)
+	Vector2<Type> operator = (const aiVector3D& _other)
 	{
-		return *this = Vector2<T>(_other);
+		return *this = Vector2<Type>(_other);
 	}
 
 
-	friend ostream& operator << (ostream& _stream, const Vector2<T>& _otherVec)
+	friend ostream& operator << (ostream& _stream, const Vector2<Type>& _otherVec)
 	{
 		return _stream << "X: " << _otherVec.x << " Y: " << _otherVec.y;
 	}

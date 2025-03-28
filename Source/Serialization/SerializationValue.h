@@ -1,8 +1,5 @@
 #pragma once
-#include <iostream>
-#include <any>
-
-using namespace std;
+#include "../Utils/Macro.h"
 
 #define SERIALIZE(RefOfOwner,Class,Status,Type,Name) SerializeValue(RefOfOwner,#Class,Status,#Type,#Name,&Name)
 
