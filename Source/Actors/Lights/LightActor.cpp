@@ -27,11 +27,11 @@ void LightActor::SetType(LightType _type)
 	}
 }
 
-LightActor::LightActor(World* _world): Actor(_world)
+LightActor::LightActor(Level* _level): Actor(_level)
 {
 	type = NONE;
 	lightComponentActive = nullptr;
-	allComponents.push_back(lightComponentActive);
+	components.insert(lightComponentActive);
 	directionalRef = nullptr;
 	pointLightRef = nullptr;
 	spotLightRef = nullptr;

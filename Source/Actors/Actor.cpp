@@ -1,6 +1,7 @@
 #include "Actor.h"
 #include "../Manager/ActorManager.h"
 #include"../Manager/Level.h"
+#include "../Components/StaticMeshComponent.h"
 //#include "TimerManager.h"
 
 
@@ -150,11 +151,6 @@ void Actor::RemoveComponent(Component* _component)
 {
 	components.erase(components.find(_component));
 
-	const unsigned int& _childrenAmount = _node->mNumChildren;
-	for (GLuint _index = 0; _index < _childrenAmount; _index++)
-	{
-		ComputeMeshes(_scene, _node->mChildren[_index]);
-	}
 }
 
 void Actor::ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node)

@@ -68,7 +68,7 @@ public:
     /// Constructor to initialize a Skybox instance with a given world.
     /// </summary>
     /// <param name="_world">The world that this Skybox belongs to.</param>
-    Skybox(World* _world);
+    Skybox(Level* _level);
 
 private:
     /// <summary>
@@ -121,7 +121,7 @@ private:
     /// </summary>
     void Draw();
 
-    virtual void Tick(const float& _deltaTime) override;
+    virtual void Tick(const float _deltaTime) override;
 
 public:
     /// <summary>

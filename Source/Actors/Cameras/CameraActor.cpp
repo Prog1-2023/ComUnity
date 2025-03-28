@@ -1,7 +1,8 @@
 #include "CameraActor.h"
+#include "../../Manager/Level.h"
 
-CameraActor::CameraActor(World* _world) : Actor(_world)
+CameraActor::CameraActor(Level* _level) : Actor(_level)
 {
 	camera = new CameraComponent(this);
-	allComponents.push_back(camera);
+	components.insert(camera);
 }

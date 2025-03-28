@@ -13,7 +13,7 @@
 #include <assimp/postprocess.h>
 
 // ReactPhysics3D
-#include <reactphysics3d/reactphysics3d.h>
+//#include <reactphysics3d/reactphysics3d.h>
 
 // IrrKlang
 #include <irrKlang.h>
@@ -28,17 +28,18 @@
 
 //Light Related
 #include "Editor/Windows/Window.h"	
-#include "Editor/World.h"
+#include "Manager/Level.h"
 #include "NewLightRelated/Material.h"
 #include "Actors/Cameras/CameraActor.h"
 #include "Actors/Skybox.h"
 #include "Components/StaticMeshComponent.h"
+#include "Actors/Lights/LightActor.h"
 
 using namespace std;
 using namespace Assimp;
 using namespace fmt;
 using namespace irrklang;
-namespace rea = reactphysics3d;
+//namespace rea = reactphysics3d;
 
 int InitMain();
 void Shutdown(GLFWwindow* _window);
@@ -51,21 +52,21 @@ int main()
 	// Create a GLFW window
 	Window _window = Window("Engine window", 600, 600);
 	// Create the world
-	World* _world = new World();
-	_world->SetWindow(&_window);
+	Level* _level = new Level("DefaultLevel");
+	//_level->SetWindow(&_window);
 	// Create the controller
 	Controller* _controller = _window.GetController();
 	#pragma endregion
 
 	#pragma region LIGHT_DEMO_INITIALISATION
 
-	Actor* _actor = _world->SpawnActor<CameraActor>();
-	_actor->LoadModel("backpack/Model/backpack.obj");
+	Actor* _actor = _level->SpawnActor<CameraActor>();
+	//_actor->LoadModel("backpack/Model/backpack.obj");
 
-	LightActor* _light = _world->SpawnLight(NONE);
-	LightActor* _light2 = _world->SpawnLight(DIRECTIONAL);
+	/*LightActor* _light = _level->SpawnActor<>(NONE);
+	LightActor* _light2 = _level->SpawnActor<>(DIRECTIONAL);*/
 
-	Skybox* _skybox = _world->SpawnActor<Skybox>();
+	Skybox* _skybox = _level->SpawnActor<Skybox>();
 
 	_skybox->Init({ "cube_right.png", "cube_left.png",
 		 "cube_down.png", "cube_up.png", "cube_front.png","cube_back.png" }, 1.f);
@@ -76,9 +77,10 @@ int main()
 	#pragma endregion
 
 	//Begin play on all Actors
-	int _size = _world->GetAllActors().size();
-	for (size_t i = 0; i < _size; i++)
-		_world->GetAllActors()[i]->BeginPlay();
+	int _size = _level->GetActorManager().GetAllActors().size();
+	//for (size_t i = 0; i < _size; i++)
+	for (Actor* _actor : _level->GetActorManager().GetAllActors())
+		_actor->BeginPlay();
 
 	//Init time and size of window variables
 	int _width, _height;
@@ -111,8 +113,9 @@ int main()
 		
 		#pragma region TICK_ACTORS
 		// Tick all actors of the world
-		for (size_t i = 0; i < _size; i++)
-			_world->GetAllActors()[i]->Tick(_deltaTime);
+		//for (size_t i = 0; i < _size; i++)
+		for (Actor* _actor : _level->GetActorManager().GetAllActors())
+			_actor->Tick(_deltaTime);
 		#pragma endregion
 
 		#pragma region COMPUTE_MVP
@@ -155,8 +158,8 @@ int main()
 	// Clean and quit
 	glfwDestroyWindow(_window.GetWindow());
 	glfwTerminate();
-	delete _world;
-	_world = nullptr;
+	delete _level;
+	_level = nullptr;
 	return EXIT_SUCCESS;
 }
 
@@ -179,35 +182,6 @@ int InitMain()
 		cout << "Assimp n'a pas pu charger le fichier test.obj.\n";
 	}
 
-	// ReactPhysics
-	// First you need to create the PhysicsCommon object. This is a factory module
-	// that you can use to create physics world and other objects. It is also responsible
-	// for logging and memory management
-	rea::PhysicsCommon physicsCommon;
-
-	// Create a physics world
-	rea::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
-
-	// Create a rigid body in the world
-	rea::Vector3 position(0, 20, 0);
-	rea::Quaternion orientation = rea::Quaternion::identity();
-	rea::Transform transform(position, orientation);
-	rea::RigidBody* body = world->createRigidBody(transform);
-
-	const rea::decimal timeStep = 1.0f / 60.0f;
-
-	// Step the simulation a few steps
-	for (int i = 0; i < 20; i++)
-	{
-		world->update(timeStep);
-
-		// Get the updated position of the body
-		const rea::Transform& transform = body->getTransform();
-		const rea::Vector3& position = transform.getPosition();
-
-		// Display the position of the body
-		cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << endl;
-	}
 
 	// IrrKlang
 	ISoundEngine* soundEngine = createIrrKlangDevice();

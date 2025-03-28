@@ -37,19 +37,19 @@ struct Vertex
 	}
 };
 
-struct Texture
-{
-	GLuint id;
-	string path;
-	aiTextureType type;
-
-	Texture(const GLuint& _id, const string& _path, const aiTextureType& _type)
-	{
-		id = _id;
-		path = _path;
-		type = _type;
-	}
-};
+//struct Texture
+//{
+//	GLuint id;
+//	string path;
+//	aiTextureType type;
+//
+//	Texture(const GLuint& _id, const string& _path, const aiTextureType& _type)
+//	{
+//		id = _id;
+//		path = _path;
+//		type = _type;
+//	}
+//};
 
 class StaticMeshComponent : public Component
 {
@@ -133,9 +133,9 @@ private:
 	void InitShaders();
 	void InitShape();
 	bool Generate2DShape(const vector<float> _outerColor, const vector<float> _innerColor);
-	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
+	//vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
 	bool Generate3DShape(const vector<float> _color);
-	vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
+	//vector<Texture> LoadTextures(aiMaterial* _material, const aiTextureType& _type);
 	float RoundFloat(const float& _value);
 	bool IsNearlyEqual(const float& _a, const float& _b, const float& _tolerance = numeric_limits<float>::epsilon());
 	void InitBuffers();
@@ -143,7 +143,7 @@ private:
 	GLuint LoadTexture(const string& _filePath);
 	bool CheckShaderForErrors(const GLuint& _shader, const string& _shaderName);
 	void UpdateColors();
-	void UpdateTextures();
+	//void UpdateTextures();
 
 	void Draw();
 

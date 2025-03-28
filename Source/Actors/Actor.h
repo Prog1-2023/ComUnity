@@ -83,7 +83,7 @@ public:
 //#include "RootComponent.h"
 //#include "Layer.h"
 
-
+class StaticMeshComponent;
 struct CollisionData;
 
 enum AttachmentType
@@ -102,7 +102,7 @@ enum LayerType
 	PROJECTILE,
 	BREAKABLE,
 	RETRIEVABLE,
-	COUNT
+	LT_COUNT
 };
 
 //using namespace Layer;
@@ -115,7 +115,8 @@ protected:
 	
 	float lifeSpan;
 	LayerType layer;
-private:
+
+protected:
 	string name;
 	string displayName;
 	set<Component*> components;
@@ -479,9 +480,9 @@ private:
 	void ComputeMesh(StaticMeshComponent* _meshComponent, const aiScene* _scene, const aiNode* _node);
 
 public:
-	void LoadModel(const string& _path);
+	//void LoadModel(const string& _path);
 
-	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
+	//void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
 #pragma endregion
 
 #pragma region Collision

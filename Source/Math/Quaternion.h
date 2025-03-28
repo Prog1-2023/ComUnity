@@ -32,7 +32,7 @@
 
 /// ReactPhysics3D namespace
 #include "../Utils/CoreMinimal.h"
-#include "mathematics.h"
+//#include "mathematics.h"
 
 
 // Class Quaternion

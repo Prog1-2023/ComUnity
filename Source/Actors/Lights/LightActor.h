@@ -36,6 +36,6 @@ public:
 	void SetType(LightType _type);
 
 public:
-	LightActor(World* _world);
+	LightActor(Level* _level);
 	~LightActor();
 };

@@ -100,30 +100,56 @@ const float MACHINE_EPSILON = std::numeric_limits<float>::epsilon();
 
 #pragma once
 
+// Defaults
 #include <iostream>
 #include <functional>
 #include <filesystem>
-#include <map>
-#include <queue>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <initializer_list>
+#include <algorithm>
+#include <assert.h>
+#include <exception>
+#include <cctype>
+#include <stdexcept>
+#include <limits>
 
+// Collections
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
 
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
 
+// Common
+#include "../Common/stb_image.h"
+
+// OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define GLM_ENABLE_EXPERIMENTAL //check to remove
+// GLM
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include<assimp/Importer.hpp>
-#include<assimp/scene.h>
-#include<assimp/postprocess.h>
+// FMT
+#include <fmt/core.h>
 
+// ImGui
+#include <imgui.h>
 
-#include <set>
+// Assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>  
+
+// IrrKlang
+#include <irrKlang.h>
 
 using namespace std;
 using namespace filesystem;

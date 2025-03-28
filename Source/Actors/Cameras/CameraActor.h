@@ -4,6 +4,8 @@
 #include "../Actor.h"
 #include "../../Components/CameraComponent.h"
 
+class Level;
+
 class CameraActor : public Actor
 {
 	CameraComponent* camera;
@@ -12,6 +14,6 @@ public:
 	FORCEINLINE CameraComponent* GetCameraComponent() const { return camera; }
 
 public:
-	CameraActor(World* _world);
+	CameraActor(Level* _level);
 };
 

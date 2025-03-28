@@ -1,7 +1,8 @@
 #include "StaticMeshComponent.h"
+#include "../Managers/LightManager.h"
 
 static vector<Texture> texturesLoaded;
-#include "../Managers/LightManager.h"
+//#include "../Managers/LightManager.h"
 
 unsigned int CreateShader(const string& _shaderPath, const bool& _isVertex)
 {
@@ -278,7 +279,7 @@ void StaticMeshComponent::GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _
 		vector<Texture> _loadedTextures;
 		for (unsigned int i = 0; i < 4; i++)
 		{
-			_loadedTextures = LoadTextures(_material, _textureTypes[i]);
+			//_loadedTextures = LoadTextures(_material, _textureTypes[i]);
 
 			if (!_loadedTextures.empty())
 			{
@@ -288,36 +289,36 @@ void StaticMeshComponent::GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _
 	}
 }
 
-vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const aiTextureType& _type)
-{
-	vector<Texture> _textures;
-
-	const  GLuint& _amount = _material->GetTextureCount(_type);
-	for (GLuint _textureIndex = 0; _textureIndex < _amount; _textureIndex++)
-	{
-		aiString _path;
-		_material->GetTexture(_type, _textureIndex, &_path);
-		bool skip = false;
-		for (unsigned int j = 0; j < textures.size(); j++)
-		{
-			if (std::strcmp(textures[j].GetStringKey().data(), _path.C_Str()) == 0)
-			{
-				textures.push_back(textures[j]);
-				skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-				break;
-			}
-		}
-		if (!skip)
-		{
-			const GLuint& _id = LoadTexture(_path.C_Str());
-			//const Texture& _texture = Texture(_id, _path.C_Str(), _type);
-			Texture* _texture = TextureManager::GetInstance().CreateTexture(_path.C_Str(), _type);
-			_textures.push_back(*_texture);
-
-		}
-	}
-	return _textures;
-}
+//vector<Texture> StaticMeshComponent::LoadTextures(aiMaterial* _material, const aiTextureType& _type)
+//{
+//	vector<Texture> _textures;
+//
+//	const  GLuint& _amount = _material->GetTextureCount(_type);
+//	for (GLuint _textureIndex = 0; _textureIndex < _amount; _textureIndex++)
+//	{
+//		aiString _path;
+//		_material->GetTexture(_type, _textureIndex, &_path);
+//		bool skip = false;
+//		for (unsigned int j = 0; j < textures.size(); j++)
+//		{
+//			if (std::strcmp(textures[j].GetStringKey().data(), _path.C_Str()) == 0)
+//			{
+//				textures.push_back(textures[j]);
+//				skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+//				break;
+//			}
+//		}
+//		if (!skip)
+//		{
+//			const GLuint& _id = LoadTexture(_path.C_Str());
+//			//const Texture& _texture = Texture(_id, _path.C_Str(), _type);
+//			Texture* _texture = TextureManager::GetInstance().CreateTexture(_path.C_Str(), _type);
+//			_textures.push_back(*_texture);
+//
+//		}
+//	}
+//	return _textures;
+//}
 
 bool StaticMeshComponent::Generate3DShape(const vector<float> _color)
 {
@@ -552,123 +553,123 @@ void StaticMeshComponent::UpdateColors()
 	glUniform3f(_lightSpecularLocation, 1.0f, 1.0f, 1.0f);
 }
 
-void StaticMeshComponent::UpdateTextures()
-{
-	/*if (useTextures)
-	{
-		int _textureIndex = 0;
-		for (const pair<string, GLuint>& _pair : allTextures)
-		{
-			glActiveTexture(GL_TEXTURE0 + _textureIndex);
-			glBindTexture(GL_TEXTURE_2D, _pair.second);
-			_textureIndex++;
-		}
-	}*/
-
-	GLuint _diffuseNr = 1;
-	GLuint _specularNr = 1;
-	GLuint _normalNr = 1;
-	GLuint _heightNr = 1;
-
-	const unsigned int& _texturesAmount = static_cast<const unsigned int>(textures.size());
-	for (GLuint _index = 0; _index < _texturesAmount; _index++)
-	{
-		glActiveTexture(GL_TEXTURE0 + _index);
-
-		string _numberText;
-		aiTextureType _type = textures[_index].type;
-
-		if (_type == aiTextureType_AMBIENT)
-		{
-			_numberText = to_string(_normalNr++);
-		}
-		else if (_type == aiTextureType_DIFFUSE)
-		{
-			_numberText = to_string(_diffuseNr++);
-		}
-		else if (_type == aiTextureType_SPECULAR)
-		{
-			_numberText = to_string(_specularNr++);
-		}
-		else if (_type == aiTextureType_HEIGHT)
-		{
-			_numberText = to_string(_heightNr++);
-		}
-
-		string _textureName = "uniform";
-
-		switch (_type)
-		{
-		case aiTextureType_NONE:
-			_textureName += "Unknown";
-			break;
-		case aiTextureType_DIFFUSE:
-			_textureName += "Diffuse";
-			break;
-		case aiTextureType_SPECULAR:
-			_textureName += "Specular";
-			break;
-		case aiTextureType_AMBIENT:
-			_textureName += "Ambient";
-			break;
-		case aiTextureType_EMISSIVE:
-			_textureName += "Emissive";
-			break;
-		case aiTextureType_HEIGHT:
-			_textureName += "Height";
-			break;
-		case aiTextureType_NORMALS:
-			break;
-		case aiTextureType_SHININESS:
-			break;
-		case aiTextureType_OPACITY:
-			break;
-		case aiTextureType_DISPLACEMENT:
-			break;
-		case aiTextureType_LIGHTMAP:
-			break;
-		case aiTextureType_REFLECTION:
-			break;
-		case aiTextureType_BASE_COLOR:
-			break;
-		case aiTextureType_NORMAL_CAMERA:
-			break;
-		case aiTextureType_EMISSION_COLOR:
-			break;
-		case aiTextureType_METALNESS:
-			break;
-		case aiTextureType_DIFFUSE_ROUGHNESS:
-			break;
-		case aiTextureType_AMBIENT_OCCLUSION:
-			break;
-		case aiTextureType_UNKNOWN:
-			break;
-		case aiTextureType_SHEEN:
-			break;
-		case aiTextureType_CLEARCOAT:
-			break;
-		case aiTextureType_TRANSMISSION:
-			break;
-		case aiTextureType_MAYA_BASE:
-			break;
-		case aiTextureType_MAYA_SPECULAR:
-			break;
-		case aiTextureType_MAYA_SPECULAR_COLOR:
-			break;
-		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
-			break;
-		case _aiTextureType_Force32Bit:
-			break;
-		default:
-			break;
-		}
-
-		_textureName += "Texture";
-		const GLuint& _uniformTextureID = glGetUniformLocation(shaderProgram, (_textureName + _numberText).c_str());
-		glUniform1i(_uniformTextureID, _index);
-		glBindTexture(GL_TEXTURE_2D, textures[_index].id);
-	}
-}
+//void StaticMeshComponent::UpdateTextures()
+//{
+//	/*if (useTextures)
+//	{
+//		int _textureIndex = 0;
+//		for (const pair<string, GLuint>& _pair : allTextures)
+//		{
+//			glActiveTexture(GL_TEXTURE0 + _textureIndex);
+//			glBindTexture(GL_TEXTURE_2D, _pair.second);
+//			_textureIndex++;
+//		}
+//	}*/
+//
+//	GLuint _diffuseNr = 1;
+//	GLuint _specularNr = 1;
+//	GLuint _normalNr = 1;
+//	GLuint _heightNr = 1;
+//
+//	const unsigned int& _texturesAmount = static_cast<const unsigned int>(textures.size());
+//	for (GLuint _index = 0; _index < _texturesAmount; _index++)
+//	{
+//		glActiveTexture(GL_TEXTURE0 + _index);
+//
+//		string _numberText;
+//		aiTextureType _type = textures[_index].type;
+//
+//		if (_type == aiTextureType_AMBIENT)
+//		{
+//			_numberText = to_string(_normalNr++);
+//		}
+//		else if (_type == aiTextureType_DIFFUSE)
+//		{
+//			_numberText = to_string(_diffuseNr++);
+//		}
+//		else if (_type == aiTextureType_SPECULAR)
+//		{
+//			_numberText = to_string(_specularNr++);
+//		}
+//		else if (_type == aiTextureType_HEIGHT)
+//		{
+//			_numberText = to_string(_heightNr++);
+//		}
+//
+//		string _textureName = "uniform";
+//
+//		switch (_type)
+//		{
+//		case aiTextureType_NONE:
+//			_textureName += "Unknown";
+//			break;
+//		case aiTextureType_DIFFUSE:
+//			_textureName += "Diffuse";
+//			break;
+//		case aiTextureType_SPECULAR:
+//			_textureName += "Specular";
+//			break;
+//		case aiTextureType_AMBIENT:
+//			_textureName += "Ambient";
+//			break;
+//		case aiTextureType_EMISSIVE:
+//			_textureName += "Emissive";
+//			break;
+//		case aiTextureType_HEIGHT:
+//			_textureName += "Height";
+//			break;
+//		case aiTextureType_NORMALS:
+//			break;
+//		case aiTextureType_SHININESS:
+//			break;
+//		case aiTextureType_OPACITY:
+//			break;
+//		case aiTextureType_DISPLACEMENT:
+//			break;
+//		case aiTextureType_LIGHTMAP:
+//			break;
+//		case aiTextureType_REFLECTION:
+//			break;
+//		case aiTextureType_BASE_COLOR:
+//			break;
+//		case aiTextureType_NORMAL_CAMERA:
+//			break;
+//		case aiTextureType_EMISSION_COLOR:
+//			break;
+//		case aiTextureType_METALNESS:
+//			break;
+//		case aiTextureType_DIFFUSE_ROUGHNESS:
+//			break;
+//		case aiTextureType_AMBIENT_OCCLUSION:
+//			break;
+//		case aiTextureType_UNKNOWN:
+//			break;
+//		case aiTextureType_SHEEN:
+//			break;
+//		case aiTextureType_CLEARCOAT:
+//			break;
+//		case aiTextureType_TRANSMISSION:
+//			break;
+//		case aiTextureType_MAYA_BASE:
+//			break;
+//		case aiTextureType_MAYA_SPECULAR:
+//			break;
+//		case aiTextureType_MAYA_SPECULAR_COLOR:
+//			break;
+//		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
+//			break;
+//		case _aiTextureType_Force32Bit:
+//			break;
+//		default:
+//			break;
+//		}
+//
+//		_textureName += "Texture";
+//		const GLuint& _uniformTextureID = glGetUniformLocation(shaderProgram, (_textureName + _numberText).c_str());
+//		glUniform1i(_uniformTextureID, _index);
+//		glBindTexture(GL_TEXTURE_2D, textures[_index].id);
+//	}
+//}
 
 void StaticMeshComponent::Draw()
 {
