@@ -1,7 +1,15 @@
 #include "Skybox.h"
 #include "../NewLightRelated/Shader.h"
 
-Skybox::Skybox(Level* _level) : Actor(_level)
+SkyBox::SkyBox(Level* _level) : Actor(_level)
+{
+    Reset();
+
+    vertexShaderPath = "";
+    fragmentShaderPath = "";
+}
+
+void SkyBox::Reset()
 {
     texturesName = vector<string>();
     vertices = vector<float>();
@@ -14,13 +22,11 @@ Skybox::Skybox(Level* _level) : Actor(_level)
 
     skyboxVAO = 0;
     skyboxVBO = 0;
-
-    vertexShaderPath = "";
-    fragmentShaderPath = "";
 }
 
-void Skybox::Init(const vector<string>& _textures, const float& _scale)
+void SkyBox::Init(const vector<string>& _textures, const float& _scale)
 {
+    Reset();
     vertexShaderPath = "CubeMap.vert";
     fragmentShaderPath = "CubeMap.frag";
     InitTextures(_textures);
@@ -36,7 +42,7 @@ void Skybox::Init(const vector<string>& _textures, const float& _scale)
     InitBuffers();
 }
 
-void Skybox::InitTextures(const vector<string>& _textures)
+void SkyBox::InitTextures(const vector<string>& _textures)
 {
     const int _size = _textures.size();
     const string& _path = GetPath(TEXTURES) + "Skybox/";
@@ -46,7 +52,7 @@ void Skybox::InitTextures(const vector<string>& _textures)
     }
 }
 
-vector<float> Skybox::InitVertices()
+vector<float> SkyBox::InitVertices()
 {
     vertices = {
         -1.0f, -1.0f, -1.0f,
@@ -94,7 +100,7 @@ vector<float> Skybox::InitVertices()
     return vertices;
 }
 
-GLuint Skybox::InitShaders()
+GLuint SkyBox::InitShaders()
 {
     // VertexShader
     unsigned int _vertexShader = CreateShader(vertexShaderPath, true);
@@ -118,7 +124,7 @@ GLuint Skybox::InitShaders()
     return shaderProgram;
 }
 
-void Skybox::InitBuffers()
+void SkyBox::InitBuffers()
 {
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -131,7 +137,7 @@ void Skybox::InitBuffers()
     glBindVertexArray(0);
 }
 
-unsigned int Skybox::CreateShader(const string& _shaderPath, const bool& _isVertex)
+unsigned int SkyBox::CreateShader(const string& _shaderPath, const bool& _isVertex)
 {
     unsigned int _shader = glCreateShader(_isVertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
     const string& _shaderCode = Shader::ReadShader(GetPath(SHADERS) + _shaderPath);
@@ -141,7 +147,7 @@ unsigned int Skybox::CreateShader(const string& _shaderPath, const bool& _isVert
     return _shader;
 }
 
-void Skybox::Draw()
+void SkyBox::Draw()
 {
     glDepthFunc(GL_LEQUAL);
     glUseProgram(shaderProgram);
@@ -152,13 +158,13 @@ void Skybox::Draw()
     glDepthFunc(GL_LESS);
 }
 
-void Skybox::Tick(const float _deltaTime)
+void SkyBox::Tick(const float _deltaTime)
 {
     SUPER::Tick(_deltaTime);
     Draw();
 }
 
-bool Skybox::CheckShaderForErrors(const GLuint& _shader, const string& _shaderName)
+bool SkyBox::CheckShaderForErrors(const GLuint& _shader, const string& _shaderName)
 {
     int _success;
     char _logs[512];
@@ -173,7 +179,7 @@ bool Skybox::CheckShaderForErrors(const GLuint& _shader, const string& _shaderNa
     return _success;
 }
 
-GLuint Skybox::LoadCubemap()
+GLuint SkyBox::LoadCubemap()
 {
     if (texturesName.empty()) return 0;
     GLuint _textureID;

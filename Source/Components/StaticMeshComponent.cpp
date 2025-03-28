@@ -87,13 +87,14 @@ StaticMeshComponent::StaticMeshComponent(Actor* _owner, const StaticMeshComponen
 void StaticMeshComponent::BeginPlay()
 {
 	SUPER::BeginPlay();
+	Init();
 	//Init(); TODO see if keep the one in construct or this one
 }
 
 void StaticMeshComponent::Construct()
 {
 	SUPER::Construct();
-	Init();
+	
 }
 
 void StaticMeshComponent::Deconstruct()

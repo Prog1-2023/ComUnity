@@ -12,8 +12,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-// ReactPhysics3D
-#include <reactphysics3d/reactphysics3d.h>
+//// ReactPhysics3D
+//#include <reactphysics3d/reactphysics3d.h>
 
 // IrrKlang
 #include <irrKlang.h>
@@ -31,14 +31,13 @@
 #include "Editor/World.h"
 #include "NewLightRelated/Material.h"
 #include "Actors/Cameras/CameraActor.h"
-#include "Actors/Skybox.h"
 #include "Components/StaticMeshComponent.h"
 
 using namespace std;
 using namespace Assimp;
 using namespace fmt;
 using namespace irrklang;
-namespace rea = reactphysics3d;
+//namespace rea = reactphysics3d;
 
 int InitMain();
 void Shutdown(GLFWwindow* _window);
@@ -88,31 +87,31 @@ int InitMain()
 	// First you need to create the PhysicsCommon object. This is a factory module
 	// that you can use to create physics world and other objects. It is also responsible
 	// for logging and memory management
-	rea::PhysicsCommon physicsCommon;
+	/*rea::PhysicsCommon physicsCommon;*/
 
 	// Create a physics world
-	rea::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+	//rea::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
 
 	// Create a rigid body in the world
-	rea::Vector3 position(0, 20, 0);
+	/*rea::Vector3 position(0, 20, 0);
 	rea::Quaternion orientation = rea::Quaternion::identity();
 	rea::Transform transform(position, orientation);
-	rea::RigidBody* body = world->createRigidBody(transform);
+	rea::RigidBody* body = world->createRigidBody(transform);*/
 
-	const rea::decimal timeStep = 1.0f / 60.0f;
+	//const rea::decimal timeStep = 1.0f / 60.0f;
 
 	// Step the simulation a few steps
-	for (int i = 0; i < 20; i++)
-	{
-		world->update(timeStep);
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	world->update(timeStep);
 
-		// Get the updated position of the body
-		const rea::Transform& transform = body->getTransform();
-		const rea::Vector3& position = transform.getPosition();
+	//	// Get the updated position of the body
+	//	const rea::Transform& transform = body->getTransform();
+	//	const rea::Vector3& position = transform.getPosition();
 
-		// Display the position of the body
-		cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << endl;
-	}
+	//	// Display the position of the body
+	//	cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << endl;
+	//}
 
 	// IrrKlang
 	ISoundEngine* soundEngine = createIrrKlangDevice();
