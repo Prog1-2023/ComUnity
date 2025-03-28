@@ -117,7 +117,7 @@ public:
 	StaticMeshComponent(Actor* _owner, StaticMeshComponent _other);
 	void LoadModel(const string& _path);
 	void ComputeMeshes(const aiScene* _scene, const aiNode* _node);
-	~StaticMeshComponent() = default;
+	virtual ~StaticMeshComponent() override;
 
 	virtual void Construct() override;
 	virtual void Deconstruct() override;

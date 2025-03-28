@@ -4,12 +4,11 @@
 #include "../Actors/Skybox.h"
 
 
-
 Engine::Engine()
 {
     window = new Window("Engine Render window", 600, 600);
     //world = nullptr;
-    levelManager = LevelManager::GetInstance();
+    levelManager = &LevelManager::GetInstance();
 }
 
 Engine::~Engine()
@@ -33,7 +32,7 @@ void Engine::Start()
     world->Start();*/
 
     Level* _currentLevel = new Level("DefaultLevel");
-    levelManager.SetLevel(_currentLevel);
+    levelManager->SetLevel(_currentLevel);
 }
 
 void Engine::Update()
@@ -45,16 +44,16 @@ void Engine::Update()
 
     #pragma region LIGHT_DEMO_INITIALISATION
 
-    Actor* _cameraActor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
-    //Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<Actor>();
-    Actor* _actor = levelManager.GetCurrentLevel()->SpawnBasicShape<Actor>(CUBE);
+    Actor* _cameraActor = levelManager->GetCurrentLevel()->SpawnActor<CameraActor>();
+    //Actor* _actor = levelManager->GetCurrentLevel()->SpawnActor<Actor>();
+    Actor* _actor = levelManager->GetCurrentLevel()->SpawnBasicShape<Actor>(CUBE);
     //_actor->LoadModel("backpack/Model/backpack.obj");
 
 
-    LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
-    LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
+    LightActor* _light = levelManager->GetCurrentLevel()->SpawnActor<LightActor>(NONE);
+    LightActor* _light2 = levelManager->GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
 
-    SkyBox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<SkyBox>();
+    SkyBox* _skybox = levelManager->GetCurrentLevel()->SpawnActor<SkyBox>();
 
     _skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
             "cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
@@ -68,7 +67,7 @@ void Engine::Update()
 #pragma endregion
     
     //Begin play on all Actors
-    std::set<Actor*> _allActor = levelManager.GetCurrentLevel()->GetActorManager().GetAllActors();
+    std::set<Actor*> _allActor = levelManager->GetCurrentLevel()->GetActorManager().GetAllActors();
     for (Actor* _actor : _allActor)
         _actor->BeginPlay();
 
@@ -103,7 +102,7 @@ void Engine::Update()
         #pragma endregion
 
         #pragma region TICK_ACTORS
-        levelManager.UpdateCurrentLevel(_deltaTime);
+        levelManager->UpdateCurrentLevel(_deltaTime);
         #pragma endregion
         
         #pragma region COMPUTE_MVP
@@ -135,13 +134,13 @@ void Engine::Update()
         _skyboxModel = translate(_skyboxModel, _cameraPosition);
         _skybox->SetMVP(_skyboxModel, _skyboxView, _projection);
 
+        //rotation
         Vector3f _newRot = _mesh->GetTransform()->rotation + 1 * _deltaTime;
-
         _mesh->SetRotation(_newRot);
-        ////translate
+
+        //translate
         Vector3f _newPos = _mesh->GetTransform()->location + 1 * _deltaTime;
         _mesh->SetPosition(_newPos);
-
 
         //scale
         Vector3f _newScale = _mesh->GetTransform()->scale + 1 * _deltaTime;
@@ -167,7 +166,7 @@ void Engine::Update()
 void Engine::Stop()
 {
 
-    levelManager.Destroy();
+    levelManager->Destroy();
     //world->Stop();
     // destroy level
 }

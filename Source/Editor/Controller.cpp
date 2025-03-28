@@ -12,7 +12,6 @@ Controller::Controller(GLFWwindow* _window)
 	phi = 0.0f;
 	speed = 1.f;
 	zoomSpeed = 1.f;
-
 	window = _window;
 	glfwSetKeyCallback(window, InputCallback);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);

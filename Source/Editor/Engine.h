@@ -9,7 +9,7 @@ class Engine
 {
 	Window* window;
 	//World* world;
-	LevelManager levelManager;
+	LevelManager* levelManager;
 
 public:
 	Engine();

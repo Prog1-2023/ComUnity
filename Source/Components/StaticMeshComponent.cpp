@@ -126,6 +126,12 @@ void StaticMeshComponent::ComputeMeshes(const aiScene* _scene, const aiNode* _no
 	}
 }
 
+StaticMeshComponent::~StaticMeshComponent()
+{
+	delete material;
+	material = nullptr;
+}
+
 void StaticMeshComponent::BeginPlay()
 {
 	SUPER::BeginPlay();
@@ -395,6 +401,7 @@ void StaticMeshComponent::InitTextures()
 			for (const pair<string, GLuint>& _pair : allTextures)
 				allTextures[_pair.first] = LoadTexture(_pair.first);
 
+			//LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
 
 			//Manager donne un vector
 			//Static Mesh Set le frag
@@ -412,7 +419,6 @@ void StaticMeshComponent::Update()
 {
 	material->Update();
 	LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
-
 	Draw();
 }
 
