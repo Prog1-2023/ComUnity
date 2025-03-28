@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 
 // FMT
 #include <fmt/core.h>
@@ -11,10 +10,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
-// ReactPhysics3D
-//#include <reactphysics3d/reactphysics3d.h>
-
 // IrrKlang
 #include <irrKlang.h>
 
@@ -22,50 +17,47 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-// GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-//Light Related
-#include "Editor/Windows/Window.h"	
-#include "Editor/World.h"
-#include "NewLightRelated/Material.h"
-#include "Actors/Cameras/CameraActor.h"
-#include "Actors/Skybox.h"
-#include "Components/StaticMeshComponent.h"
-
 using namespace std;
 using namespace Assimp;
 using namespace fmt;
 using namespace irrklang;
-//namespace rea = reactphysics3d;
 
-int InitMain();
-void Shutdown(GLFWwindow* _window);
-
-
-#include "Editor/Engine.h"
-
-void InitConfig()
+enum Category
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	Logger::Reset();
-	system("cls");
-}
-
+	Category1 = 0x0001,
+	Category2 = 0x0002,
+	Category3 = 0x0003,
+	Category4 = 0x0004,
+	Category5 = 0x0005,
+	Category6 = 0x0006,
+	Category7 = 0x0007,
+	Category8 = 0x0010,
+	Category9 = 0x0011,
+	Category10 = 0x0012,
+	Category11 = 0x0013,
+	Category12 = 0x0014,
+	Category13 = 0x0015,
+	Category14 = 0x0016,
+	Category15 = 0x0017,
+	Category16 = 0x0020,
+	Category17 = 0x0021,
+	Category18 = 0x0022,
+	Category19 = 0x0023,
+	Category20 = 0x0024,
+	Category21 = 0x0025,
+	Category22 = 0x0026,
+	Category23 = 0x0027,
+	Category24 = 0x0030,
+	Category25 = 0x0031,
+	Category26 = 0x0032,
+	Category27 = 0x0033,
+	Category28 = 0x0034,
+	Category29 = 0x0035,
+	Category30 = 0x0037,
+	Category31 = 0x0040,
+	Category32 = 0x0041,
+};
 int main()
-{
-	if (InitMain())return -1;
-
-	InitConfig();
-
-	Engine _engine;
-	_engine.Run();
-
-	return EXIT_SUCCESS;
-}
-
-int InitMain()
 {
 	cout << "ComUnity : l'Engine des Communistes !" << endl;
 
@@ -75,62 +67,67 @@ int InitMain()
 	// Assimp
 	Importer importer;
 	const aiScene* scene = importer.ReadFile("test.obj", aiProcess_Triangulate);
-	if (scene)
+	if (scene) 
 	{
 		cout << "Assimp a chargé un fichier avec " << scene->mNumMeshes << " mesh(es).\n";
 	}
-	else
+	else 
 	{
 		cout << "Assimp n'a pas pu charger le fichier test.obj.\n";
 	}
 
-	// ReactPhysics
-	// First you need to create the PhysicsCommon object. This is a factory module
-	// that you can use to create physics world and other objects. It is also responsible
-	// for logging and memory management
-	//rea::PhysicsCommon physicsCommon;
-
-	//// Create a physics world
-	//rea::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
-
-	//// Create a rigid body in the world
-	//rea::Vector3 position(0, 20, 0);
-	//rea::Quaternion orientation = rea::Quaternion::identity();
-	//rea::Transform transform(position, orientation);
-	//rea::RigidBody* body = world->createRigidBody(transform);
-
-	//const rea::decimal timeStep = 1.0f / 60.0f;
-
-	// Step the simulation a few steps
-	//for (int i = 0; i < 20; i++)
-	//{
-	//	world->update(timeStep);
-
-	//	// Get the updated position of the body
-	//	const rea::Transform& transform = body->getTransform();
-	//	const rea::Vector3& position = transform.getPosition();
-
-	//	// Display the position of the body
-	//	cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << endl;
-	//}
-
 	// IrrKlang
 	ISoundEngine* soundEngine = createIrrKlangDevice();
-	if (soundEngine)
+	if (soundEngine) 
 	{
 		cout << "IrrKlang initialisé avec succès !\n";
 		soundEngine->drop();
 	}
-	else
+	else 
 	{
 		cout << "Erreur d'initialisation d'IrrKlang.\n";
 	}
 
-	return EXIT_SUCCESS;
-}
+	// OpenGL
+	// Initialisation de GLFW
+	if (!glfwInit()) {
+		std::cerr << "Erreur d'initialisation de GLFW!" << std::endl;
+		return -1;
+	}
 
-void Shutdown(GLFWwindow* _window)
-{
-	glfwDestroyWindow(_window);
+	// Créer une fenêtre GLFW
+	GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL avec GLEW", nullptr, nullptr);
+	if (!window) {
+		std::cerr << "Erreur de création de la fenêtre!" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+
+	// Rendre le contexte de la fenêtre courant
+	glfwMakeContextCurrent(window);
+
+	// Initialiser GLEW
+	if (glewInit() != GLEW_OK) {
+		std::cerr << "Erreur d'initialisation de GLEW!" << std::endl;
+		return -1;
+	}
+
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
+	// Boucle de rendu
+	while (!glfwWindowShouldClose(window)) {
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Swap des buffers
+		glfwSwapBuffers(window);
+
+		// Polling des événements
+		glfwPollEvents();
+	}
+
+	// Nettoyer et quitter
+	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	return EXIT_SUCCESS;
 }

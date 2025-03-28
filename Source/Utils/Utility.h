@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SubclassOf.h"
+#include "../Collision/SubclassOf.h"
 #include "Macro.h"
 
 template <typename Type>

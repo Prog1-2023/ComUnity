@@ -6,6 +6,7 @@
 #include"../Components/ITransformableViewer.h"
 #include "../Components/StaticMeshComponent.h"
 
+
 //#include "TransformableModifier.h"
 //#include "TransformableViewer.h"
 //#include "Component.h"
@@ -14,7 +15,7 @@
 
 
 struct CollisionData;
-
+class CollisionComponent;
 enum AttachmentType
 {
 	AT_KEEP_RELATIVE,
@@ -386,6 +387,7 @@ public:
 	void Unregister();
 	void SetName(const string& _name);
 	void CreateSocket(const string& _name, const Transform& _transform = Transform(), const AttachmentType& _type = AT_SNAP_TO_TARGET);
+	void AddCollision(CollisionComponent* _collision);
 	void Destroy();
 
 

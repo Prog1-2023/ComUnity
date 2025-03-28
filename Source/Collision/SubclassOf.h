@@ -1,5 +1,5 @@
 #pragma once
-#include "Macro.h"
+#include "../Utils/CoreMinimal.h"
 
 template <typename Type>
 class SubclassOf

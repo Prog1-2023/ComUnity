@@ -7,6 +7,21 @@
 class Actor;
 
 #define MAX_BONE_INFLUENCE 4
+enum TextureExtensionType
+{
+	PNG,
+	JPG,
+	GIF,
+};
+
+enum ShapeObjectType
+{
+	SOT_CIRCLE,
+	SOT_RECTANGLE,
+	SOT_VERTEX,
+
+	SOT_COUNT,
+};
 
 struct Vertex
 {

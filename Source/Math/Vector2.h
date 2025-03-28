@@ -108,6 +108,14 @@ struct Vector2
 
 		return _result;
 	}
+	Vector2<Type> operator / (const float _value)
+	{
+		Vector2<Type> _result;
+		_result.x = x / _value;
+		_result.y = y / _value;
+
+		return _result;
+	}
 	Vector2<Type>& operator = (Vector2<Type>&& _other) noexcept
 	{
 		x = move(_other.x);
@@ -223,11 +231,11 @@ struct Vector2
 };
 
 
-//template<typename Type>
-//ostream& operator << (ostream& _stream, const Vector2<Type>& _otherVec)
-//{
-//	return _stream << "X: " << _otherVec.x << " Y: " << _otherVec.y;
-//}
+template<typename Type>
+ostream& operator << (ostream& _stream, const Vector2<Type>& _otherVec)
+{
+	return _stream << "X: " << _otherVec.x << " Y: " << _otherVec.y;
+}
 
 using Vector2c = Vector2<char>;
 using Vector2us = Vector2<unsigned short>;

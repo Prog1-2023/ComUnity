@@ -134,6 +134,7 @@ void StaticMeshComponent::GenerateShapeFromModel(aiMesh* _mesh, const aiScene* _
 	const unsigned int& _verticesAmount = _mesh->mNumVertices;
 	for (GLuint _index = 0; _index < _verticesAmount; _index++)
 	{
+		aiScene* _scene;
 
 		Vector3f _position = _mesh->mVertices[_index];
 

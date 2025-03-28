@@ -2,6 +2,7 @@
 #include "../Manager/ActorManager.h"
 #include"../Manager/Level.h"
 #include "../Components/StaticMeshComponent.h"
+//#include "../Collision/CollisionComponent.h"
 //#include "TimerManager.h"
 
 
@@ -127,6 +128,12 @@ void Actor::CreateSocket(const string& _name, const Transform& _transform, const
 {
 	Actor* _socket = world->SpawnActor<Actor>(_name, _transform);
 	AddChild(_socket, _type);
+}
+
+void Actor::AddCollision(CollisionComponent* _collision)
+{
+	//GetOwner
+	GetWorld()->GetCollisionManager().AddCollision(_collision);
 }
 
 void Actor::Destroy()

@@ -1,16 +1,5 @@
-#include "Macro.h"
-
-//#include "../Common/Shader.h"
-//#include "../Common/stb_image.h"
-#include "../Editor/Logger.h"
-#include "../Common/stb_image.h"
-#include "../Math/Vector2.h"
-#include "../Math/Vector3.h"
-#include "../Math/Vector4.h"
-#include "../Math/Angle.h"
-#include "../Collision/SubclassOf.h"
-
-#include "../Collision/Utilities.h"
+#pragma once
+//#include "Utilities.h"
 //#include "Logger.h"
 //#include "CustomException.h"
 //#include "Kismet.h"

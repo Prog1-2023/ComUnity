@@ -4,6 +4,7 @@
 #include"../Actors/Actor.h"
 
 #include "../Manager/ActorManager.h"
+#include "../Collision/CollisionManager.h"
 #include "../Utils/Utility.h"
 #include "../Actors/SkyBox.h"
 
@@ -20,6 +21,8 @@ class Level
 	bool isLoaded;
 	string name;
 	ActorManager actorManager;
+	CollisionManager collisionManager;
+
 	SkyBox* skyBox;
 	/*
 	Camera::CameraManager cameraManager;
@@ -40,6 +43,10 @@ public:
 	FORCEINLINE ActorManager& GetActorManager()
 	{
 		return actorManager;
+	}
+	FORCEINLINE CollisionManager& GetCollisionManager()
+	{
+		return collisionManager;
 	}
 	FORCEINLINE SkyBox* GetSkyBox() const { return skyBox; }
 	/*
@@ -94,7 +101,7 @@ public:
 
 #pragma region SpawnActor
 
-	template <typename Type, typename ...Args, IS_BASE_OF(Actor, Type)>
+	template <typename Type, typename ...Args, IS_BASE_OF(Actor , Type)>
 	FORCEINLINE Type* SpawnActor(Args&&... _args)
 	{
 		Type* _actor = new Type(this, forward<Args>(_args)...);
