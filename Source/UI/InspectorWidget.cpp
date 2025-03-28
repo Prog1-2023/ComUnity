@@ -50,43 +50,7 @@ void InspectorWidget::DrawComponents()
 				for (SerializedValue* _value : _values[_type])
 				{
 					if (!DrawFromType(_value))
-					{
-						int* _var = static_cast<int*>(_value->variable);
-						string _stingVar = string(to_string(*_var));
-						const char* _temp = _stingVar.c_str();
-						char* _buffer = const_cast<char*>(_temp);
-
-						ImGui::InputText(_value->name.c_str(), _buffer, 10);
-						string _result = _buffer;
-						*_var = stoi(_result);
-					}
-					else if (_value->type == "float")
-					{
-						float* _var = static_cast<float*>(_value->variable);
-						string _stingVar = string(to_string(*_var));
-						const char* _temp = _stingVar.c_str();
-						char* _buffer = const_cast<char*>(_temp);
-
-						ImGui::InputText(_value->name.c_str(), _buffer, 10);
-						string _result = _buffer;
-						*_var = stof(_result);
-					}
-					else if (_value->type == "bool")
-					{
-						bool* _var = static_cast<bool*>(_value->variable);
-						string _stingVar = string(to_string(*_var));
-						const char* _temp = _stingVar.c_str();
-						char* _buffer = const_cast<char*>(_temp);
-
-						ImGui::Checkbox(_value->name.c_str(), _var);
-					}
-					else
-					{
-						LOG_WARNING("No Serializable Type");
-						vector<std::any> _values = _component->GenerateSerialization();
-						DrawFromComplexeClass(_values);
-						DrawFromComplexeClass(_serializedValues,_value);
-					}
+						DrawFromComplexeClass(_serializedValues, _value);
 				}
 			}
 		}
@@ -96,22 +60,28 @@ void InspectorWidget::DrawComponents()
 
 bool InspectorWidget::DrawFromType(SerializedValue* _value)
 {
+	bool _hasSerialized = false;
 	if (_value->type == "int" || _value->type == "unsigned int")
 	{
 		DrawIntOutput(_value);
-		return true;
+		_hasSerialized = true;
 	}
 	else if (_value->type == "float")
 	{
 		DrawFloatOutput(_value);
-		return true;
+		_hasSerialized = true;
 	}
 	else if (_value->type == "bool")
 	{
 		DrawBoolOutput(_value);
-		return true;
+		_hasSerialized = true;
 	}
-	return false;
+	else if (_value->type == "double")
+	{
+		DrawDoubleOutput(_value);
+		_hasSerialized = true;
+	}
+	return _hasSerialized;
 }
 
 void InspectorWidget::DrawFromComplexeClass(Array<ValueAttachedToObject*> _serializedValues,SerializedValue* _value)
