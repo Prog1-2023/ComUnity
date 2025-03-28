@@ -4,16 +4,14 @@
 
 struct SerializedValue
 {
-	unsigned int status;
 	string name;
 	string type;
 	void* variable;
 
 public:
 	SerializedValue() = default;
-	SerializedValue(const unsigned int _status, const string& _name, const string& _type, void* _variable)
+	SerializedValue(const string& _name, const string& _type, void* _variable)
 	{
-		status = _status;
 		name = _name;
 		type = _type;
 		variable = _variable;

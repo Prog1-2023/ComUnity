@@ -1,9 +1,7 @@
 #pragma once
 #include "../Utils/Macro.h"
 
-#define SERIALIZE(RefOfOwner,Class,Status,Type,Name) SerializeValue(RefOfOwner,#Class,Status,#Type,#Name,&Name)
+#define SERIALIZE(RefOfOwner,Class,Status,Type,Name) SerializeValue(RefOfOwner,#Class,#Type,#Name,&Name)
+#define SERIALIZE_PTR(RefOfOwner,Class,Status,Type,Name) SerializeValue(RefOfOwner,#Class,#Type,#Name,Name)
 
-#define READ 0
-#define WRITE 1
-
-void SerializeValue(void* _ref, const string& _className, const int _status, const string& _type, const string& _name, void* _value);
+void SerializeValue(void* _ref, const string& _className,const string& _type, const string& _name, void* _value);

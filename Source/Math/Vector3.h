@@ -36,36 +36,42 @@ struct Vector3
 		x = Type();
 		y = Type();
 		z = Type();
+		SetSerializeValue();
 	}
 	Vector3(const Type& _value)
 	{
 		x = _value;
 		y = _value;
 		z = _value;
+		SetSerializeValue();
 	}
 	Vector3(const Type& _x, const Type& _y)
 	{
 		x = _x;
 		y = _y;
 		z = Type();
+		SetSerializeValue();
 	}
 	Vector3(const Type& _x, const Type& _y, const Type& _z)
 	{
 		x = _x;
 		y = _y;
 		z = _z;
+		SetSerializeValue();
 	}
 	Vector3(const Vector3& _other)
 	{
 		x = _other.x;
 		y = _other.y;
 		z = _other.z;
+		SetSerializeValue();
 	}
 	Vector3(const aiVector3D& _other)
 	{
 		x = _other.x;
 		y = _other.y;
 		z = _other.z;
+		SetSerializeValue();
 	}
 	Vector3(const initializer_list<Type>& _list)
 	{
@@ -76,16 +82,19 @@ struct Vector3
 		// if there's more than 2 values, they will be ignored
 		y = _list.size() == 1 ? *_begin : *(_begin + 1);
 		z = _list.size() == 1 ? Type() : *(_begin + 2);
+		SetSerializeValue();
 	}
 	Vector3(Vector3&& _other)
 	{
 		// take all values in other and put in this instance then put other in default value
 		*this = move(_other);
+		SetSerializeValue();
 	}
 #pragma endregion
 
 
 #pragma region Methods
+
 
 	void SetSerializeValue()
 	{

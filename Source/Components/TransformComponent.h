@@ -21,11 +21,6 @@ class TransformComponent : public Component
 
 	Mobility mobility;
 
-	bool physics;
-	int moveSpeed = 10;
-	float rotateSpeed = 50.25f;
-	Vector3f vectorTest;
-
 public:
 	FORCEINLINE Vector3f GetLocalLocation() { return localLocation; }
 	FORCEINLINE Vector3f GetLocation() { return location; }

@@ -1,11 +1,11 @@
 #include "SerializationValue.h"
 #include "Serialization.h"
 
-void SerializeValue(void* _ref, const string& _className, const int _status, const string& _type, const string& _name, void* _value)
+void SerializeValue(void* _ref, const string& _className, const string& _type, const string& _name, void* _value)
 {
 	Array<ValueAttachedToObject*>& _map = Serialization::GetInstance().GetStoredValues();
 
-	SerializedValue* _newSerializedValue = new SerializedValue(_status, _name, _type, _value);
+	SerializedValue* _newSerializedValue = new SerializedValue(_name, _type, _value);
 
 	// Contains the object
 	for (ValueAttachedToObject* _ValAttached : _map)
