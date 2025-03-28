@@ -54,7 +54,7 @@ void Engine::Update()
     LightActor* _light = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(NONE);
     LightActor* _light2 = levelManager.GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);
 
-    Skybox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<Skybox>();
+    SkyBox* _skybox = levelManager.GetCurrentLevel()->SpawnActor<SkyBox>();
 
     _skybox->Init({ "cube_right.png", "cube_left.png","cube_up.png",
             "cube_down.png",  "cube_front.png","cube_back.png" }, 1.f);
