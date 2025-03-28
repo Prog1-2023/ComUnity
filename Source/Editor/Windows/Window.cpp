@@ -70,5 +70,5 @@ void Window::InitController()
 void Window::Update()
 {
 	if (!controller) return;
-	controller->ProcessInputs();
+	controller->PollEvents();
 }
