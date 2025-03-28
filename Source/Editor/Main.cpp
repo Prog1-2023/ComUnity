@@ -12,6 +12,8 @@
 #include "../UI/UIText.h"
 #include "../UI/ConsoleWidget.h"
 
+#include "../UI/FileManager.h"
+
 void Shutdown(GLFWwindow* _window);
 
 int main()

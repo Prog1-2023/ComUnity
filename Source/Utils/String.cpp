@@ -221,8 +221,8 @@ ostream& operator<<(ostream& _stream, const String& _string)
 
 String String::ItoS(int _value)
 {
-    string _str = std::to_string(_value);
-    return String(_str.c_str());
+	string _str = std::to_string(_value);
+	return String(_str.c_str());
 }
 
 String String::FtoS(float _value)
@@ -239,4 +239,18 @@ int String::StoI(String _string)
 float String::StoF(String _string)
 {
 	return stof(_string.GetData());
+}
+
+vector<string> String::Split(const string& _toSplit, const string& _delimiter)
+{
+	vector<string> _result = vector<string>();
+	size_t _start = 0;
+	size_t _end = 0;
+	while ((_end = _toSplit.find(_delimiter, _start)) != string::npos)
+	{
+		_result.push_back(_toSplit.substr(_start, _end - _start));
+		_start = _end + _delimiter.length();
+	}
+	_result.push_back(_toSplit.substr(_start));
+	return _result;
 }

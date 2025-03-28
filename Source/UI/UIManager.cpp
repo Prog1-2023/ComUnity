@@ -33,8 +33,8 @@ void UIManager::InitPanels()
 	new SceneWidget(true);
 	new InspectorWidget(true);
 	new ProjectSettingsWidget(false);
-	new EditorPreferencesWidget(false);
 	new SpawnActorWidget(true);
+	new EditorPreferencesWidget(false);
 }
 
 void UIManager::InitDockingPositions()

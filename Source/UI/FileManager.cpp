@@ -103,3 +103,101 @@ int FileManager::ReplaceFileContent(const string& _path, const string& _toReplac
 
 	return 0;
 }
+
+SaveData::SaveData(const string& _saveName)
+{
+	saveName = _saveName;
+	Load();
+}
+
+SaveData::~SaveData()
+{
+	Save();
+}
+
+bool SaveData::DoesKeyExist(const string& _key)
+{
+	return data.contains(_key);
+}
+
+void SaveData::Load()
+{
+	const string& _path = FileManager::GetContentPath() + "/Saves/" + saveName + ".ComUnitySave";
+	ifstream _streamIn = ifstream(_path);
+	string _line;
+
+	while (getline(_streamIn, _line))
+	{
+		size_t _start = 0;
+		size_t _end = 0;
+		string _key = "";
+		string _value = "";
+		_end = _line.find(": ", _start);
+		_key = _line.substr(_start, _end - _start);
+		_value = _line.substr(_end - _start + 2, _line.length());
+		cout << "Key: " << _key << " | Value: " << _value << endl;
+		SetData(_key.c_str(), _value.c_str());
+	}
+	_streamIn.close();
+}
+
+void SaveData::Save()
+{
+	if (saveName.empty())
+		return;
+	if (data.size() == 0)
+		return;
+
+	const string& _path = FileManager::GetContentPath() + "/Saves/" + saveName + ".ComUnitySave";
+	ofstream _streamOut = ofstream(_path);
+
+	for (const pair<string, string>& _pair : data)
+		_streamOut << _pair.first << ": " << _pair.second << endl;
+
+	_streamOut.close();
+}
+
+int SaveData::GetInt(const string& _id)
+{
+	if (!DoesKeyExist(_id))
+	{
+		LOG_ERROR("Error: Save key not found! " + _id);
+		return -1;
+	}
+	return stoi(data[_id]);
+}
+
+string SaveData::GetString(const string& _id)
+{
+	if (!DoesKeyExist(_id))
+	{
+		LOG_ERROR("Error: Save key not found! " + _id);
+		return "";
+	}
+	return data[_id];
+}
+
+float SaveData::GetFloat(const string& _id)
+{
+	if (!DoesKeyExist(_id))
+	{
+		LOG_ERROR("Error: Save key not found! " + _id);
+		return -1.0f;
+	}
+	return stof(data[_id]);
+}
+
+bool SaveData::GetBool(const string& _key)
+{
+	if (!DoesKeyExist(_key))
+	{
+		LOG_ERROR("Error: Save key not found! " + _key);
+		return -1.0f;
+	}
+	return (bool)stoi(data[_key]);
+}
+
+void SaveData::SetData(const string& _id, const string& _value)
+{
+	data[_id] = _value;
+}
