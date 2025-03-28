@@ -3,7 +3,7 @@
 #include "FileManager.h"
 #include "Log.h"
 
-ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault), newClassTypes{"empty", "actor", "component"}
+ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault), newClassTypes{ "empty", "actor", "component" }
 {
 	currentPath = "";
 	fileToRename = "";
@@ -64,28 +64,6 @@ void ContentWidget::GoBack()
 
 void ContentWidget::CreateFolder()
 {
-	SetNextWindowSize(ImVec2(200.0f, 80.0f));
-	if (BeginPopupModal("Create Folder##CreateFolderPopup", nullptr, ImGuiWindowFlags_NoResize))
-	{
-		Text("Name");
-		SameLine();
-		InputText("##CreateFolderInput", popupEnterName, maxNameLength);
-		if (Button("Cancel##CreateFolderCancel", ImVec2(60.0f, 20.0f)))
-		{
-			openCreateFolder = false;
-			CloseCurrentPopup();
-		}
-		SameLine(GetWindowWidth() - 30.0f - 40.0f);
-		if (Button("Confirm##CreateFolderConfirm", ImVec2(60.0f, 20.0f)))
-		{
-			openCreateFolder = false;
-			CloseCurrentPopup();
-			const string& _path = FileManager::GetContentPath() + "/" + currentPath;
-			FileManager::CreateFolder(_path, popupEnterName);
-			UpdateElements();
-		}
-		EndPopup();
-	}
 	SetNextWindowSize(ImVec2(350.0f, 150.0f));
 	if (BeginPopupModal("Create Folder", nullptr, ImGuiWindowFlags_NoResize))
 	{
@@ -112,35 +90,6 @@ void ContentWidget::CreateFolder()
 
 void ContentWidget::CreateClass()
 {
-	SetNextWindowSize(ImVec2(200.0f, 80.0f));
-	if (BeginPopupModal("Create Class##CreateClassPopup", nullptr, ImGuiWindowFlags_NoResize))
-	{
-		Text("Name");
-		SameLine();
-		InputText("##CreateClassInput", popupEnterName, maxNameLength);
-		if (Button("Cancel##CreateClassCancel", ImVec2(60.0f, 20.0f)))
-		{
-			openCreateClass = false;
-			CloseCurrentPopup();
-		}
-		SameLine(GetWindowWidth() - 30.0f - 40.0f);
-		if (Button("Confirm##CreateClassConfirm", ImVec2(60.0f, 20.0f)))
-		{
-			openCreateClass = false;
-			CloseCurrentPopup();
-			const string& _className = string(popupEnterName);
-			const string& _templatePath = FileManager::GetSourcePath() + "/UI/Templates/";
-			const string& _contentPath = FileManager::GetContentPath() + "/" + currentPath + "/";
-			const string& _headerFilePath = _contentPath + _className + ".h";
-			const string& _cppFilePath = _contentPath + _className + ".cpp";
-			FileManager::CopyFile(_templatePath + "class.htemplate", _headerFilePath);
-			FileManager::CopyFile(_templatePath + "class.cpptemplate", _cppFilePath);
-			FileManager::ReplaceFileContent(_headerFilePath, "[NAME]", _className);
-			FileManager::ReplaceFileContent(_cppFilePath, "[NAME]", _className);
-			UpdateElements();
-		}
-		EndPopup();
-	}
 	SetNextWindowSize(ImVec2(350.0f, 150.0f));
 	if (BeginPopupModal("Create Class", nullptr, ImGuiWindowFlags_NoResize))
 	{
@@ -179,9 +128,9 @@ void ContentWidget::CreateClass()
 void ContentWidget::ImportFile()
 {
 	SetNextWindowSize(ImVec2(200.0f, 80.0f));
-	if (BeginPopupModal("Import File##ImportFilePopup", nullptr, ImGuiWindowFlags_NoResize))
+	if (BeginPopupModal("Import File", nullptr, ImGuiWindowFlags_NoResize))
 	{
-		if (Button("Cancel##ImportFileCancel", ImVec2(60.0f, 20.0f)))
+		if (Button("Cancel", ImVec2(60.0f, 20.0f)))
 		{
 			openImportFile = false;
 			CloseCurrentPopup();
@@ -207,16 +156,19 @@ void ContentWidget::DeleteFile(const string& _fileName)
 
 void ContentWidget::RenameFile()
 {
-	if (BeginPopupModal("Rename File##RenameFilePopup", nullptr))
+	SetNextWindowSize(ImVec2(350.0f, 150.0f));
+	if (BeginPopupModal("Rename File", nullptr, ImGuiWindowFlags_NoResize))
 	{
-		InputText("New Name##RenameFileInput", popupEnterName, 30);
-		if (Button("Cancel##RenameFileCancel"))
+		Text("New Name");
+		SameLine();
+		InputText("##name", popupEnterName, maxNameLength);
+		if (Button("Cancel", ImVec2(100.0f, 40.0f)))
 		{
 			openRename = false;
 			CloseCurrentPopup();
 		}
-		SameLine();
-		if (Button("Confirm##RenameFileConfirm"))
+		SameLine(GetWindowWidth() - 30.0f - 100.0f);
+		if (Button("Confirm", ImVec2(100.0f, 40.0f)))
 		{
 			openRename = false;
 			CloseCurrentPopup();
@@ -240,6 +192,27 @@ void ContentWidget::ResetInput(const string& _newInput)
 
 void ContentWidget::Draw()
 {
+	if (openRename)
+	{
+		OpenPopup("Rename File");
+		RenameFile();
+	}
+	if (openCreateFolder)
+	{
+		OpenPopup("Create Folder");
+		CreateFolder();
+	}
+	if (openCreateClass)
+	{
+		OpenPopup("Create Class");
+		CreateClass();
+	}
+	if (openImportFile)
+	{
+		OpenPopup("Import File");
+		ImportFile();
+	}
+
 	if (glfwGetTime() - time >= 3.0)
 	{
 		time = glfwGetTime();
@@ -248,8 +221,8 @@ void ContentWidget::Draw()
 
 	BeginDisabled(currentPath.empty());
 	EndDisabled();
-	if (Button("Import##ImportFile"))
-		openImportFile = true;
+	//if (Button("Import##ImportFile"))
+	//	openImportFile = true;
 	SameLine();
 	if (Button("Create Folder##CreateFolder"))
 	{
@@ -266,7 +239,7 @@ void ContentWidget::Draw()
 	if (Button("Refresh##Refresh"))
 		UpdateElements();
 
-	Separator(); 
+	Separator();
 
 	vector<string> _pathSegments;
 	string _tempPath = "";
@@ -274,9 +247,7 @@ void ContentWidget::Draw()
 	string _segment;
 
 	while (getline(_ss, _segment, '/'))
-	{
 		_pathSegments.push_back(_segment);
-	}
 
 	if (Button("Content##ContentRoot"))
 	{
@@ -311,6 +282,25 @@ void ContentWidget::Draw()
 	Separator();
 
 	BeginChild("ContentScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+	if (BeginPopupContextWindow("ContentRCC"))
+	{
+		//if (MenuItem("Import File"))
+		//	openImportFile = true;
+		if (MenuItem("Create Folder"))
+		{
+			ResetInput();
+			openCreateFolder = true;
+		}
+		if (MenuItem("Create Class"))
+		{
+			ResetInput();
+			openCreateClass = true;
+		}
+		if (MenuItem("Refresh"))
+			UpdateElements();
+		EndPopup();
+	}
 
 	const string& _basePath = FileManager::GetContentPath() + "/" + currentPath + "/";
 	for (unsigned int _index = 0; _index < elements.size(); _index++)
