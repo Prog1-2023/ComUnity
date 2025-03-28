@@ -32,6 +32,7 @@ public:
 	float phi;
 	float speed;
 	float zoomSpeed;
+	float deltaTime;
 private:
 	GLFWwindow* window;
 
@@ -53,6 +54,7 @@ private:
 
 public:
 	void ProcessInputs();
+	FORCEINLINE void SetDeltaTime(float _value) { deltaTime = _value; }
 };
 
 void InputCallback(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods);

@@ -94,6 +94,7 @@ void Engine::Update()
         // Processing inputs
         
         _controller->ProcessInputs();
+        _controller->SetDeltaTime(_deltaTime);
         #pragma endregion
 
         #pragma region Clear
@@ -133,14 +134,23 @@ void Engine::Update()
         mat4 _model = mat4(1.0f);
         _skyboxModel = translate(_skyboxModel, _cameraPosition);
         _skybox->SetMVP(_skyboxModel, _skyboxView, _projection);
-        //_mesh->GetTransform()->rotation += 1 * _deltaTime;
-        //_model = rotate(_model, _mesh->GetTransform()->rotation.x, vec3(1, 0, 0));
-        //_model = rotate(_model, _mesh->GetTransform()->rotation.y, vec3(0, 1, 0));
-        //_model = rotate(_model, _mesh->GetTransform()->rotation.z, vec3(0, 0, 1));
-        //translate
+
+        Vector3f _newRot = _mesh->GetTransform()->rotation + 1 * _deltaTime;
+
+        _mesh->SetRotation(_newRot);
+        ////translate
+        Vector3f _newPos = _mesh->GetTransform()->location + 1 * _deltaTime;
+        _mesh->SetPosition(_newPos);
+
+
         //scale
-        _mesh->SetMVP(_model, _view, _projection);
-        //_mesh->SetUniformModelMatrix();
+        Vector3f _newScale = _mesh->GetTransform()->scale + 1 * _deltaTime;
+        _mesh->SetScale(_newScale);
+
+        _mesh->GetMaterial()->SetUniformProjection(_projection);
+        _mesh->GetMaterial()->SetUniformView(_view);
+
+
         #pragma endregion	
         //world->Update();
 

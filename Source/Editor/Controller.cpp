@@ -10,8 +10,8 @@ Controller::Controller(GLFWwindow* _window)
 	viewRadius = 5.0f;
 	theta = 0.0f;
 	phi = 0.0f;
-	speed = 0.001f;
-	zoomSpeed = 0.001f;
+	speed = 1.f;
+	zoomSpeed = 1.f;
 
 	window = _window;
 	glfwSetKeyCallback(window, InputCallback);
@@ -36,37 +36,37 @@ void Controller::ProcessInputs()
 		if (IsValidKey(_input.scancode, { GLFW_KEY_UP, GLFW_KEY_W }))
 		{
 			cout << "HAUT" << endl;
-			phi += speed;
+			phi += speed * deltaTime;
 		}
 
 		if (IsValidKey(_input.scancode, { GLFW_KEY_DOWN, GLFW_KEY_S }))
 		{
 			cout << "DOWN" << endl;
-			phi -= speed;
+			phi -= speed * deltaTime;
 		}
 
 		if (IsValidKey(_input.scancode, { GLFW_KEY_LEFT, GLFW_KEY_A }))
 		{
 			cout << "LEFT" << endl;
-			theta -= speed;
+			theta -= speed * deltaTime;
 		}
 
 		if (IsValidKey(_input.scancode, { GLFW_KEY_RIGHT, GLFW_KEY_D }))
 		{
 			cout << "RIGHT" << endl;
-			theta += speed;
+			theta += speed * deltaTime;
 		}
 
 		if (IsValidKey(_input.scancode, { GLFW_KEY_Q }))
 		{
 			cout << "ZOOM" << endl;
-			viewRadius -= zoomSpeed;
+			viewRadius -= zoomSpeed * deltaTime;
 		}
 
 		if (IsValidKey(_input.scancode, { GLFW_KEY_E }))
 		{
 			cout << "DE-ZOOM" << endl;
-			viewRadius += zoomSpeed;
+			viewRadius += zoomSpeed * deltaTime;
 		}
 
 		if (_input.action == GLFW_RELEASE)

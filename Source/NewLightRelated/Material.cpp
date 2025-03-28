@@ -77,6 +77,30 @@ void Material::SetMVP(const mat4& _model, const mat4& _view, const mat4& _projec
 	shader->SetUniformVec4("uniformProjection", _projection);
 }
 
+void Material::SetUniformModel(const mat4& _model)
+{
+	if (!shader)return;
+	shader->Use();
+	shader->SetUniformVec4("uniformModel", _model);
+
+}
+
+void Material::SetUniformView(const mat4& _view)
+{
+	if (!shader)return;
+	shader->Use();
+	shader->SetUniformVec4("uniformView", _view);
+
+}
+
+void Material::SetUniformProjection(const mat4& _projection)
+{
+	if (!shader)return;
+	shader->Use();
+
+	shader->SetUniformVec4("uniformProjection", _projection);
+}
+
 void Material::Update()
 {
 	//TODO find a way to clean the following up. But really...

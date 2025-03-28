@@ -235,6 +235,11 @@ struct Vector3
 	//{
 	//	return _stream << "x: " << _otherVec.x << " y: " << _otherVec.y << " z: " << _otherVec.z;
 	//}
+
+	operator glm::vec3() const
+	{
+		return glm::vec3(this->x, this->y, this->z);
+	}
 #pragma endregion
 
 #pragma region Methods

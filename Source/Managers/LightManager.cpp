@@ -13,7 +13,7 @@ void LightManager::RemoveLight(LightComponent* _light)
 
 void LightManager::ApplyLighting(GLuint _shaderProgram)
 {
-    glUseProgram(_shaderProgram);
+    //glUseProgram(_shaderProgram);
 
     int _lightCount = lights.size();
     glUniform1i(glGetUniformLocation(_shaderProgram, "uniformLightCount"), _lightCount);
