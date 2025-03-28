@@ -59,6 +59,12 @@ public:
 	
 	void SetMVP(const mat4& _model, const mat4& _view, const mat4& _projection);
 
+	void SetUniformModel(const mat4& _model);
+
+	void SetUniformView(const mat4& _view);
+
+	void SetUniformProjection(const mat4& _projection);
+
 	void Update();
 
 private:

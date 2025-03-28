@@ -40,16 +40,15 @@ public:
 public:
 	FORCEINLINE mat4 ComputeView(Window* _window)
 	{
-		const float _pitch = viewRadius * sin(phi);           
-		const float _yaw = viewRadius * cos(phi) * sin(theta);  
+		const float _pitch = viewRadius * sin(phi);
+		const float _yaw = viewRadius * cos(phi) * sin(theta);
 		const float _roll = viewRadius * cos(phi) * cos(theta);
 		const vec3 _cameraPosition = vec3(_roll, _pitch, _yaw) + targetPos;
 		vec3 _up = vec3(0.0f, 1.0f, 0.0f);
 		return lookAt(_cameraPosition, targetPos, _up);
 	}
-	
+
 	virtual void Construct() override;
 	virtual void Deconstruct() override;
 
 };
-

@@ -98,12 +98,49 @@ public:
 	FORCEINLINE Type* SpawnActor(Args&&... _args)
 	{
 		Type* _actor = new Type(this, forward<Args>(_args)...);
-		const SubclassOf<Type>& _actorRef = *_actor;
-		_actor = Spawn<Type>(_actorRef);
+		//const SubclassOf<Type>& _actorRef = *_actor;
+		//Type* _toReturn = Spawn<Type>(_actorRef);
 		_actor->Construct();
 		_actor->Register();
-
+		//delete _actor;
+		//_actor = nullptr;
 		return _actor;
+	}
+
+
+	template <typename Type, typename ...Args, IS_BASE_OF(Actor, Type)>
+	FORCEINLINE Type* SpawnBasicShape(SHAPES _shape, Args&&... _args)
+	{
+
+		Type* _toReturn = SpawnActor<Type>(forward<Args>(_args)...);
+
+		string _path = "";
+		switch (_shape)
+		{
+		case CUBE:
+			_path = "BasicShapes/cube.obj";
+			break;
+		case SHPERE:
+			_path = "BasicShapes/sphere.obj";
+			break;
+		case CAPSULE:
+			_path = "BasicShapes/capsule.obj";
+			break;
+		case CONE:
+			_path = "BasicShapes/cone.obj";
+			break;
+		case CYLINDER:
+			_path = "BasicShapes/cylinder.obj";
+			break;
+		default:
+			break;
+		}
+
+		StaticMeshComponent* _mesh = _toReturn->CreateComponent<StaticMeshComponent>();
+		_mesh->LoadModel(_path);
+		//_actor->LoadModel(_path);
+
+		return _toReturn;
 	}
 
 

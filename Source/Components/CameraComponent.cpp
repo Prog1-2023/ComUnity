@@ -40,5 +40,3 @@ void CameraComponent::Deconstruct()
 {
 	SUPER::Deconstruct();
 }
-
-
