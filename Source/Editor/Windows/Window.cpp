@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "../../Components/CameraComponent.h"
 
 Window::Window(const string& _name)
 {
@@ -70,5 +71,5 @@ void Window::InitController()
 void Window::Update()
 {
 	if (!controller) return;
-	controller->ProcessInputs();
+	controller->PollEvents();
 }
