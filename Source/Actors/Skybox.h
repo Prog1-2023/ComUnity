@@ -120,6 +120,7 @@ private:
     /// <summary>
     /// Draws the Skybox using the current shader program and cubemap texture.
     /// </summary>
+public:
     void Draw();
 
     virtual void Tick(const float _deltaTime) override;

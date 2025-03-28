@@ -5,7 +5,7 @@
 #include <fmt/core.h>
 
 // ImGui
-#include <imgui.h>
+//#include <imgui.h>
 
 // Assimp
 #include <assimp/Importer.hpp>

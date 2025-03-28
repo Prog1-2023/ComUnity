@@ -5,8 +5,7 @@
       "glfw3",
       "glew",
       "fmt",
-      "assimp",
-      "imgui",
+      "assimp",      
       "glm"
   ]
 }

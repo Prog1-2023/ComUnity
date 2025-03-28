@@ -5,6 +5,9 @@
 #include "Log.h"
 #include "UIMacros.h"
 
+#include "../Manager/LevelManager.h"
+#include "../Actors/Lights/LightActor.h"
+
 SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn Actors", _openedByDefault)
 {
 	tabList = unordered_map<string, SpawnActorTab>();
@@ -12,14 +15,14 @@ SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn
 	SpawnActorTab _meshTab = SpawnActorTab();
 	SpawnActorTab _lightTab = SpawnActorTab();
 
-	_meshTab.actorList["Cube"] = SpawnActor([&]() { LOG("Cube"); }, "Cube.png");
-	_meshTab.actorList["Sphere"] = SpawnActor([&]() { LOG("Sphere"); }, "Sphere.png");
-	_meshTab.actorList["Cylinder"] = SpawnActor([&]() { LOG("Cylinder"); }, "Cylinder.png");
-	_meshTab.actorList["Cone"] = SpawnActor([&]() { LOG("Cone"); }, "Cone.png");
+	_meshTab.actorList["Cube"] = SpawnActor([&]() { LOG("Spawned : Cube"); }, "Cube.png");
+	_meshTab.actorList["Sphere"] = SpawnActor([&]() { LOG("Spawned : Sphere"); }, "Sphere.png");
+	_meshTab.actorList["Cylinder"] = SpawnActor([&]() { LOG("Spawned : Cylinder"); }, "Cylinder.png");
+	_meshTab.actorList["Cone"] = SpawnActor([&]() { LOG("Spawned : Cone"); }, "Cone.png");
 
-	_lightTab.actorList["Point Light"] = SpawnActor([&]() { LOG("Point Light"); }, "PointLight.png");
-	_lightTab.actorList["Spot Light"] = SpawnActor([&]() { LOG("Spot Light"); }, "SpotLight.png");
-	_lightTab.actorList["Directional Light"] = SpawnActor([&]() { LOG("Directional Light"); }, "DirectionalLight.png");
+	_lightTab.actorList["Point Light"] = SpawnActor([&]() { LOG("Point Light"); /*LevelManager::GetInstance().GetCurrentLevel()->SpawnActor<LightActor>(POINT);*/ }, "PointLight.png");
+	_lightTab.actorList["Spot Light"] = SpawnActor([&]() { LOG("Spot Light");  /*LevelManager::GetInstance().GetCurrentLevel()->SpawnActor<LightActor>(SPOT);*/ }, "SpotLight.png");
+	_lightTab.actorList["Directional Light"] = SpawnActor([&]() { LOG("Directional Light");  /*LevelManager::GetInstance().GetCurrentLevel()->SpawnActor<LightActor>(DIRECTIONAL);*/ }, "DirectionalLight.png");
 
 	tabList["Meshes"] = _meshTab;
 	tabList["Lights"] = _lightTab;
@@ -63,6 +66,7 @@ void SpawnActorWidget::Draw()
 	int _index = currentOpenedTab == "Lights" ? tabList["Meshes"].actorList.size() : 0;
 	for (const pair<string, SpawnActor>& _pair : tabList[currentOpenedTab].actorList)
 	{
+		//Image(_pair.second.texture.textureID, ImVec2(50.0f, 50.0f), ImVec2(1.0f, 1.0f), ImVec2(0.0f, 0.0f));
 		Image(_pair.second.texture.textureID, ImVec2(50.0f, 50.0f));
 		SameLine(0.0f, 0.0f);
 		Selectable(_pair.first.c_str());

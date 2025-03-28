@@ -44,7 +44,7 @@ protected:
 	
 	float lifeSpan;
 	LayerType layer;
-private:
+protected:
 	string name;
 	string displayName;
 	Array<Component*> components;
@@ -70,6 +70,7 @@ public:
 #pragma endregion
 
 #pragma region ID/Name
+	FORCEINLINE void SetDisplayName(const string& _name) { displayName = _name; }
 	FORCEINLINE u_int GetID() const
 	{
 		return id;

@@ -1,6 +1,7 @@
 #pragma once
 #include "../Utils/CoreMinimal.h"
-#include "../UI/Singleton.h"
+#include "../Manager/Singleton.h"
+
 
 struct SerializedValue
 {

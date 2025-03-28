@@ -11,11 +11,11 @@
 #include "FileManager.h"
 #include "GameWidget.H"
 
+
 UIManager::UIManager()
 {
 	toolbar = Toolbar();
 	allWidgets = map<string, Widget*>();
-	world = nullptr;
 	window = nullptr;
 }
 
@@ -49,10 +49,10 @@ void UIManager::InitDockingPositions()
 	}
 }
 
-void UIManager::Init(GLFWwindow* _window, World* _world)
+void UIManager::Init(GLFWwindow* _window, Level* _level)
 {
 	window = _window;
-	world = _world;
+	level = _level;
 	IMGUI_CHECKVERSION();
 	CreateContext();
 	ImGuiIO& _io = GetIO();

@@ -1,14 +1,16 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "../UI/Event.h"
+#include "../Utils/Event.h"
 
 template <typename Type>
 class Array
 {
-	Event<void, Type> onItemAdded;
-	Event<void> onCleared;
-	Event<void, Type> onItemRemoved;
+	/*Event<void, Type> onItemAdded = Event<void, Type>();
+	Event<void> onCleared = Event<void>();
+	Event<void, Type> onItemRemoved = Event<void, Type>();*/
 	std::vector<Type> list;
+
+
 
 public:
 	// Returns the size of the Array
@@ -18,11 +20,11 @@ public:
 	// Returns the modifiable vector
 	std::vector<Type>& GetVectorReference() { return list; }
 	// Called when a new item is added to the Array
-	Event<void, Type>& OnItemAdded() { return onItemAdded; }
-	// Called when the Array is cleared
-	Event<void>& OnCleared() { return onCleared; }
-	// Called when an item is removed from the Array
-	Event<void, Type>& OnItemRemoved() { return onItemRemoved; }
+	//Event<void, Type>& OnItemAdded() { return onItemAdded; }
+	//// Called when the Array is cleared
+	//Event<void>& OnCleared() { return onCleared; }
+	//// Called when an item is removed from the Array
+	//Event<void, Type>& OnItemRemoved() { return onItemRemoved; }
 
 public:
 	Array() = default;
@@ -40,7 +42,7 @@ public:
 	void Add(const Type& _toAdd)
 	{
 		list.push_back(_toAdd);
-		onItemAdded.Invoke(_toAdd);
+		//onItemAdded.Invoke(_toAdd);
 	}
 	// Adds the list of elements from another Array
 	void Add(const Array<Type>& _otherArray)
@@ -50,7 +52,7 @@ public:
 		{
 			const Type& _element = _otherArray[_index];
 			Add(_element);
-			onItemAdded.Invoke(_element);
+			//onItemAdded.Invoke(_element);
 		}
 	}
 	// Adds the list of elements from a vector
@@ -61,7 +63,7 @@ public:
 		{
 			const Type& _element = _vector[_index];
 			Add(_element);
-			onItemAdded.Invoke(_element);
+			//onItemAdded.Invoke(_element);
 		}
 	}
 	// Removes an item from the Array
@@ -75,7 +77,7 @@ public:
 			const Type& _element = list[_index];
 			if (_element == _toRemove)
 			{
-				onItemRemoved.Invoke(_element);
+				//onItemRemoved.Invoke(_element);
 				list.erase(list.begin() + _index);
 				break;
 			}
@@ -96,7 +98,7 @@ public:
 	{
 		if (_indexToRemove < 0 || _indexToRemove >= Size())
 			return false;
-		onItemRemoved.Invoke(list[_indexToRemove]);
+		//onItemRemoved.Invoke(list[_indexToRemove]);
 		list.erase(list.begin() + _indexToRemove);
 		return true;
 	}
@@ -152,7 +154,7 @@ public:
 	void Clear()
 	{
 		list.clear();
-		onCleared.Invoke();
+		//onCleared.Invoke();
 	}
 	// Delete all elements from the Array then clears it
 	void DeleteAll()
@@ -176,7 +178,7 @@ public:
 		return list[_size - 1];
 	}
 	// Return a copy of the Array with the elements that match the predicate
-	Array<Type> Where(Event<bool, Type> _predicate)
+	/*Array<Type> Where(Event<bool, Type> _predicate)
 	{
 		Array<Type> _toReturn;
 		for (Type _element : list)
@@ -185,7 +187,7 @@ public:
 				_toReturn.Add(_element);
 		}
 		return _toReturn;
-	}
+	}*/
 	// Return a copy of the Array
 	Array<Type> Copy()
 	{

@@ -307,6 +307,7 @@ void ContentWidget::Draw()
 	for (unsigned int _index = 0; _index < elements.size(); _index++)
 	{
 		const string& _path = _basePath + elements[_index];
+		//Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f), ImVec2(1.0f, 1.0f), ImVec2(0.0f, 0.0f));
 		Image((is_directory(_path) ? folderTexture.textureID : fileTexture.textureID), ImVec2(25.0f, 25.0f));
 		SameLine(0.0f, 0.0f);
 		if (Button(elements[_index].c_str()))

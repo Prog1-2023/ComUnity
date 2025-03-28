@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../Utils/CoreMinimal.h"
-#include "Singleton.h"
+#include "../Manager/Singleton.h"
+
 
 class SaveData
 {

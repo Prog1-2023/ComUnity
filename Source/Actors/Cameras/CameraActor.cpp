@@ -4,6 +4,7 @@
 CameraActor::CameraActor(Level* _level) : Actor(_level)
 {
 	camera = nullptr;
+	displayName = "CameraActor";
 	//allComponents.push_back(camera);
 }
 

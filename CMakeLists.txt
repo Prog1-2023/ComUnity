@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.19)
 
+add_compile_options(/wd4828)
+
 # Set the path to vcpkg
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/Dependencies/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 

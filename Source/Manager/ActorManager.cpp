@@ -1,4 +1,6 @@
 #include "ActorManager.h"
+#include "../UI/UIManager.h"
+#include "../UI/HierarchyWidget.h"
 
 ActorManager::~ActorManager()
 {
@@ -6,8 +8,13 @@ ActorManager::~ActorManager()
 	{
 		delete _actor;
 	}
+	//allActors.Clear();
 }
 
+void ActorManager::Init()
+{
+	UIManager::GetInstance().GetWidgetOfType<HierarchyWidget>()->OnActorDeleteAction().Add(this, &ActorManager::RemoveActor);
+}
 
 void ActorManager::BeginPlay()
 {

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../Utils/CoreMinimal.h"
-#include "Singleton.h"
+#include "../Manager/Singleton.h"
 #include "Toolbar.h"
-#include "..\Editor\World.h"
+//#include "..\Editor\World.h"
+#include "../Manager/Level.h"
 
 class Widget;
 
@@ -11,12 +12,11 @@ class UIManager : public Singleton<UIManager>
 {
 	map<string, Widget*> allWidgets;
 	Toolbar toolbar;
-	World* world;
 	GLFWwindow* window;
+	Level* level;
 
-public:
-	FORCEINLINE void SetWorld(World* _world) { world = _world; }
-	FORCEINLINE World* GetWorld() const { return world; }
+public:	
+	FORCEINLINE Level* GetLevel() const { return level; }
 	FORCEINLINE GLFWwindow* GetWindow() const { return window; }
 	FORCEINLINE Toolbar& GetToolbar() { return toolbar; }
 
@@ -29,7 +29,7 @@ private:
 	void InitDockingPositions();
 
 public:
-	void Init(GLFWwindow* _window, World* _world);
+	void Init(GLFWwindow* _window, Level* _level);
 	void StartLoop();
 	void EndLoop();
 	void Destroy();

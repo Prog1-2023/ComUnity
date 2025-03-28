@@ -2,7 +2,7 @@
 
 #include "../Utils/CoreMinimal.h"
 #include "Widget.h"
-#include "Event.h"
+#include "../Utils/Event.h"
 
 class Actor;
 
@@ -10,8 +10,8 @@ class HierarchyWidget : public Widget
 {
 	int selectedActorIndex;
 	Event<void, Actor*> onActorSelected;
-	Event<void, Actor*> onActorDeleteAction;
-	
+	Event<void, Actor*> onActorDeleteAction; 	
+
 public:
 	FORCEINLINE Event<void, Actor*>& OnActorSelected() { return onActorSelected; }
 	FORCEINLINE Event<void, Actor*>& OnActorDeleteAction() { return onActorDeleteAction; }

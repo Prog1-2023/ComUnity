@@ -1,7 +1,7 @@
 #pragma once
-#include "../Utils/CoreMinimal.h"
-#include "Singleton.h"
-#include "Event.h"
+//#include "../Utils/CoreMinimal.h"
+#include "../Manager/Singleton.h"
+#include "../Utils/Event.h"
 
 class Log
 {
