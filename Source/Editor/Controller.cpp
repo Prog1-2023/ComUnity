@@ -1,85 +1,46 @@
 #include "Controller.h"
-#include "map"
-//InputController currentInput;
-vector<InputController> currentInput;
-map<int, InputController> allInputs;
+#include <queue>
+
+//scancode, Input
+map<int, Input> allInputs;
 
 Controller::Controller(GLFWwindow* _window)
 {
-	//TODO MOVE into camera class
-	viewRadius = 5.0f;
-	theta = 0.0f;
-	phi = 0.0f;
-	speed = 0.001f;
-	zoomSpeed = 0.001f;
+    window = _window;
+    glfwSetKeyCallback(window, InputCallback);
+    glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
 
-	window = _window;
-	glfwSetKeyCallback(window, InputCallback);
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
+    inputMappingContext = map<string, InputAction>();
 }
 
-void Controller::ProcessInputs()
+void Controller::PollEvents()
 {
-	vector<int> _tempToDestroy;
+    vector<int> _tempToDestroy;
 
-	for (const pair<int, InputController>& _pair : allInputs)
-	{
-		InputController _input = _pair.second;
+    for (map<int, Input>::const_iterator _it = allInputs.begin(); _it != allInputs.end(); _it++)
+    {
+        const Input& _input = _it->second;
 
-		//if (_input.action != GLFW_PRESS && _input.action != GLFW_REPEAT) return;
+        ComputeKey(_input.scancode);
 
-		if (IsValidKey(_input.scancode, { GLFW_KEY_ESCAPE }))
-		{
-			glfwSetWindowShouldClose(window, true);
-		}
+        if (_input.action == GLFW_RELEASE)
+            _tempToDestroy.push_back(_it->first);
+    }
 
-		if (IsValidKey(_input.scancode, { GLFW_KEY_UP, GLFW_KEY_W }))
-		{
-			cout << "HAUT" << endl;
-			phi += speed;
-		}
+    size_t _size = _tempToDestroy.size();
+    for (size_t _i = 0; _i < _size; _i++)
+    {
+        allInputs.erase(_tempToDestroy[_i]);
+    }
+}
 
-		if (IsValidKey(_input.scancode, { GLFW_KEY_DOWN, GLFW_KEY_S }))
-		{
-			cout << "DOWN" << endl;
-			phi -= speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_LEFT, GLFW_KEY_A }))
-		{
-			cout << "LEFT" << endl;
-			theta -= speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_RIGHT, GLFW_KEY_D }))
-		{
-			cout << "RIGHT" << endl;
-			theta += speed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_Q }))
-		{
-			cout << "ZOOM" << endl;
-			viewRadius -= zoomSpeed;
-		}
-
-		if (IsValidKey(_input.scancode, { GLFW_KEY_E }))
-		{
-			cout << "DE-ZOOM" << endl;
-			viewRadius += zoomSpeed;
-		}
-
-		if (_input.action == GLFW_RELEASE)
-			_tempToDestroy.push_back(_pair.first);
-	}
-	int _size = _tempToDestroy.size();
-	for (int i = 0; i < _size; i++)
-	{
-		allInputs.erase(_tempToDestroy[i]);
-	}
+void Controller::AddInputAction(const string& _name, const vector<GLuint>& _allKeys, const function<void()>& _callback)
+{
+    InputAction _action = InputAction(_allKeys, _callback);
+    inputMappingContext[_name] = _action;
 }
 
 void InputCallback(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
 {
-	allInputs[_scancode] = (InputController(_window, _key, _scancode, _action, _mods));
+    allInputs[_scancode] = Input(_window, _key, _scancode, _action, _mods);
 }

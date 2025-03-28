@@ -40,14 +40,14 @@ void Engine::Update()
 {
     #pragma region INITIALIZATION_OF_LIFETIME_TYPES
     // Create the controller
-    Controller* _controller = window->GetController();
+    //Controller* _controller = window->GetController();
     #pragma endregion
 
     #pragma region LIGHT_DEMO_INITIALISATION
 
     Actor* _cameraActor = levelManager.GetCurrentLevel()->SpawnActor<CameraActor>();
     //Actor* _actor = levelManager.GetCurrentLevel()->SpawnActor<Actor>();
-    Actor* _actor = levelManager.GetCurrentLevel()->SpawnBasicShape<Actor>(CUBE);
+    Actor* _actor = levelManager.GetCurrentLevel()->SpawnBasicShape<Actor>(CUBE,"test");
     //_actor->LoadModel("backpack/Model/backpack.obj");
 
 
@@ -64,6 +64,10 @@ void Engine::Update()
     StaticMeshComponent* _mesh = _actor->GetComponent<StaticMeshComponent>();
 
     CameraComponent* _camera = _cameraActor->GetComponent<CameraComponent>();
+    // Create the controller
+   
+    InitInput(_camera);
+    
 
 #pragma endregion
     
@@ -93,7 +97,8 @@ void Engine::Update()
         _time = glfwGetTime();
         // Processing inputs
         
-        _controller->ProcessInputs();
+       /* _controller->ProcessInputs();*/
+       
         #pragma endregion
 
         #pragma region Clear
@@ -110,14 +115,18 @@ void Engine::Update()
         mat4 _skyboxView = mat4(1.0f);
         _view = _camera->ComputeView(window);
 
-        const float& _pitch = cos(_controller->phi) * cos(_controller->theta) * _controller->viewRadius;
-        const float& _yaw = sin(_controller->phi) * _controller->viewRadius;
-        const float& _roll = cos(_controller->phi) * sin(_controller->theta) * _controller->viewRadius;
+    const float _phi = _camera->GetPhi();
+    const float _theta = _camera->GetTheta();
+    const float _viewRadius = _camera->GetViewRadius();
+
+        const float& _pitch = cos(_phi) * cos(_theta) * _viewRadius;
+        const float& _yaw = sin(_phi) * _viewRadius;
+        const float& _roll = cos(_phi) * sin(_theta) * _viewRadius;
         const vec3& _cameraPosition = vec3(_pitch, _yaw, _roll) + _targetPosition;
 
         _mesh->SetCameraLocation(_cameraPosition);
 
-        vec3 _up = normalize(vec3(0.0f, cosf(_controller->phi), 0.0f));
+        vec3 _up = normalize(vec3(0.0f, cosf(_phi), 0.0f));
         _view = lookAt(_cameraPosition, _targetPosition, _up);
         _skyboxView = _view;
 
@@ -160,4 +169,22 @@ void Engine::Stop()
     levelManager.Destroy();
     //world->Stop();
     // destroy level
+}
+
+void Engine::InitInput(CameraComponent* _camera)
+{
+    Controller* _controller = window->GetController();
+
+    const function<void()> _moveCameraUp = bind(&CameraComponent::MoveViewUp, _camera);
+    _controller->AddInputAction("CameraMoveUp", { GLFW_KEY_W }, _moveCameraUp);
+    const function<void()> _moveCameraDown = bind(&CameraComponent::MoveViewDown, _camera);
+    _controller->AddInputAction("CameraMoveDown", { GLFW_KEY_S }, _moveCameraDown);
+    const function<void()> _moveCameraLeft = bind(&CameraComponent::MoveViewLeft, _camera);
+    _controller->AddInputAction("CameraMoveLeft", { GLFW_KEY_A }, _moveCameraLeft);
+    const function<void()> _moveCameraRight = bind(&CameraComponent::MoveViewRight, _camera);
+    _controller->AddInputAction("CameraMoveRight", { GLFW_KEY_D }, _moveCameraRight);
+    const function<void()> _zoomInCamera = bind(&CameraComponent::ZoomIn, _camera);
+    _controller->AddInputAction("CameraZoomIn", { GLFW_KEY_E }, _zoomInCamera);
+    const function<void()> _zoomOutCamera = bind(&CameraComponent::ZoomOut, _camera);
+    _controller->AddInputAction("CameraZoomOut", { GLFW_KEY_Q }, _zoomOutCamera);
 }
