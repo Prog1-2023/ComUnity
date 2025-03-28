@@ -19,7 +19,7 @@ void CameraActor::Tick(float _deltatime)
 {
 	SUPER::Tick(_deltatime);
 	//TODO location and rotation never change always at 0,0,0
-	/*Vector3f _location = GetPosition();
-	Vector3f _rotation = GetRotation();
-	SoundManager::GetInstance().SetListener(_location, _rotation);*/
+	//Vector3f _location = GetPosition();
+	//Vector3f _rotation = GetRotation();
+	//SoundManager::GetInstance().SetListener(_location, _rotation);
 }

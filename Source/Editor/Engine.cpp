@@ -68,6 +68,18 @@ void Engine::Update()
    
     InitInput(_camera);
     
+    //Sound
+    //TODO cline but don't work
+    //SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
+    //SoundActor* _sound = _currentLevel->SpawnActor<SoundActor>("../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+    //SoundActor* _sound = levelManager.GetCurrentLevel()->SpawnActor<SoundActor>("../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+
+    //TODO not cline but work
+    //SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
+    //SoundActor _sound = SoundActor(levelManager.GetCurrentLevel(),"../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+    //_sound.Construct();
+    //_sound.BeginPlay();
+
 
 #pragma endregion
     
