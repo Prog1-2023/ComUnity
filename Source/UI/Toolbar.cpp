@@ -2,6 +2,7 @@
 
 #include "UIManager.h"
 #include "Log.h"
+#include "UIMacros.h"
 
 Toolbar::Toolbar()
 {
@@ -37,7 +38,7 @@ void Toolbar::Draw()
 			EndMenu();
 		}
 
-		const unsigned int& _amount = static_cast<const unsigned int>(allToggleablePanels.size());
+		SIZE_CAST(_amount, allToggleablePanels.size());
 		if (_amount >= 1)
 		{
 			if (BeginMenu("Panels"))

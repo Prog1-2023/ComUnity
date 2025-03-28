@@ -2,6 +2,7 @@
 
 #include "FileManager.h"
 #include "Log.h"
+#include "UIMacros.h"
 
 ContentWidget::ContentWidget(const bool& _openedByDefault) : Widget("Content", _openedByDefault), newClassTypes{ "empty", "actor", "component" }
 {
@@ -185,7 +186,7 @@ void ContentWidget::RenameFile()
 
 void ContentWidget::ResetInput(const string& _newInput)
 {
-	const unsigned int& _newInputSize = static_cast<const unsigned int>(_newInput.length());
+	SIZE_CAST(_newInputSize, _newInput.length());
 	for (unsigned int _index = 0; _index < maxNameLength - 1; _index++)
 		popupEnterName[_index] = (_index >= _newInputSize ? (char)0 : _newInput[_index]);
 }
