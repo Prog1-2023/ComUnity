@@ -139,6 +139,7 @@ void EditorPreferencesWidget::UpdateTheme()
 
 void EditorPreferencesWidget::Draw()
 {
+	BeginChild("EditorPreferencesArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 	Text("Editor style");
 	SameLine();
 	SetNextItemWidth(150.0f);
@@ -151,5 +152,6 @@ void EditorPreferencesWidget::Draw()
 	BeginDisabled(selectedTheme != 3);
 	DrawCustomStyleSettings();
 	EndDisabled();
+	EndChild();
 }
 
