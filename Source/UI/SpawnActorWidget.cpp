@@ -3,6 +3,7 @@
 #include "UIManager.h"
 #include "SceneWidget.h"
 #include "Log.h"
+#include "UIMacros.h"
 
 SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn Actors", _openedByDefault)
 {
@@ -31,7 +32,7 @@ SpawnActorWidget::SpawnActorWidget(const bool& _openedByDefault) : Widget("Spawn
 
 void SpawnActorWidget::ExecuteEvent(const int& _id)
 {
-	const unsigned int& _meshesAmount = tabList["Meshes"].actorList.size();
+	SIZE_CAST(_meshesAmount, tabList["Meshes"].actorList.size());
 	const string& _actorType = (_id < _meshesAmount ? "Meshes" : "Lights");
 	unsigned int _currentIndex = _actorType == "Lights" ? _meshesAmount : 0;
 	for (const pair<string, SpawnActor>& _pair : tabList[_actorType].actorList)
@@ -47,7 +48,6 @@ void SpawnActorWidget::ExecuteEvent(const int& _id)
 
 void SpawnActorWidget::Draw()
 {
-	// TODO opti?
 	for (const pair<string, SpawnActorTab>& _pair : tabList)
 	{
 		SameLine();
