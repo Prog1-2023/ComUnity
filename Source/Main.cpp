@@ -64,6 +64,9 @@ int main()
 
 	LightActor* _light = _world->SpawnLight(SPOT);
 
+	cout << "X : " << _light->GetTransform()->GetPosition().x << " Y : " << _light->GetTransform()->GetPosition().y << " Z : " << _light->GetTransform()->GetPosition().z << endl;
+	//_light->GetTransform()->SetPosition(Vector3f(0.0f, 0.0f, -2.0f));
+	//_light->GetTransform()->SetRotation(Vector3f(0.0f, 0.0f, 0.0f));
 	
 	//LightActor* _light2 = _world->SpawnLight(DIRECTIONAL);
 
@@ -134,8 +137,8 @@ int main()
 		_skyboxView = _view;
 
 		//const GLuint& _uniformViewPosition = glGetUniformLocation(_mesh->GetShaderProgram(), "uniformViewPosition");
-		//const GLuint& _uniformViewPosition = glGetUniformLocation(_material.GetShader()->GetShaderProgram(), "uniformViewPosition");
-		//glUniform3f(_uniformViewPosition, _cameraPosition.x, _cameraPosition.y, _cameraPosition.z);
+		/*const GLuint& _uniformViewPosition = glGetUniformLocation(_material.GetShader()->GetShaderProgram(), "viewPos");
+		glUniform3f(_uniformViewPosition, _cameraPosition.x, _cameraPosition.y, _cameraPosition.z);*/
 
 		mat4 _projection = mat4();
 		if (_height != 0.0f)

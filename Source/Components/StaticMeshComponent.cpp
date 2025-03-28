@@ -334,7 +334,7 @@ void StaticMeshComponent::InitTextures()
 
 			//ManagerLight
 			//ApplyLight
-			LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
+			//LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
 
 			//Manager donne un vector
 			//Static Mesh Set le frag
@@ -349,6 +349,7 @@ void StaticMeshComponent::InitTextures()
 void StaticMeshComponent::Update()
 {
 	material->Update();
+	LightManager::GetInstance().ApplyLighting(material->GetShader()->GetShaderProgram());
 	Draw();
 }
 

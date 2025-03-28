@@ -136,14 +136,14 @@ void ComputePointLight(PointLight _light, vec3 _normal, vec3 _fragPos, vec3 _vie
 
 void ComputeSpotLight(SpotLight _light, vec3 _normal, vec3 _fragPos, vec3 _viewDir)
 {
-    vec3 _lightDir = normalize(_light.position - fragPos);
+    vec3 _lightDir = normalize(_light.position - _fragPos);
     // diffuse shading
     float _diff = max(dot(_normal, _lightDir), 0.0);
     // specular shading
     vec3 _reflectDir = reflect(-_lightDir, _normal);
     float _spec = pow(max(dot(_viewDir, _reflectDir), 0.0), uniformMaterial.shininess);
     // attenuation
-    float _distance = length(_light.position - fragPos);
+    float _distance = length(_light.position - _fragPos);
     float _attenuation = 1.0 / (_light.constant + _light.linear * _distance + _light.quadratic * (_distance * _distance));    
     // spotlight intensity
     float _theta = dot(_lightDir, normalize(-_light.direction)); 

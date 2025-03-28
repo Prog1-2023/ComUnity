@@ -2,14 +2,15 @@
 
 SpotLightComponent::SpotLightComponent(Actor* _owner) : LightComponent(_owner)
 {
-    direction = vec3(0.0f, 0.0f, 0.0f);
+    direction = vec3(0.0f, 0.0f, -1.0f);
     angle = 30.0f;
-    cutoff = 0.9f;
-    cutoff = 0.9f;
-    outerCutoff = 1.0f;
+    /*cutoff = 0.9f;
+    outerCutoff = 1.0f;*/
+    cutoff = 12.5f;
+    outerCutoff = 17.5f;
     constant = 1.0f;
-    linear = 1.0f;
-    quadratic = 1.0f;
+    linear = 0.09f;
+    quadratic = 0.032f;
 }
 
 SpotLightComponent::SpotLightComponent(Actor* _owner, float _intensity, vec3 _color, float _angle, float _cutoff) : LightComponent(_owner, _intensity, _color)
