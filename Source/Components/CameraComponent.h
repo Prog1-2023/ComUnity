@@ -10,11 +10,28 @@ class CameraComponent : public Component
 	float nearDistance;
 	float farDistance;
 
+	float viewRadius;
+	float theta;
+	float phi;
+	float speed;
+	float zoomSpeed;
+
 public:
 	FORCEINLINE virtual Component* Clone(Actor* _owner) const override
 	{
 		return new CameraComponent(_owner, *this);
 	}
+	FORCEINLINE float GetViewRadius() const { return viewRadius; }
+	FORCEINLINE float GetTheta() const { return theta; }
+	FORCEINLINE float GetPhi() const { return phi; }
+	FORCEINLINE float GetSpeed() const { return speed; }
+	FORCEINLINE float GetZoomSpeed() const { return zoomSpeed; }
+	FORCEINLINE void ZoomIn() { viewRadius += zoomSpeed; }
+	FORCEINLINE void ZoomOut() { viewRadius -= zoomSpeed; }
+	FORCEINLINE void MoveViewUp() { phi += speed; }
+	FORCEINLINE void MoveViewDown() { phi -= speed; }
+	FORCEINLINE void MoveViewLeft() { theta -= speed; }
+	FORCEINLINE void MoveViewRight() { theta += speed; }
 public:
 	CameraComponent(Actor* _owner);
 	CameraComponent(Actor* _owner, const CameraComponent& _other);
@@ -23,22 +40,12 @@ public:
 public:
 	FORCEINLINE mat4 ComputeView(Window* _window)
 	{
-		Controller* _controller = _window->GetController();
-		const float& _theta = _controller->theta;
-		const float& _phi = _controller->phi;
-		const float& _viewRadius = _controller->viewRadius;
-		const float& _pitch = cos(_phi) * cos(_theta) * _viewRadius;
-		const float& _yaw = sin(_phi) * _viewRadius;
-		const float& _roll = cos(_phi) * sin(_theta) * _viewRadius;
-		const vec3& _cameraPosition = vec3(_pitch, _yaw, _roll) + targetPos;
-		vec3 _up = normalize(vec3(0.0f, cos(_phi), 0.0f));
+		const float _pitch = viewRadius * sin(phi);           
+		const float _yaw = viewRadius * cos(phi) * sin(theta);  
+		const float _roll = viewRadius * cos(phi) * cos(theta);
+		const vec3 _cameraPosition = vec3(_roll, _pitch, _yaw) + targetPos;
+		vec3 _up = vec3(0.0f, 1.0f, 0.0f);
 		return lookAt(_cameraPosition, targetPos, _up);
-	}
-
-	FORCEINLINE mat4 ComputeProjection(Window* _window)
-	{
-		const Vector2i& _windowSize = _window->GetSize();
-		return perspective(radians(fov), (float)_windowSize.x / (float)_windowSize.y, nearDistance, farDistance);
 	}
 	
 	virtual void Construct() override;
