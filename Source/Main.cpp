@@ -115,7 +115,7 @@ int InitMain()
 	}
 
 	// IrrKlang
-	ISoundEngine* soundEngine = createIrrKlangDevice();
+	/*ISoundEngine* soundEngine = createIrrKlangDevice();
 	if (soundEngine)
 	{
 		cout << "IrrKlang initialisé avec succès !\n";
@@ -124,7 +124,7 @@ int InitMain()
 	else
 	{
 		cout << "Erreur d'initialisation d'IrrKlang.\n";
-	}
+	}*/
 
 	return EXIT_SUCCESS;
 }
