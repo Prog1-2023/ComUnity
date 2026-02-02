@@ -8,7 +8,7 @@ class ActorManager
 	Array<Actor*> allActors;
 	multimap<string, Actor*> actorsName;
 public:
-	SoundActor* sound = nullptr;
+	//SoundActor* sound = nullptr;
 
 public:
 	FORCEINLINE void AddActor(Actor* _actor)

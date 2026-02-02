@@ -3,7 +3,7 @@
 
 #define KEY(GLFW_KEY) glfwGetKeyScancode(GLFW_KEY)
 
-struct Input
+struct InputController
 {
     GLFWwindow* window;
     int key;
@@ -11,8 +11,8 @@ struct Input
     int action;
     int mods;
 
-    Input() = default;
-    Input(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
+    InputController() = default;
+    InputController(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods)
     {
         window = _window;
         key = _key;
@@ -58,6 +58,12 @@ class Controller
 
     GLFWwindow* window;
 
+public:
+    float viewRadius;
+    float theta; 
+    float phi;
+    float speed;
+    float zoomSpeed;
 
 
 private:
@@ -70,13 +76,23 @@ private:
                 _pair.second.Invoke();
         }
     }
+    FORCEINLINE bool IsValidKey(const unsigned int _scancode, const vector<unsigned int>& _allKeys) const
+    {
+        const unsigned int _keysCount = _allKeys.size();
+        for (unsigned int _index = 0; _index < _keysCount; _index++)
+        {
+            if (_scancode == KEY(_allKeys[_index])) return true;
+        }
+        return false;
+    }
 
 public:
     Controller(GLFWwindow* _window);
 
 public:
-    void PollEvents();
-    void AddInputAction(const string& _name, const vector<GLuint>& _allKeys, const function<void()>& _callback);
+    //void pollevents();
+    //void addinputaction(const string& _name, const vector<gluint>& _allkeys, const function<void()>& _callback);
+    void ProcessInputs();
 };
 
 void InputCallback(GLFWwindow* _window, const int _key, const int _scancode, const int _action, const int _mods);

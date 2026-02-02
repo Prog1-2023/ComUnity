@@ -16,7 +16,7 @@
 //#include <reactphysics3d/reactphysics3d.h>
 
 // IrrKlang
-#include <irrKlang.h>
+//#include <irrKlang.h>
 
 // OpenGL
 #include <GL/glew.h>
@@ -40,7 +40,7 @@
 using namespace std;
 using namespace Assimp;
 using namespace fmt;
-using namespace irrklang;
+//using namespace irrklang;
 //namespace rea = reactphysics3d;
 
 int InitMain();
