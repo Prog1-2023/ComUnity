@@ -5,7 +5,7 @@
             "name": "default",
             "inherits": "vcpkg",
             "environment": {
-                "VCPKG_ROOT": "C:/Users/Gregory ZANATTA/OneDrive/Bureau/CustomEngine/ComUnity/Dependencies/vcpkg"
+                "VCPKG_ROOT": "Dependencies/vcpkg"
           }
         }
     ]
