@@ -5,7 +5,7 @@
 #include <fmt/core.h>
 
 // ImGui
-#include <imgui.h>
+//#include <imgui.h>
 
 // Assimp
 #include <assimp/Importer.hpp>
@@ -28,7 +28,7 @@
 
 //Light Related
 #include "Editor/Windows/Window.h"	
-#include "Editor/World.h"
+//#include "Editor/World.h"
 #include "NewLightRelated/Material.h"
 #include "Actors/Cameras/CameraActor.h"
 #include "Actors/Skybox.h"
@@ -52,7 +52,7 @@ void Shutdown(GLFWwindow* _window);
 void InitConfig()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	Logger::Reset();
+	//Logger::Reset();
 	system("cls");
 }
 

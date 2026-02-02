@@ -17,6 +17,7 @@ Level::Level(const string& _name)
 	name = _name;
 	actorManager = ActorManager();
 	skyBox = nullptr;
+	grid = nullptr;
 	/*cameraManager = Camera::CameraManager();
 	collisionManager = CollisionManager();
 	audioManager = AudioManager();
@@ -26,12 +27,13 @@ Level::Level(const string& _name)
 	window.setVisible(false);*/
 
 	M_LEVEL.RegisterLevel(_name, this);
-	InitLevel();
+	//InitLevel();
 }
 
 Level::~Level()
 {
-
+	delete skyBox;
+	delete grid;
 }
 
 void Level::InitLevel()
@@ -40,17 +42,19 @@ void Level::InitLevel()
 	cameraManager.Register(_camera->GetCamera());*/
 	
 	InitDefaultSkyBox();
+	grid = SpawnActor<Grid>();
+	grid->Init(10, 2.0f);
 	
-	Actor* _actor = SpawnActor<Actor>();
-	_actor->CreateComponent<StaticMeshComponent>();
+	/*Actor* _actor = SpawnActor<Actor>();
+	_actor->CreateComponent<StaticMeshComponent>();*/
 }
 
 void Level::Update(const float _deltaTime)
 {
 
 	actorManager.Update(_deltaTime);
-
-
+	grid->Draw();
+	skyBox->Draw();
 }
 
 void Level::Load()
@@ -67,7 +71,6 @@ void Level::Load()
 
 void Level::Unload()
 {
-
 	actorManager.BeginDestroy();
 }
 

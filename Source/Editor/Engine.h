@@ -1,9 +1,10 @@
 #pragma once
 #include "../Utils/CoreMinimal.h"
 #include "../Editor/Windows/Window.h"
-#include "../Editor/World.h"
+//#include "../Editor/World.h"
 
 #include "../Manager/LevelManager.h" // TODO Maybe need to remove
+#include "../UI/UIManager.h"
 
 class CameraComponent;
 class Engine
@@ -11,6 +12,7 @@ class Engine
 	Window* window;
 	//World* world;
 	LevelManager levelManager;
+	UIManager* uiManager;
 
 public:
 	Engine();

@@ -1,0 +1,17 @@
+#pragma once
+
+#include "../Utils/CoreMinimal.h"
+#include "../Actors/Actor.h"
+
+class [NAME] : public Actor
+{
+
+public:
+	[NAME](World* _world);
+	~[NAME]();
+
+public:
+	virtual void BeginPlay() override;
+	virtual void Tick(const float _deltatime) override;
+	virtual void BeginDestroy() override;
+};

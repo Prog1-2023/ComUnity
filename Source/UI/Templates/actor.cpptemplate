@@ -1,0 +1,26 @@
+#include "[NAME].h"
+
+[NAME]::[NAME](World* _world) : Actor(_world)
+{
+
+}
+
+[NAME]::~[NAME]()
+{
+
+}
+
+void [NAME]::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void [NAME]::Tick(const float _deltatime)
+{
+	Super::Tick(_deltatime);
+}
+
+void [NAME]::BeginDestroy()
+{
+	Super::BeginDestroy();
+}

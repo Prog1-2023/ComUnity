@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.19)
 
+add_compile_options(/wd4828)
+
 # Set the path to vcpkg
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/Dependencies/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 
@@ -80,8 +82,8 @@ find_package(assimp CONFIG REQUIRED)
 target_link_libraries(ComUnity PRIVATE assimp::assimp)
 
 # ImGUI
-find_package(imgui CONFIG REQUIRED)
-target_link_libraries(ComUnity PRIVATE imgui::imgui)
+#find_package(imgui CONFIG REQUIRED)
+#target_link_libraries(ComUnity PRIVATE imgui::imgui)
 
 # GLM
 find_package(glm CONFIG REQUIRED)
