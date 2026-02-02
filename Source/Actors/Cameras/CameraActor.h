@@ -15,5 +15,6 @@ public:
 
 public:
 	virtual void Construct()override;
+	virtual void Tick(float _deltatime) override;
 };
 

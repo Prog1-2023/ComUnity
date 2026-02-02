@@ -1,24 +1,27 @@
 #pragma once
 
 #include "../Actors/Actor.h"
+#include "../Actors/SoundActor.h"
 
 class ActorManager
 {
-	set<Actor*> allActors;
+	Array<Actor*> allActors;
 	multimap<string, Actor*> actorsName;
+public:
+	SoundActor* sound = nullptr;
 
 public:
 	FORCEINLINE void AddActor(Actor* _actor)
 	{
-		allActors.insert(_actor);
+		allActors.Add(_actor);
 		AddActorName(_actor);
 	}
 	FORCEINLINE void RemoveActor(Actor* _actor)
 	{
-		allActors.erase(_actor);
+		allActors.Remove(_actor);
 		RemoveActorName(_actor);
 	}
-	FORCEINLINE set<Actor*> GetAllActors() const
+	FORCEINLINE Array<Actor*> GetAllActors() const
 	{
 		return allActors;
 	}
@@ -81,6 +84,8 @@ public:
 
 public:
 	~ActorManager();
+
+	void Init();
 
 	void BeginPlay();
 	void Update(const float _deltaTime);

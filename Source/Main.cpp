@@ -5,7 +5,7 @@
 #include <fmt/core.h>
 
 // ImGui
-#include <imgui.h>
+//#include <imgui.h>
 
 // Assimp
 #include <assimp/Importer.hpp>
@@ -28,11 +28,14 @@
 
 //Light Related
 #include "Editor/Windows/Window.h"	
-#include "Editor/World.h"
+//#include "Editor/World.h"
 #include "NewLightRelated/Material.h"
 #include "Actors/Cameras/CameraActor.h"
 #include "Actors/Skybox.h"
 #include "Components/StaticMeshComponent.h"
+
+#include"Manager/SoundManager.h"
+#include"Actors/SoundActor.h"
 
 using namespace std;
 using namespace Assimp;
@@ -49,12 +52,29 @@ void Shutdown(GLFWwindow* _window);
 void InitConfig()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	Logger::Reset();
+	//Logger::Reset();
 	system("cls");
 }
 
 int main()
 {
+	//ISoundEngine* _soundEngine = createIrrKlangDevice();
+	//
+	////SoundManager::GetInstance().GetSoundEngine()->play3D("../Content/Sound/sonic-unleashed-ost.mp3", vec3df(0.0f, 0.0f, 5.0f), true, false, true, E_STREAM_MODE::ESM_AUTO_DETECT, true);
+	//SoundInfo _soundInfo = SoundInfo(true, Vector3f(0.0f, 0.0f, 5.0f), true, 1.0f, 1.0f, true, false, true);
+	//SoundActor _sound = SoundActor(nullptr,"../Content/Sound/sonic-unleashed-ost.mp3", _soundInfo);
+	//_sound.Construct();
+	//_sound.BeginPlay();
+	//int _index = 0;
+	//while (_index >= 0 || _index <= 120000)
+	//{
+	//	_index++;
+
+	//	cout << _index << endl;
+	//}
+	//return 0;
+
+
 	if (InitMain())return -1;
 
 	InitConfig();
@@ -115,7 +135,7 @@ int InitMain()
 	//}
 
 	// IrrKlang
-	ISoundEngine* soundEngine = createIrrKlangDevice();
+	/*ISoundEngine* soundEngine = createIrrKlangDevice();
 	if (soundEngine)
 	{
 		cout << "IrrKlang initialisé avec succès !\n";
@@ -124,7 +144,7 @@ int InitMain()
 	else
 	{
 		cout << "Erreur d'initialisation d'IrrKlang.\n";
-	}
+	}*/
 
 	return EXIT_SUCCESS;
 }

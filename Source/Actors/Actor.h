@@ -44,10 +44,10 @@ protected:
 	
 	float lifeSpan;
 	LayerType layer;
-private:
+protected:
 	string name;
 	string displayName;
-	set<Component*> components;
+	Array<Component*> components;
 	TransformComponent* root;
 	Actor* parent;
 	AttachmentType attachment;
@@ -70,6 +70,7 @@ public:
 #pragma endregion
 
 #pragma region ID/Name
+	FORCEINLINE void SetDisplayName(const string& _name) { displayName = _name; }
 	FORCEINLINE u_int GetID() const
 	{
 		return id;
@@ -416,6 +417,10 @@ public:
 		return nullptr;
 	}
 
+	Array<Component*> GetComponents() const
+	{
+		return components;
+	}
 #pragma endregion
 
 #pragma region Collision

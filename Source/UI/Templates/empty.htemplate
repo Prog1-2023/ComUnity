@@ -1,0 +1,11 @@
+#pragma once
+
+#include "../Utils/CoreMinimal.h"
+
+class [NAME]
+{
+
+public:
+	[NAME]();
+	~[NAME]();
+};

@@ -4,7 +4,7 @@
 SkyBox::SkyBox(Level* _level) : Actor(_level)
 {
     Reset();
-
+    displayName = "Skybox";
     vertexShaderPath = "";
     fragmentShaderPath = "";
 }
@@ -161,7 +161,7 @@ void SkyBox::Draw()
 void SkyBox::Tick(const float _deltaTime)
 {
     SUPER::Tick(_deltaTime);
-    Draw();
+    //Draw();
 }
 
 bool SkyBox::CheckShaderForErrors(const GLuint& _shader, const string& _shaderName)

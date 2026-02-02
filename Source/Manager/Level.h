@@ -6,6 +6,7 @@
 #include "../Manager/ActorManager.h"
 #include "../Utils/Utility.h"
 #include "../Actors/SkyBox.h"
+#include "../Actors/Grid.h"
 
 //#include "CameraManager.h"
 //#include "CollisionManager.h"
@@ -21,6 +22,7 @@ class Level
 	string name;
 	ActorManager actorManager;
 	SkyBox* skyBox;
+	Grid* grid;
 	/*
 	Camera::CameraManager cameraManager;
 	CollisionManager collisionManager;
@@ -32,7 +34,6 @@ protected:
 
 public:
 
-
 	FORCEINLINE string GetName() const
 	{
 		return name;
@@ -42,6 +43,7 @@ public:
 		return actorManager;
 	}
 	FORCEINLINE SkyBox* GetSkyBox() const { return skyBox; }
+	FORCEINLINE Grid* GetGrid() const { return grid; }
 	/*
 	FORCEINLINE Camera::CameraManager& GetCameraManager()
 	{

@@ -4,8 +4,8 @@
         {
             "name": "default",
             "inherits": "vcpkg",
-          "environment": {
-            "VCPKG_ROOT": "D:\A_LoicG\GitHub\OpenGL-ENGINE\ComUnity\Dependencies\vcpkg"
+            "environment": {
+                "VCPKG_ROOT": "Dependencies/vcpkg"
           }
         }
     ]

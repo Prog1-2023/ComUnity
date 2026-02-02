@@ -1,0 +1,26 @@
+#include "[NAME].h"
+
+[NAME]::[NAME](Actor* _owner) : Component(_owner)
+{
+
+}
+
+[NAME]::~[NAME]()
+{
+
+}
+
+void [NAME]::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void [NAME]::Tick(const float _deltatime)
+{
+	Super::Tick(_deltatime);
+}
+
+void [NAME]::BeginDestroy()
+{
+	Super::BeginDestroy();
+}

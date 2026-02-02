@@ -11,22 +11,29 @@ void LightActor::SetType(LightType _type)
 		/*if (!directionalRef) directionalRef = new DirectionalLightComponent(this);
 		lightComponentActive = directionalRef;*/
 		lightComponentActive->SetColor(vec3(1.0f, 0.0f, 0.0f));
+		displayName = "Directionnal Light";
 	}
 	else if (type == SPOT)
 	{
 		if (!spotLightRef) 
 			spotLightRef = CreateComponent<SpotLightComponent>();
 		lightComponentActive = spotLightRef;
+		displayName = "Spot Light";
 	}
+
 	else if (type == POINT)
 	{
 		if (!pointLightRef)
 			CreateComponent<PointLightComponent>();
 		lightComponentActive = pointLightRef;
+		displayName = "Point Light";
+
 	}
 	else if (type == NONE)
 	{
-		lightComponentActive = CreateComponent<SpotLightComponent>();
+		lightComponentActive = new LightComponent(this);
+		displayName = "Ceci n'est pas une light";
+
 	}
 }
 
