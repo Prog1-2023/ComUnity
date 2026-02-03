@@ -1,6 +1,38 @@
 # ComUnity
 
-UML :
-- Main => https://drive.google.com/file/d/1SfpsJKpL5jjQRdJJSG0JI9rXtxYddJVD/view?usp=sharing
-- UI => https://drive.google.com/file/d/14nbaq4-CAjRzd5WNbkJhV2LSTymi_K1f/view?usp=sharing
-- ReactPhysic3D => https://drive.google.com/file/d/1N5XljJVqeJ41LXGfU70hk18qt2gF6q7c/view?usp=sharing
+ComUnity is a course project where the goal was to reproduce a game engine by making several teams.
+
+![Illustration](ComUnity.png)
+
+__Made in One Week__
+
+## Teams
+
+<ins>Gestion:</ins>
+- [@OlivierM98](https://github.com/OlivierM98)
+- [@MedyHanne](https://github.com/MedyHanne)
+- [@DMystop](https://github.com/DMystop)
+- [@Alkonogi](https://github.com/Alkonogi)
+
+<ins>UI:</ins>
+
+- [@Kylariria](https://github.com/Kylariria)
+- [@Ultired8](https://github.com/Alkonogi)
+- [@DamienP1602](https://github.com/DamienP1602)
+
+<ins>Lights:</ins>
+- [@RaphBv](https://github.com/RaphBv)
+- [@Fuegodavid57](https://github.com/Fuegodavid57)
+- [@Harull](https://github.com/Harull)
+- [@SilverIkito](https://github.com/SilverIkito)
+
+<ins>ReactPhysics:</ins>
+- [@Lu0ma](https://github.com/Lu0ma)
+- [@J0su4k](https://github.com/J0su4k)
+- [@Tranzate](https://github.com/Tranzate)
+
+<ins>Sound:</ins>
+- [@Lefleur05](https://github.com/Lefleur05)
+
+__Supervised by [@ThreatsHunterPro](https://github.com/ThreatsHunterPro), our teacher.__
+
