@@ -1,6 +1,6 @@
 # ComUnity
 
-ComUnity is a course project where the goal was to reproduce a game engine by making several teams.
+ComUnity is a project from Objectif3D where the goal was to make a GameEngine by learning OpenGL.
 
 ![Illustration](ComUnity.png)
 
